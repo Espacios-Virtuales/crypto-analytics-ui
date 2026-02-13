@@ -1,11 +1,11 @@
 version: "3.9"
 services:
-  evaas-ui:
+  crypto-analytics-ui:
     build:
       context: .
       dockerfile: Dockerfile
-    image: evaas-ui:prod
-    container_name: evaas-ui
+    image: crypto-analytics-ui:prod
+    container_name: crypto-analytics-ui
     ports:
       - "8181:80"
     restart: unless-stopped
