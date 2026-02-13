@@ -1,0 +1,30 @@
+
+> evaas-interface@0.0.0 test
+> ng test
+
+❯ Building...
+✔ Building...
+Application bundle generation failed. [2.891 seconds] - 2026-02-13T01:51:03.871Z
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'createProject' does not exist on type 'SoftwareService'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/software.service.spec.ts:40:8:
+[37m      40 │     svc.[32mcreateProject[37m(payload).subscribe(job => {
+         ╵         [32m~~~~~~~~~~~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS7006: Parameter 'job' implicitly has an 'any' type.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/software.service.spec.ts:40:41:
+[37m      40 │     svc.createProject(payload).subscribe([32mjob[37m => {
+         ╵                                          [32m~~~[0m
+
+
+[31m✘ [41;31m[[41;97mERROR[41;31m][0m [1mTS2339: Property 'provisions' does not exist on type '{ auth: { register: string; refresh: string; logout: string; login: string; }; integrations: { software: string; }; project: { software: string; view: string; byId: (id: string) => string; }; }'.[0m [1m[35m[plugin angular-compiler][0m
+
+    src/app/core/services/software.service.spec.ts:52:73:
+[37m      52 │ ...ne(r => r.method === 'POST' && r.url === API.[32mprovisions[37m.software);
+         ╵                                                 [32m~~~~~~~~~~[0m
+
+
+Watch mode enabled. Watching for file changes...

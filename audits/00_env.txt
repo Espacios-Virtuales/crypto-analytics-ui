@@ -1,5 +1,5 @@
 [audit] env
-jue 12 feb 2026 22:36:08 -03
+jue 12 feb 2026 22:50:45 -03
 Linux adareloise-ubuntu-PC02 6.8.0-79-generic #79-Ubuntu SMP PREEMPT_DYNAMIC Tue Aug 12 14:42:46 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
-v18.18.2
-9.8.1
+v22.16.0
+10.9.2
