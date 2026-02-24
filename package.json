@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve crypto-analytics-ui",
+    "start": "ng serve crypto-analytics-ui --proxy-config proxy.conf.json",
     "watch": "ng build crypto-analytics-ui --watch --configuration development",
     "test": "ng test crypto-analytics-ui",
     "build": "ng build crypto-analytics-ui --configuration=production",   

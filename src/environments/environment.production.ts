@@ -1,3 +1,4 @@
 export const environment = {
-    apiUrl: 'https://api.evaas.lat'
-} as const; 
+    production: true,
+    apiUrl: 'https://crypto.evaas.lat/api/v1',
+  } as const;
