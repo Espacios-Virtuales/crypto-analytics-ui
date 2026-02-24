@@ -1,88 +1,189 @@
 @use "sass:color";
 
-// Paleta Inspira / EVAAS
-$primary: #003e6b;
-$secondary: #2bd4e0;
-$light-gray: #f5f7fa;
+/* 🌑 EVAAS Noir + Gold (login) */
+$bg: #0b0d10;
+$surface: #11141a;
+$surface2: #171b22;
+
+$text: #f5f7fa;
+$muted: #a9b0bb;
+
+$gold: #d4af37;
+$gold2: #f1d27a;
+
+$border: rgba(255, 255, 255, 0.10);
+$shadow: 0 18px 60px rgba(0, 0, 0, 0.55);
+$goldGlow: rgba(212, 175, 55, 0.22);
 
 .login-wrapper {
-  background-color: $light-gray;
+  background: radial-gradient(1200px 600px at 20% 10%, rgba(212,175,55,.08), transparent 55%),
+              radial-gradient(900px 500px at 80% 70%, rgba(255,255,255,.05), transparent 60%),
+              $bg;
+  min-height: 100vh;
+
+  /* panel general (si tu layout ya es flex, esto no estorba) */
+  display: flex;
 
   .login-image {
-    background: linear-gradient(135deg, $primary, $secondary);
     flex: 1;
     position: relative;
-    color: white;
+    color: $text;
     text-align: center;
 
+    /* “cielo nocturno” con ribetes dorados */
+    background: radial-gradient(900px 500px at 30% 20%, rgba(212,175,55,.18), transparent 55%),
+                radial-gradient(800px 500px at 70% 70%, rgba(255,255,255,.08), transparent 60%),
+                linear-gradient(135deg, #0b0d10, #141822);
+
+    /* borde dorado sutil separando columnas */
+    border-right: 1px solid rgba(212,175,55,.16);
+
+    /* grano sutil opcional (sin assets) */
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, rgba(0,0,0,.30), rgba(0,0,0,.30));
+      opacity: 1;
+      pointer-events: none;
+    }
+
     .overlay {
-      background: rgba(0, 0, 0, 0.2);
-      padding: 2rem;
+      position: relative;
+      z-index: 1;
+      margin: 2rem;
+      padding: 2.25rem;
       border-radius: 1rem;
+
+      background: rgba(17, 20, 26, 0.72);
+      border: 1px solid rgba(212,175,55,.16);
+      box-shadow: $shadow;
+      backdrop-filter: blur(8px);
     }
 
     .brand-logo {
       width: 120px;
-      opacity: 0.9;
-      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-      transition: transform 0.3s ease, opacity 0.3s ease;
+      opacity: 0.95;
+      filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.5));
+      transition: transform 0.25s ease, opacity 0.25s ease, filter 0.25s ease;
 
       &:hover {
-        transform: scale(1.05);
+        transform: scale(1.04);
         opacity: 1;
+        filter: drop-shadow(0 10px 22px rgba(212,175,55,.20));
       }
     }
   }
 
   .login-form {
-    background: #ffffff;
+    background: $surface;
     display: flex;
     align-items: center;
     justify-content: center;
+    flex: 1;
 
     .form-container {
+      width: min(420px, 92%);
+      padding: 2.25rem;
+      border-radius: 1rem;
+
+      background: linear-gradient(180deg, $surface, color.adjust($surface, $lightness: 2%));
+      border: 1px solid $border;
+      box-shadow: $shadow;
+
+      /* Títulos / textos si están dentro */
+      h1, h2, h3, label { color: $text; }
+      p, small { color: $muted; }
+
       .form-control {
-        // ⚙️ reemplazo de lighten() por color.adjust()
-        border: 1px solid color.adjust($primary, $lightness: 40%);
-        border-radius: 0.5rem;
-        padding: 0.75rem 1rem;
-        transition: all 0.2s ease;
+        background: $surface2;
+        color: $text;
+
+        border: 1px solid rgba(255,255,255,.12);
+        border-radius: 0.65rem;
+        padding: 0.8rem 1rem;
+        transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+
+        &::placeholder {
+          color: rgba(245,247,250,.55);
+        }
 
         &:focus {
-          border-color: $secondary;
-          box-shadow: 0 0 0 0.15rem rgba($secondary, 0.3);
+          border-color: rgba(212,175,55,.55);
+          box-shadow: 0 0 0 0.18rem $goldGlow;
+          background: color.adjust($surface2, $lightness: 2%);
+          outline: none;
         }
       }
 
+      /* Botón principal noir + borde dorado */
       .btn-ev {
-        background: linear-gradient(135deg, $primary, $secondary);
-        color: #fff;
-        border: none;
-        border-radius: 0.5rem;
-        font-weight: 600;
-        transition: all 0.2s ease;
+        width: 100%;
+        padding: 0.85rem 1rem;
+
+        background: linear-gradient(180deg, #1b1f27, #12151b);
+        color: $text;
+
+        border: 1px solid rgba(212,175,55,.35);
+        border-radius: 0.65rem;
+        font-weight: 700;
+        letter-spacing: .2px;
+
+        transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, filter .18s ease;
 
         &:hover {
-          // ⚙️ reemplazo de darken() por color.adjust()
-          background: linear-gradient(
-            135deg,
-            color.adjust($primary, $lightness: -5%),
-            color.adjust($secondary, $lightness: -5%)
-          );
+          border-color: rgba(212,175,55,.55);
+          box-shadow: 0 0 0 4px $goldGlow, 0 14px 36px rgba(0,0,0,.45);
           transform: translateY(-1px);
+          filter: brightness(1.03);
+        }
+
+        &:active {
+          transform: translateY(0px);
+          filter: brightness(0.99);
         }
 
         &:disabled {
-          background: color.adjust($primary, $lightness: 25%);
+          opacity: .6;
+          cursor: not-allowed;
+          border-color: rgba(255,255,255,.10);
+          box-shadow: none;
+          transform: none;
+        }
+      }
+
+      /* Variante dorada (si la quieres para “Ingresar”) */
+      .btn-ev-gold {
+        width: 100%;
+        padding: 0.85rem 1rem;
+
+        background: linear-gradient(180deg, $gold2, $gold);
+        color: #0b0d10;
+
+        border: 1px solid rgba(255,255,255,.12);
+        border-radius: 0.65rem;
+        font-weight: 800;
+
+        transition: transform .18s ease, filter .18s ease, box-shadow .18s ease;
+
+        &:hover {
+          transform: translateY(-1px);
+          filter: brightness(1.02);
+          box-shadow: 0 0 0 4px rgba(212,175,55,.18), 0 14px 36px rgba(0,0,0,.45);
+        }
+
+        &:disabled {
+          opacity: .6;
           cursor: not-allowed;
         }
       }
 
       .link-ev {
-        color: $secondary;
+        color: $gold;
         text-decoration: none;
 
         &:hover {
+          color: $gold2;
           text-decoration: underline;
         }
       }

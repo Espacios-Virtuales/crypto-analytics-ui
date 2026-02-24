@@ -4,38 +4,100 @@
 /* Google Fonts: */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
 
-/* Aplica la fuente globalmente */
+/* Fuente global */
 html, body {
   font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
                Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+
+  /* Base UI */
+  background: var(--ev-bg);
+  color: var(--ev-text);
 }
 
+/* 🌑 Paleta EVAAS Noir + Gold */
 :root {
-  --ev-primary: #003E6B;
-  --ev-accent:  #2BD4E0;
+  /* Fondos */
+  --ev-bg: #0b0d10;          /* negro profundo */
+  --ev-surface: #11141a;     /* tarjetas / paneles */
+  --ev-surface-2: #171b22;   /* hover / elevación */
+
+  /* Texto */
+  --ev-text: #f5f7fa;        /* blanco suave */
+  --ev-muted: #a9b0bb;       /* gris “silencioso” */
+
+  /* Bordes / sombras */
+  --ev-border: rgba(255,255,255,.10);
+  --ev-shadow: 0 12px 40px rgba(0,0,0,.45);
+
+  /* Dorado (acento) */
+  --ev-gold: #d4af37;        /* gold soft */
+  --ev-gold-2: #f1d27a;      /* highlight */
+  --ev-gold-glow: rgba(212,175,55,.25);
+
+  /* Estados */
+  --ev-danger: #ef4444;
+  --ev-success: #22c55e;
 }
 
+/* Links / acentos */
+.text-accent { color: var(--ev-gold) !important; }
+a { color: var(--ev-gold); }
+a:hover { color: var(--ev-gold-2); }
+
+/* Botón principal (Noir + Gold) */
 .btn-ev {
-  /* Bootstrap ya está como CSS global, puedes extender utilidades si quieres */
-  background: var(--ev-primary);
-  color: #fff;
-  &:hover { filter: brightness(1.05); }
+  background: linear-gradient(180deg, #1b1f27, #12151b);
+  color: var(--ev-text);
+  border: 1px solid rgba(212,175,55,.35);
+  box-shadow: 0 10px 26px rgba(0,0,0,.35);
+
+  &:hover {
+    border-color: rgba(212,175,55,.55);
+    box-shadow: 0 0 0 4px var(--ev-gold-glow), 0 14px 36px rgba(0,0,0,.45);
+    filter: brightness(1.05);
+  }
+
+  &:active {
+    transform: translateY(1px);
+    filter: brightness(0.98);
+  }
+
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px var(--ev-gold-glow), 0 14px 36px rgba(0,0,0,.45);
+  }
 }
 
-.text-accent { color: var(--ev-accent); }
+/* Variante dorada (para CTA premium) */
+.btn-ev-gold {
+  background: linear-gradient(180deg, var(--ev-gold-2), var(--ev-gold));
+  color: #0b0d10;
+  border: 1px solid rgba(255,255,255,.15);
 
+  &:hover { filter: brightness(1.03); }
+}
+
+/* Snackbar / toast */
 .snack-error {
-  // Ajusta a tu brand
-  --bg: #1f2937;
-  --fg: #fff;
+  --bg: #12151b;
+  --fg: var(--ev-text);
   background: var(--bg) !important;
   color: var(--fg) !important;
+  border: 1px solid rgba(239,68,68,.35);
+  box-shadow: var(--ev-shadow);
 }
 
+/* Inputs / superficies (si usas forms custom) */
+.ev-surface {
+  background: var(--ev-surface);
+  border: 1px solid var(--ev-border);
+  border-radius: 14px;
+  box-shadow: var(--ev-shadow);
+}
 
-// Ajusta a tu brand - ajustar diálogos full screen
+/* Ajuste diálogos full screen (tu bloque se mantiene) */
 .full-dialog .mat-dialog-container {
   width: 90vw !important;
   height: 90vh !important;
@@ -44,8 +106,7 @@ html, body {
   padding: 2rem;
 }
 
-
-/* Micro-transiciones para animate.enter/leave */
+/* Micro-transiciones */
 .fade-in   { animation: ev-fade-in .22s ease-out; }
 .fade-out  { animation: ev-fade-out .18s ease-in forwards; }
 .slide-up  { animation: ev-slide-up .22s ease-out; }
@@ -58,28 +119,43 @@ html, body {
   .fade-in, .fade-out, .slide-up { animation: none !important; }
 }
 
-/* Aplica solo a este diálogo gracias a panelClass */
+/* Dialog (panelClass: evaas-dialog) — Noir + Gold */
 .evaas-dialog .mat-mdc-dialog-container {
-  /* contenedor */
-  padding: 0; /* mover padding al contenido para más control */
-  --mdc-dialog-container-color: var(--mat-sys-surface, #fff);
-  --mdc-dialog-shape: 16px; /* borde suave */
+  padding: 0;
+
+  /* Material tokens / fallback */
+  --mdc-dialog-container-color: var(--ev-surface);
+  --mdc-dialog-shape: 16px;
+
+  border: 1px solid rgba(212,175,55,.18);
+  box-shadow: var(--ev-shadow);
 }
 
 .evaas-dialog .mat-mdc-dialog-surface {
   border-radius: 16px;
-  overflow: hidden; /* evita barras raras si algo se desborda */
-}
-
-.evaas-dialog .mat-mdc-dialog-content {
-  max-height: 70vh; /* controla el scroll SOLO aquí */
-  padding: 24px 24px 8px;
+  overflow: hidden;
+  background: var(--ev-surface);
 }
 
 .evaas-dialog .mat-mdc-dialog-title {
   padding: 20px 24px 0 24px;
+  color: var(--ev-text);
+}
+
+.evaas-dialog .mat-mdc-dialog-content {
+  max-height: 70vh;
+  padding: 24px 24px 8px;
+  color: var(--ev-muted);
 }
 
 .evaas-dialog .mat-mdc-dialog-actions {
   padding: 8px 16px 16px;
+  border-top: 1px solid var(--ev-border);
+}
+
+/* Optional: separadores / líneas */
+hr, .ev-divider {
+  border: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212,175,55,.25), transparent);
 }

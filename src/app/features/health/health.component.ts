@@ -8,6 +8,8 @@ import { ApiService } from '../../core/services/api.service';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './health.component.html',
+  styleUrls: ['./health.component.scss']
+
 })
 export class HealthComponent {
   loading = false;
