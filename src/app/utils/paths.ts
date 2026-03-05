@@ -4,6 +4,7 @@ export const PATHS = {
     register: 'register',
     dashboard: 'dashboard',
     health: 'health',
+    assets: 'assets',
 
   } as const;
   

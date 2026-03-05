@@ -7,6 +7,7 @@ export const routes: Routes = [
   { path: '', loadChildren: () => import('./features/auth/auth.routes').then(m => m.AUTH_ROUTES) },
   { path: '', loadChildren: () => import('./features/dashboard/dashboard.routes').then(m => m.DASHBOARD_ROUTES) },
   { path: '', loadChildren: () => import('./features/health/health.routes').then(m => m.HEALTH_ROUTES) },
+  { path: '', loadChildren: () => import('./features/assets/assets.routes').then(m => m.ASSETS_ROUTES) },
 
   { path: '**', redirectTo: PATHS.login },
 ];
