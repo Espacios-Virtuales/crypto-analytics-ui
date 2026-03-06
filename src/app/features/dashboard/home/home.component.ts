@@ -1,45 +1,28 @@
-// src/app/features/dashboard/home/home.component.ts
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { combineLatest } from 'rxjs';
+import { LatestService } from '../../../core/services/latest.service';
 
 @Component({
-  standalone: true,
   selector: 'app-home',
+  standalone: true,
   imports: [CommonModule],
-  template: `
-  <div class="container-xxl py-4">
-    <div class="row g-3">
-      <div class="col-12 col-md-6 col-xl-3">
-        <div class="card ev-card h-100">
-          <div class="card-body">
-            <div class="card-title h6 mb-1">Clientes</div>
-            <div class="display-6 fw-bold">12</div>
-            <small class="text-muted">+2 esta semana</small>
-          </div>
-        </div>
-      </div>
-      <div class="col-12 col-md-6 col-xl-3">
-        <div class="card ev-card h-100">
-          <div class="card-body">
-            <div class="card-title h6 mb-1">Recursos activos</div>
-            <div class="display-6 fw-bold">37</div>
-            <small class="text-muted">últimas 24 h</small>
-          </div>
-        </div>
-      </div>
-      <div class="col-12 col-xl-6">
-        <div class="card ev-card h-100">
-          <div class="card-body">
-            <div class="card-title h6 mb-3">Actividad</div>
-            <div class="placeholder-glow">
-              <span class="placeholder col-12 mb-2"></span>
-              <span class="placeholder col-10 mb-2"></span>
-              <span class="placeholder col-8"></span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>`,
+  templateUrl: './home.component.html',
 })
-export class HomeComponent {}
+export class HomeComponent {
+  private latestService = inject(LatestService);
+
+  readonly asset = 'BTC';
+  readonly timeframe = '1m';
+  readonly horizon = '5m';
+
+  readonly pulse$ = combineLatest({
+    price: this.latestService.getPrice({ asset: this.asset, timeframe: this.timeframe }),
+    feature: this.latestService.getFeature({ asset: this.asset, timeframe: this.timeframe }),
+    prediction: this.latestService.getPrediction({
+      asset: this.asset,
+      timeframe: this.timeframe,
+      horizon: this.horizon,
+    }),
+  });
+}

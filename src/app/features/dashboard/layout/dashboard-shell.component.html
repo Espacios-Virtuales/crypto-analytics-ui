@@ -14,15 +14,15 @@
       </a>
       <!-- Ejemplo de visibilidad por rol -->
       <a
-        routerLink="/dashboard/resources"
+        routerLink="/dashboard/assets"
         class="menu-item"
         routerLinkActive="active"
-        *hasRole="'ROLE_USER'"
+        *hasRole="'ADMIN'"
       >
-        <i class="bi bi-boxes"></i> <span>Recursos</span>
+        <i class="bi bi-stack"></i> <span>Activos</span>
       </a>
 
-      <a routerLink="/dashboard/projects" class="menu-item" routerLinkActive="active">
+      <a routerLink="/dashboard/assets" class="menu-item" routerLinkActive="active">
         <i class="bi bi-box2-heart"></i> <span>Proyectos</span> 
       </a>
     </nav>

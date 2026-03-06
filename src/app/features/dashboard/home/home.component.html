@@ -1,0 +1,105 @@
+<div class="container-fluid py-4">
+
+    <!-- Header -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <h2 class="fw-bold">Dashboard</h2>
+        <p class="text-muted mb-0">
+          Pulse actual del activo configurado.
+        </p>
+      </div>
+    </div>
+  
+    <!-- Data -->
+    <ng-container *ngIf="pulse$ | async as pulse">
+  
+      <!-- Cards -->
+      <div class="row g-4">
+  
+        <!-- PRICE -->
+        <div class="col-xl-4 col-lg-6 col-md-12">
+          <div class="card shadow-sm h-100">
+            <div class="card-body">
+  
+              <div class="d-flex align-items-center mb-3">
+                <i class="bi bi-currency-bitcoin fs-3 text-warning me-2"></i>
+                <span class="text-muted small">Precio actual</span>
+              </div>
+  
+              <div class="fs-2 fw-bold">
+                {{ pulse.price.data.close | number:'1.2-2' }}
+              </div>
+  
+              <div class="text-muted small mt-2">
+                {{ pulse.price.meta.asset }} · {{ pulse.price.meta.timeframe }}
+              </div>
+  
+            </div>
+          </div>
+        </div>
+  
+  
+        <!-- FEATURES -->
+        <div class="col-xl-4 col-lg-6 col-md-12">
+          <div class="card shadow-sm h-100">
+            <div class="card-body">
+  
+              <div class="d-flex align-items-center mb-3">
+                <i class="bi bi-activity fs-3 text-info me-2"></i>
+                <span class="text-muted small">Indicadores técnicos</span>
+              </div>
+  
+              <div class="fs-2 fw-bold">
+                RSI {{ pulse.feature.data.rsi | number:'1.0-2' }}
+              </div>
+  
+              <div class="text-muted small mt-2">
+                MACD {{ pulse.feature.data.macd | number:'1.0-2' }}
+              </div>
+  
+            </div>
+          </div>
+        </div>
+  
+  
+        <!-- PREDICTION -->
+        <div class="col-xl-4 col-lg-6 col-md-12">
+          <div class="card shadow-sm h-100">
+            <div class="card-body">
+  
+              <div class="d-flex align-items-center mb-3">
+                <i class="bi bi-cpu fs-3 text-primary me-2"></i>
+                <span class="text-muted small">Predicción ML</span>
+              </div>
+  
+              <div class="fs-2 fw-bold">
+                {{ pulse.prediction.data.y_hat | number:'1.2-2' }}
+              </div>
+  
+              <div class="text-muted small mt-2">
+                Confianza
+                {{ pulse.prediction.data.confidence | percent:'1.0-0' }}
+              </div>
+  
+              <div class="text-muted small">
+                Horizonte {{ pulse.prediction.meta.horizon }}
+              </div>
+  
+            </div>
+          </div>
+        </div>
+  
+      </div>
+  
+  
+      <!-- Footer info -->
+      <div class="row mt-4">
+        <div class="col-12 text-muted small d-flex align-items-center">
+          <i class="bi bi-clock me-2"></i>
+          Datos actualizados: {{ pulse.price.meta.asof_ts_utc }}
+        </div>
+      </div>
+  
+    </ng-container>
+  
+  </div>
