@@ -4,7 +4,7 @@ import { environment } from '../../../environments/environment.development';
 import { Observable } from 'rxjs';
 import { ReadyResponse } from '../models/ready.model';
 
-type QueryParams = Record<string, string | number | boolean | null | undefined>;
+type QueryValue = string | number | boolean | null | undefined;
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -12,14 +12,12 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
-  /** GET tipado simple */
-  get<T, P extends object = QueryParams>(path: string, params?: P): Observable<T> {
+  get<T>(path: string, params?: object): Observable<T> {
     const url = this.url(path);
     const httpParams = this.toParams(params);
     return this.http.get<T>(url, { params: httpParams });
   }
 
-  /** HEAD (útil para health simple) */
   head(path: string): Observable<HttpResponse<unknown>> {
     const url = this.url(path);
     return this.http.head(url, { observe: 'response' });
@@ -34,8 +32,8 @@ export class ApiService {
     let httpParams = new HttpParams();
     if (!params) return httpParams;
 
-    for (const [k, v] of Object.entries(params)) {
-      if (v === null || v === undefined) continue;
+    for (const [k, v] of Object.entries(params as Record<string, QueryValue>)) {
+      if (v === null || v === undefined || v === '') continue;
       httpParams = httpParams.set(k, String(v));
     }
 

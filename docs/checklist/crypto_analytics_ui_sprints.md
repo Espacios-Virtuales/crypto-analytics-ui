@@ -210,7 +210,21 @@ Comparación ejemplo:
 
 ------------------------------------------------------------------------
 
-# Sprint 7 --- Preparación para Trading Mode (placeholder)
+# Sprint 7 --- Despliegue
+
+## Objetivo
+
+Desplegar en Vercel
+
+## Elementos
+
+-   [ ] Configurar
+-   [ ] Construir 
+-   [ ] Testear
+
+------------------------------------------------------------------------
+
+# Sprint 8 --- Preparación para Trading Mode (placeholder)
 
 ## Objetivo
 
@@ -236,7 +250,8 @@ Preparar arquitectura para integración futura de trading.
   Sprint 4   Pendiente
   Sprint 5   Pendiente
   Sprint 6   Pendiente
-  Sprint 7   Futuro
+  Sprint 7   Pendiente
+  Sprint 8   Futuro
 
 ------------------------------------------------------------------------
 

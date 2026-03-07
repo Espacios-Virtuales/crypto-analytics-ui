@@ -14,17 +14,14 @@ export class LatestService {
   constructor(private api: ApiService) {}
 
   getPrice(query: LatestQuery): Observable<LatestPriceResponse> {
-    return this.api.get<LatestPriceResponse, LatestQuery>('/latest/price', query);
+    return this.api.get<LatestPriceResponse>('/latest/price', query);
   }
-
+  
   getFeature(query: LatestQuery): Observable<LatestFeatureResponse> {
-    return this.api.get<LatestFeatureResponse, LatestQuery>('/latest/feature', query);
+    return this.api.get<LatestFeatureResponse>('/latest/feature', query);
   }
-
+  
   getPrediction(query: LatestPredictionQuery): Observable<LatestPredictionResponse> {
-    return this.api.get<LatestPredictionResponse, LatestPredictionQuery>(
-      '/latest/prediction',
-      query
-    );
+    return this.api.get<LatestPredictionResponse>('/latest/prediction', query);
   }
 }

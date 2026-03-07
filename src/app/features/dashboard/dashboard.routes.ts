@@ -30,10 +30,16 @@ export const DASHBOARD_ROUTES: Routes = [
             lazy(import('./objects/grid/objects-grid.component'), 'ObjectsGridComponent'),
       },
       {
-        path: 'assets',
+        path: PATHS.assets,
         title: 'Assets',
         loadComponent: () =>
           lazy(import('./assets/assets.component'), 'AssetsComponent'),
+      },
+      {
+        path: PATHS.history,
+        title: 'Histórico',
+        loadComponent: () =>
+          lazy(import('./history/history.component'), 'HistoryComponent'),
       }
     ],
   },

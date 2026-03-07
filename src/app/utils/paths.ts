@@ -5,6 +5,7 @@ export const PATHS = {
     dashboard: 'dashboard',
     health: 'health',
     assets: 'assets',
+    history: 'history',
 
   } as const;
   

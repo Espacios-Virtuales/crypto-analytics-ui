@@ -1,0 +1,192 @@
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+      <div class="col-12">
+        <h2 class="fw-bold">Histórico</h2>
+        <p class="text-muted mb-0">
+          Lectura histórica de precios, features y predicciones.
+        </p>
+      </div>
+    </div>
+  
+    <div class="row g-3 mb-4">
+      <div class="col-xl-3 col-md-6 col-12">
+        <label class="form-label small text-muted">Activo</label>
+        <select class="form-select" [formControl]="form.controls.asset">
+          <option value="BTC">BTC</option>
+          <option value="ETH">ETH</option>
+          <option value="SOL">SOL</option>
+        </select>
+      </div>
+  
+      <div class="col-xl-3 col-md-6 col-12">
+        <label class="form-label small text-muted">Timeframe</label>
+        <select class="form-select" [formControl]="form.controls.timeframe">
+          <option value="1m">1m</option>
+        </select>
+      </div>
+  
+      <div class="col-xl-3 col-md-6 col-12">
+        <label class="form-label small text-muted">Horizonte</label>
+        <select class="form-select" [formControl]="form.controls.horizon">
+          <option value="5m">5m</option>
+        </select>
+      </div>
+  
+      <div class="col-xl-3 col-md-6 col-12">
+        <label class="form-label small text-muted">Límite</label>
+        <input
+          class="form-control"
+          type="number"
+          min="1"
+          [formControl]="form.controls.limit"
+        />
+      </div>
+    </div>
+  
+    <ng-container *ngIf="vm$ | async as vm; else loadingTpl">
+      <ng-container *ngIf="vm; else errorTpl">
+        <div class="row g-4">
+          <!-- Prices -->
+          <div class="col-12">
+            <div class="card shadow-sm">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <strong>Prices</strong>
+                <small class="text-muted">
+                  {{ vm.prices.meta.asset }} / {{ vm.prices.meta.timeframe }}
+                </small>
+              </div>
+  
+              <div class="table-responsive">
+                <table class="table table-sm table-hover align-middle mb-0">
+                  <thead>
+                    <tr>
+                      <th>ts_utc</th>
+                      <th>open</th>
+                      <th>high</th>
+                      <th>low</th>
+                      <th>close</th>
+                      <th>volume</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let row of vm.prices.data">
+                      <td>{{ row.ts_utc }}</td>
+                      <td>{{ row.open | number:'1.2-2' }}</td>
+                      <td>{{ row.high | number:'1.2-2' }}</td>
+                      <td>{{ row.low | number:'1.2-2' }}</td>
+                      <td>{{ row.close | number:'1.2-2' }}</td>
+                      <td>{{ row.volume | number:'1.2-2' }}</td>
+                    </tr>
+  
+                    <tr *ngIf="!vm.prices.data.length">
+                      <td colspan="6" class="text-center text-muted py-3">
+                        Sin datos de precios.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Features -->
+          <div class="col-12">
+            <div class="card shadow-sm">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <strong>Features</strong>
+                <small class="text-muted">
+                  {{ vm.features.meta.features_version }}
+                </small>
+              </div>
+  
+              <div class="table-responsive">
+                <table class="table table-sm table-hover align-middle mb-0">
+                  <thead>
+                    <tr>
+                      <th>ts_utc</th>
+                      <th>ema_12</th>
+                      <th>ema_26</th>
+                      <th>macd</th>
+                      <th>macd_signal</th>
+                      <th>rsi</th>
+                      <th>volatility</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let row of vm.features.data">
+                      <td>{{ row.ts_utc }}</td>
+                      <td>{{ row.ema_12 | number:'1.2-2' }}</td>
+                      <td>{{ row.ema_26 | number:'1.2-2' }}</td>
+                      <td>{{ row.macd | number:'1.2-4' }}</td>
+                      <td>{{ row.macd_signal | number:'1.2-4' }}</td>
+                      <td>{{ row.rsi | number:'1.2-2' }}</td>
+                      <td>{{ row.volatility | number:'1.2-4' }}</td>
+                    </tr>
+  
+                    <tr *ngIf="!vm.features.data.length">
+                      <td colspan="7" class="text-center text-muted py-3">
+                        Sin datos de features.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+  
+          <!-- Predictions -->
+          <div class="col-12">
+            <div class="card shadow-sm">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <strong>Predictions</strong>
+                <small class="text-muted">
+                  {{ vm.predictions.meta.horizon }} / {{ vm.predictions.meta.model_version }}
+                </small>
+              </div>
+  
+              <div class="table-responsive">
+                <table class="table table-sm table-hover align-middle mb-0">
+                  <thead>
+                    <tr>
+                      <th>ts_utc</th>
+                      <th>y_hat</th>
+                      <th>confidence</th>
+                      <th>explanation</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let row of vm.predictions.data">
+                      <td>{{ row.ts_utc }}</td>
+                      <td>{{ row.y_hat | number:'1.2-4' }}</td>
+                      <td>{{ row.confidence | number:'1.2-4' }}</td>
+                      <td>{{ row.explanation || '-' }}</td>
+                    </tr>
+  
+                    <tr *ngIf="!vm.predictions.data.length">
+                      <td colspan="4" class="text-center text-muted py-3">
+                        Sin datos de predicciones.
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  
+    <ng-template #loadingTpl>
+      <div class="card shadow-sm">
+        <div class="card-body text-muted">
+          Cargando histórico...
+        </div>
+      </div>
+    </ng-template>
+  
+    <ng-template #errorTpl>
+      <div class="alert alert-danger mb-0">
+        No fue posible cargar el histórico.
+      </div>
+    </ng-template>
+  </div>

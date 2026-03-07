@@ -10,12 +10,7 @@
 
     <nav class="menu">
       <!-- Ejemplo de visibilidad por rol -->
-      <a
-        routerLink="/dashboard/assets"
-        class="menu-item"
-        routerLinkActive="active"
-        *hasRole="'ADMIN'"
-      >
+      <a routerLink="/dashboard/assets" class="menu-item" routerLinkActive="active" *hasRole="'ADMIN'">
         <i class="bi bi-stack"></i> <span>Activos</span>
       </a>
 
@@ -23,8 +18,8 @@
         <i class="bi bi-speedometer2"></i> <span>Resumen</span>
       </a>
 
-      <a routerLink="/dashboard/assets" class="menu-item" routerLinkActive="active">
-        <i class="bi bi-box2-heart"></i> <span>Analisis</span> 
+      <a routerLink="/dashboard/history" class="menu-item" routerLinkActive="active">
+        <i class="bi bi-graph-up"></i> <span>Análisis</span>
       </a>
     </nav>
   </aside>
