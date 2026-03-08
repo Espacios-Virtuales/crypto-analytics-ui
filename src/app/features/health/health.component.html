@@ -1,0 +1,35 @@
+<div class="health-page">
+  <div class="health-card">
+    <div class="health-header">
+      <div>
+        <h2 class="health-title">Health</h2>
+        <p class="health-subtitle">Prueba mínima de conexión con la API.</p>
+      </div>
+
+      <span class="health-pill" [class.ok]="status==='ok'" [class.fail]="status==='fail'" [class.idle]="status==='idle'">
+        {{ status === 'idle' ? 'Idle' : (status === 'ok' ? 'Online' : 'Offline') }}
+      </span>
+    </div>
+
+    <div class="health-actions">
+      <button class="btn-ev" (click)="check()" [disabled]="loading">
+        <i class="bi bi-plug"></i>
+        {{ loading ? 'Probando...' : 'Probar conexión' }}
+      </button>
+
+      <span class="health-hint" *ngIf="status !== 'idle'">
+        <i class="bi bi-info-circle"></i>
+        {{ message }}
+      </span>
+    </div>
+
+    <div class="health-result" *ngIf="status !== 'idle'">
+      <div class="health-alert" [class.ok]="status==='ok'" [class.fail]="status==='fail'">
+        <i class="bi" [class.bi-check-circle]="status==='ok'" [class.bi-x-circle]="status==='fail'"></i>
+        <strong>{{ status === 'ok' ? 'Conexión exitosa' : 'Conexión fallida' }}</strong>
+      </div>
+
+      <pre class="health-pre">{{ details | json }}</pre>
+    </div>
+  </div>
+</div>

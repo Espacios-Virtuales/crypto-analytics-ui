@@ -6,6 +6,6 @@ export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: PATHS.login },
   { path: '', loadChildren: () => import('./features/auth/auth.routes').then(m => m.AUTH_ROUTES) },
   { path: '', loadChildren: () => import('./features/dashboard/dashboard.routes').then(m => m.DASHBOARD_ROUTES) },
-
+  { path: '', loadChildren: () => import('./features/health/health.routes').then(m => m.HEALTH_ROUTES) },
   { path: '**', redirectTo: PATHS.login },
 ];

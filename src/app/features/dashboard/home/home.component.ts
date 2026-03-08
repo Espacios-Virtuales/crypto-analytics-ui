@@ -1,45 +1,81 @@
-// src/app/features/dashboard/home/home.component.ts
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { combineLatest, of } from 'rxjs';
+import { catchError, map, shareReplay, startWith, switchMap } from 'rxjs/operators';
+
+import { AssetsService } from '../../../core/services/assets.service';
+import { LatestService } from '../../../core/services/latest.service';
+import { AssetInfo } from '../../../core/models/assets.model';
 
 @Component({
-  standalone: true,
   selector: 'app-home',
-  imports: [CommonModule],
-  template: `
-  <div class="container-xxl py-4">
-    <div class="row g-3">
-      <div class="col-12 col-md-6 col-xl-3">
-        <div class="card ev-card h-100">
-          <div class="card-body">
-            <div class="card-title h6 mb-1">Clientes</div>
-            <div class="display-6 fw-bold">12</div>
-            <small class="text-muted">+2 esta semana</small>
-          </div>
-        </div>
-      </div>
-      <div class="col-12 col-md-6 col-xl-3">
-        <div class="card ev-card h-100">
-          <div class="card-body">
-            <div class="card-title h6 mb-1">Recursos activos</div>
-            <div class="display-6 fw-bold">37</div>
-            <small class="text-muted">últimas 24 h</small>
-          </div>
-        </div>
-      </div>
-      <div class="col-12 col-xl-6">
-        <div class="card ev-card h-100">
-          <div class="card-body">
-            <div class="card-title h6 mb-3">Actividad</div>
-            <div class="placeholder-glow">
-              <span class="placeholder col-12 mb-2"></span>
-              <span class="placeholder col-10 mb-2"></span>
-              <span class="placeholder col-8"></span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>`,
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
+  templateUrl: './home.component.html',
 })
-export class HomeComponent {}
+export class HomeComponent {
+  private fb = inject(FormBuilder);
+  private assetsService = inject(AssetsService);
+  private latestService = inject(LatestService);
+
+  readonly assets$ = this.assetsService.list().pipe(shareReplay(1));
+
+  readonly form = this.fb.nonNullable.group({
+    asset: 'BTC',
+    timeframe: '1m',
+    horizon: '5m',
+  });
+
+  readonly options$ = combineLatest([
+    this.assets$,
+    this.form.valueChanges.pipe(startWith(this.form.getRawValue())),
+  ]).pipe(
+    map(([assets, formValue]) => {
+      const selected =
+        assets.find((a) => a.asset === formValue.asset) ?? assets[0] ?? null;
+  
+      return {
+        assets,
+        timeframes: selected?.timeframes ?? ['1m'],
+        horizons: selected?.horizons ?? ['5m'],
+      };
+    }),
+    shareReplay(1)
+  );
+
+  readonly pulse$ = this.form.valueChanges.pipe(
+    startWith(this.form.getRawValue()),
+    switchMap((value) =>
+      combineLatest({
+        price: this.latestService.getPrice({
+          asset: value.asset ?? 'BTC',
+          timeframe: value.timeframe ?? '1m',
+        }),
+        feature: this.latestService.getFeature({
+          asset: value.asset ?? 'BTC',
+          timeframe: value.timeframe ?? '1m',
+        }),
+        prediction: this.latestService.getPrediction({
+          asset: value.asset ?? 'BTC',
+          timeframe: value.timeframe ?? '1m',
+          horizon: value.horizon ?? '5m',
+        }),
+      }).pipe(
+        catchError((error) => {
+          console.error('[HomeComponent] pulse error', error);
+          return of(null);
+        })
+      )
+    ),
+    shareReplay(1)
+  );
+
+  onAssetChange(asset: AssetInfo): void {
+    this.form.patchValue({
+      asset: asset.asset,
+      timeframe: asset.timeframes?.[0] ?? '1m',
+      horizon: asset.horizons?.[0] ?? '5m',
+    });
+  }
+}

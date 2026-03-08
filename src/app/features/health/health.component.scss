@@ -1,0 +1,158 @@
+@use "sass:color";
+
+/* Reusa el mismo espíritu Noir+Gold */
+$bg: #0b0d10;
+$surface: #11141a;
+$surface2: #171b22;
+
+$text: #f5f7fa;
+$muted: #a9b0bb;
+
+$gold: #d4af37;
+$gold2: #f1d27a;
+
+$border: rgba(255,255,255,.10);
+$shadow: 0 18px 60px rgba(0,0,0,.55);
+
+$ok: #22c55e;
+$fail: #ef4444;
+
+.health-page {
+  min-height: calc(100vh - 64px); /* ajusta si tienes navbar */
+  padding: 24px;
+  background: radial-gradient(1100px 520px at 20% 10%, rgba(212,175,55,.08), transparent 55%),
+              radial-gradient(900px 480px at 80% 70%, rgba(255,255,255,.05), transparent 60%),
+              $bg;
+  display: grid;
+  place-items: start center;
+}
+
+.health-card {
+  width: min(860px, 96%);
+  background: linear-gradient(180deg, $surface, color.adjust($surface, $lightness: 2%));
+  border: 1px solid $border;
+  border-radius: 16px;
+  box-shadow: $shadow;
+  padding: 22px;
+}
+
+.health-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.health-title {
+  margin: 0;
+  color: $text;
+  font-weight: 800;
+  letter-spacing: .2px;
+}
+
+.health-subtitle {
+  margin: 6px 0 0;
+  color: $muted;
+}
+
+.health-pill {
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .3px;
+  border: 1px solid rgba(212,175,55,.18);
+  background: rgba(17,20,26,.75);
+  color: $muted;
+
+  &.idle { color: $muted; }
+  &.ok   { color: $ok;   border-color: rgba(34,197,94,.35); }
+  &.fail { color: $fail; border-color: rgba(239,68,68,.35); }
+}
+
+.health-actions {
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.btn-ev {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  background: linear-gradient(180deg, #1b1f27, #12151b);
+  color: $text;
+  border: 1px solid rgba(212,175,55,.35);
+  border-radius: 0.75rem;
+  padding: 0.85rem 1rem;
+  font-weight: 800;
+  letter-spacing: .2px;
+  box-shadow: 0 10px 26px rgba(0,0,0,.35);
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, filter .18s ease;
+
+  &:hover:not(:disabled) {
+    border-color: rgba(212,175,55,.55);
+    box-shadow: 0 0 0 4px rgba(212,175,55,.18), 0 14px 36px rgba(0,0,0,.45);
+    transform: translateY(-1px);
+    filter: brightness(1.03);
+  }
+
+  &:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+    border-color: rgba(255,255,255,.10);
+    box-shadow: none;
+    transform: none;
+  }
+}
+
+.health-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: $muted;
+  font-size: 13px;
+
+  i { color: rgba(212,175,55,.70); }
+}
+
+.health-result {
+  margin-top: 18px;
+}
+
+.health-alert {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: $surface2;
+  color: $text;
+
+  &.ok {
+    border-color: rgba(34,197,94,.35);
+    i { color: $ok; }
+  }
+
+  &.fail {
+    border-color: rgba(239,68,68,.35);
+    i { color: $fail; }
+  }
+}
+
+.health-pre {
+  margin-top: 12px;
+  padding: 14px;
+  border-radius: 12px;
+  background: #0e1116;
+  border: 1px solid rgba(255,255,255,.10);
+  color: rgba(245,247,250,.88);
+  overflow: auto;
+  font-size: 12px;
+  line-height: 1.45;
+}

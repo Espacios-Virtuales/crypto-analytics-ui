@@ -23,17 +23,23 @@ export interface RegistrationResponse {
     enabled: boolean;
 }
 
-export interface AuthRequest { 
-    email: string; 
-    password: string; 
+export interface AuthRequest {
+    email?: string;
+    password: string;
 }
 
-export interface AuthResponse { 
-    token: string; 
+
+export interface AuthResponse {
+    access_token: string;
+    token_type?: string;
+    expires_in?: number;
+    refresh_token?: string;
+    user?: AuthUser;
+}
+
+export interface AuthUser {
+    id: string;
     username: string;
-    role: Role[];
-    issuedAt: string;         
-    refreshToken: string;
-    refreshExpiresIn: number; 
-    message: string;
+    roles: string[];
+    privileges?: string[];
 }

@@ -3,42 +3,22 @@ import { AuthResponse } from '../models/http.model';
 import { decodeJwtPayload } from '../../utils/jwt';
 
 export function mapAuthResponseToSession(res: AuthResponse): UserSession {
-  // --- Normaliza role ---
-  const rolesRaw: Role[] = Array.isArray(res.role)
-    ? res.role
-    : res.role
-      ? [res.role]
-      : [];
+  const now = Date.now();
+  const expiresIn = Number(res.expires_in ?? 3600);
 
-  // --- Deriva roles y privilegios ---
-  const roles: string[] = rolesRaw.map((r: Role) => r.roleEnum);
-  const privileges: string[] = rolesRaw
-    .flatMap((r: Role) => r.privileges || [])
-    .map(p => p.type);
+  const accessTokenExp = new Date(now + expiresIn * 1000);
 
-  // --- Decodifica payload JWT ---
-  const payload = decodeJwtPayload<JwtPayload>(res.token);
-  const accessTokenExp = payload?.exp
-    ? new Date(payload.exp * 1000)
-    : new Date(Date.now() + 10 * 60 * 1000); // fallback 10min
-
-  // --- Calcula refreshExp ---
-  const issuedAtMs = Date.parse(res.issuedAt);
-  const refreshExp = isNaN(issuedAtMs)
-    ? new Date(Date.now() + res.refreshExpiresIn * 1000)
-    : new Date(issuedAtMs + res.refreshExpiresIn * 1000);
-
-  // NEW: fijamos loginAt desde issuedAt si es válido; si no, ahora.
-  const loginAt = isNaN(issuedAtMs) ? new Date() : new Date(issuedAtMs);
+  // Si tu modelo tiene refreshExp y no viene, ponle un valor "largo" o igual a access exp
+  const refreshExp = new Date(now + 7 * 24 * 3600 * 1000);
 
   return {
-    email: res.username,
-    roles,
-    privileges,
-    accessToken: res.token,
+    accessToken: res.access_token,
     accessTokenExp,
-    refreshToken: res.refreshToken,
+    refreshToken: res.refresh_token ?? null,
     refreshExp,
-    loginAt, // NEW
-  };
+    roles: res.user?.roles ?? [],
+    privileges: res.user?.privileges ?? [],
+    email: res.user?.username ?? null,
+    loginAt: new Date(now),
+  } as UserSession;
 }

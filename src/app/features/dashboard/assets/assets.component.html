@@ -1,0 +1,30 @@
+<div class="container py-4">
+    <h2 class="text-dark">Assets</h2>
+    <p class="text-muted">Activos disponibles en el motor.</p>
+
+    <ng-container *ngIf="assets$ | async as assets">
+        <div class="text-muted" *ngIf="assets.length === 0">
+            No hay activos (data vacía).
+        </div>
+
+        <div class="list-group" *ngIf="assets.length > 0">
+            <div class="list-group-item" *ngFor="let a of assets">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{ a.asset }}</strong>
+                        <span class="text-muted ms-2">TF: {{ a.timeframes.join(', ') }}</span>
+                        <span class="text-muted ms-2">H: {{ a.horizons.join(', ') }}</span>
+                    </div>
+
+                    <span class="badge" [class.text-bg-success]="a.ready" [class.text-bg-warning]="!a.ready">
+                        {{ a.ready ? 'READY' : 'NOT READY' }}
+                    </span>
+                </div>
+
+                <div class="small text-muted mt-2">
+                    Último: {{ a.last?.price_ts_utc ?? '—' }} | versión: {{ a.versions?.model_version ?? '—' }}
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</div>

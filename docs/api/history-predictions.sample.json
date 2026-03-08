@@ -1,0 +1,133 @@
+{
+  "data": [
+    {
+      "confidence": 0.7377048470503791,
+      "explanation": "Linear trend fit on last 200 closes: slope=-0.202155. Horizon=5m steps=5. Vol=0.00022786894118702623, MACD=8.326914907403989 signal=0.7102959534374219.",
+      "ts_utc": "2026-03-07T02:32:00",
+      "y_hat": 68232.2286994825
+    },
+    {
+      "confidence": 0.7377048470503791,
+      "explanation": "Linear trend fit on last 200 closes: slope=-0.189802. Horizon=5m steps=5. Vol=0.00022786894118702623, MACD=8.326914907403989 signal=0.7102959534374219.",
+      "ts_utc": "2026-03-07T02:31:00",
+      "y_hat": 68234.28095703141
+    },
+    {
+      "confidence": 0.7377048470503791,
+      "explanation": "Linear trend fit on last 200 closes: slope=-0.173600. Horizon=5m steps=5. Vol=0.00022786894118702623, MACD=8.326914907403989 signal=0.7102959534374219.",
+      "ts_utc": "2026-03-07T02:30:00",
+      "y_hat": 68236.7937608115
+    },
+    {
+      "confidence": 0.7377048470503791,
+      "explanation": "Linear trend fit on last 200 closes: slope=-0.144164. Horizon=5m steps=5. Vol=0.00022786894118702623, MACD=8.326914907403989 signal=0.7102959534374219.",
+      "ts_utc": "2026-03-07T02:28:00",
+      "y_hat": 68241.9438877972
+    },
+    {
+      "confidence": 0.7377048470503791,
+      "explanation": "Linear trend fit on last 200 closes: slope=-0.125777. Horizon=5m steps=5. Vol=0.00022786894118702623, MACD=8.326914907403989 signal=0.7102959534374219.",
+      "ts_utc": "2026-03-07T02:27:00",
+      "y_hat": 68244.66859771244
+    },
+    {
+      "confidence": 0.7377048470503791,
+      "explanation": "Linear trend fit on last 200 closes: slope=-0.109759. Horizon=5m steps=5. Vol=0.00022786894118702623, MACD=8.326914907403989 signal=0.7102959534374219.",
+      "ts_utc": "2026-03-07T02:26:00",
+      "y_hat": 68247.24620916524
+    },
+    {
+      "confidence": 0.7377048470503791,
+      "explanation": "Linear trend fit on last 200 closes: slope=-0.096610. Horizon=5m steps=5. Vol=0.00022786894118702623, MACD=8.326914907403989 signal=0.7102959534374219.",
+      "ts_utc": "2026-03-07T02:25:00",
+      "y_hat": 68249.45687169429
+    },
+    {
+      "confidence": 0.7377048470503791,
+      "explanation": "Linear trend fit on last 200 closes: slope=-0.079536. Horizon=5m steps=5. Vol=0.00022786894118702623, MACD=8.326914907403989 signal=0.7102959534374219.",
+      "ts_utc": "2026-03-07T02:23:00",
+      "y_hat": 68253.11786141906
+    },
+    {
+      "confidence": 0.7377048470503791,
+      "explanation": "Linear trend fit on last 200 closes: slope=-0.063633. Horizon=5m steps=5. Vol=0.00022786894118702623, MACD=8.326914907403989 signal=0.7102959534374219.",
+      "ts_utc": "2026-03-07T02:22:00",
+      "y_hat": 68255.62961630542
+    },
+    {
+      "confidence": 0.7377048470503791,
+      "explanation": "Linear trend fit on last 200 closes: slope=-0.064120. Horizon=5m steps=5. Vol=0.00022786894118702623, MACD=8.326914907403989 signal=0.7102959534374219.",
+      "ts_utc": "2026-03-07T02:21:00",
+      "y_hat": 68255.95732771317
+    },
+    {
+      "confidence": 0.7377048470503791,
+      "explanation": "Linear trend fit on last 200 closes: slope=-0.057916. Horizon=5m steps=5. Vol=0.00022786894118702623, MACD=8.326914907403989 signal=0.7102959534374219.",
+      "ts_utc": "2026-03-07T02:19:00",
+      "y_hat": 68256.9100923273
+    },
+    {
+      "confidence": 0.7377048470503791,
+      "explanation": "Linear trend fit on last 200 closes: slope=-0.063026. Horizon=5m steps=5. Vol=0.00022786894118702623, MACD=8.326914907403989 signal=0.7102959534374219.",
+      "ts_utc": "2026-03-07T02:18:00",
+      "y_hat": 68256.77259034727
+    },
+    {
+      "confidence": 0.7377048470503791,
+      "explanation": "Linear trend fit on last 200 closes: slope=-0.081501. Horizon=5m steps=5. Vol=0.00022786894118702623, MACD=8.326914907403989 signal=0.7102959534374219.",
+      "ts_utc": "2026-03-07T02:17:00",
+      "y_hat": 68255.80804732615
+    },
+    {
+      "confidence": 0.7377048470503791,
+      "explanation": "Linear trend fit on last 200 closes: slope=-0.124420. Horizon=5m steps=5. Vol=0.00022786894118702623, MACD=8.326914907403989 signal=0.7102959534374219.",
+      "ts_utc": "2026-03-07T02:15:00",
+      "y_hat": 68253.20470984773
+    },
+    {
+      "confidence": 0.7377048470503791,
+      "explanation": "Linear trend fit on last 200 closes: slope=-0.137566. Horizon=5m steps=5. Vol=0.00022786894118702623, MACD=8.326914907403989 signal=0.7102959534374219.",
+      "ts_utc": "2026-03-07T02:14:00",
+      "y_hat": 68252.73227712444
+    },
+    {
+      "confidence": 0.7377048470503791,
+      "explanation": "Linear trend fit on last 200 closes: slope=-0.163109. Horizon=5m steps=5. Vol=0.00022786894118702623, MACD=8.326914907403989 signal=0.7102959534374219.",
+      "ts_utc": "2026-03-07T02:13:00",
+      "y_hat": 68250.89483534089
+    },
+    {
+      "confidence": 0.7377048470503791,
+      "explanation": "Linear trend fit on last 200 closes: slope=-0.214619. Horizon=5m steps=5. Vol=0.00022786894118702623, MACD=8.326914907403989 signal=0.7102959534374219.",
+      "ts_utc": "2026-03-07T02:11:00",
+      "y_hat": 68246.62674214355
+    },
+    {
+      "confidence": 0.7377048470503791,
+      "explanation": "Linear trend fit on last 200 closes: slope=-0.232155. Horizon=5m steps=5. Vol=0.00022786894118702623, MACD=8.326914907403989 signal=0.7102959534374219.",
+      "ts_utc": "2026-03-07T02:10:00",
+      "y_hat": 68245.24431578042
+    },
+    {
+      "confidence": 0.7377048470503791,
+      "explanation": "Linear trend fit on last 200 closes: slope=-0.255561. Horizon=5m steps=5. Vol=0.00022786894118702623, MACD=8.326914907403989 signal=0.7102959534374219.",
+      "ts_utc": "2026-03-07T02:09:00",
+      "y_hat": 68243.27148249457
+    },
+    {
+      "confidence": 0.7377048470503791,
+      "explanation": "Linear trend fit on last 200 closes: slope=-0.276749. Horizon=5m steps=5. Vol=0.00022786894118702623, MACD=8.326914907403989 signal=0.7102959534374219.",
+      "ts_utc": "2026-03-07T02:08:00",
+      "y_hat": 68241.84637665939
+    }
+  ],
+  "meta": {
+    "asset": "BTC",
+    "horizon": "5m",
+    "limit": 20,
+    "model_version": "m1",
+    "order": "desc",
+    "timeframe": "1m",
+    "total": 515
+  }
+}

@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "evaas-interface": {
+    "crypto-analytics-ui": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,6 +17,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "outputPath": "dist/crypto-analytics-ui",
             "browser": "src/main.ts",
             "polyfills": [
               "zone.js"
@@ -69,10 +70,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "evaas-interface:build:production"
+              "buildTarget": "crypto-analytics-ui:build:production"
             },
             "development": {
-              "buildTarget": "evaas-interface:build:development"
+              "buildTarget": "crypto-analytics-ui:build:development"
             }
           },
           "defaultConfiguration": "development"

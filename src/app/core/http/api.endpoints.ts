@@ -7,7 +7,7 @@ export const API = {
     register:`${environment.apiUrl}/user/register`,
     refresh: `${environment.apiUrl}/auth/refresh`, // 👈 aquí tu refresh
     logout:  `${environment.apiUrl}/logout`,
-    login:   `${environment.apiUrl}/login`,
+    login:   `${environment.apiUrl}/auth/login`,
   },
   integrations: {
     software:   `${environment.apiUrl}/integrations/software`,

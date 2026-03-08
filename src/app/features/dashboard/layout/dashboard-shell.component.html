@@ -9,21 +9,17 @@
     </div>
 
     <nav class="menu">
+      <!-- Ejemplo de visibilidad por rol -->
+      <a routerLink="/dashboard/assets" class="menu-item" routerLinkActive="active" *hasRole="'ADMIN'">
+        <i class="bi bi-stack"></i> <span>Activos</span>
+      </a>
+
       <a routerLink="/dashboard" class="menu-item" routerLinkActive="active">
         <i class="bi bi-speedometer2"></i> <span>Resumen</span>
       </a>
-      <!-- Ejemplo de visibilidad por rol -->
-      <a
-        routerLink="/dashboard/resources"
-        class="menu-item"
-        routerLinkActive="active"
-        *hasRole="'ROLE_USER'"
-      >
-        <i class="bi bi-boxes"></i> <span>Recursos</span>
-      </a>
 
-      <a routerLink="/dashboard/projects" class="menu-item" routerLinkActive="active">
-        <i class="bi bi-box2-heart"></i> <span>Proyectos</span> 
+      <a routerLink="/dashboard/history" class="menu-item" routerLinkActive="active">
+        <i class="bi bi-graph-up"></i> <span>Análisis</span>
       </a>
     </nav>
   </aside>
