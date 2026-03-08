@@ -1,0 +1,64 @@
+<div class="card shadow-sm">
+    <div class="card-header d-flex justify-content-between align-items-center">
+      <strong>{{ title }}</strong>
+      <div class="small text-muted d-flex gap-3">
+        <span>
+          <i class="bi bi-dash-lg me-1"></i>{{ seriesAName }}
+        </span>
+        <span>
+          <i class="bi bi-dash-lg me-1"></i>{{ seriesBName }}
+        </span>
+      </div>
+    </div>
+  
+    <div class="card-body">
+      <ng-container *ngIf="hasData; else emptyTpl">
+        <svg
+          [attr.viewBox]="'0 0 ' + width + ' ' + height"
+          class="w-100"
+          preserveAspectRatio="none"
+          [style.height.px]="height"
+        >
+          <ng-container *ngFor="let tick of yTicks()">
+            <line
+              x1="24"
+              [attr.y1]="pointY(tick)"
+              [attr.x2]="width - 24"
+              [attr.y2]="pointY(tick)"
+              stroke="rgba(255,255,255,0.08)"
+              stroke-width="1"
+            />
+            <text
+              x="0"
+              [attr.y]="pointY(tick) + 4"
+              font-size="10"
+              fill="currentColor"
+              opacity="0.65"
+            >
+              {{ tick | number:'1.2-2' }}
+            </text>
+          </ng-container>
+  
+          <polyline
+            *ngIf="seriesA.length > 1"
+            [attr.points]="toPolyline(seriesA)"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          />
+  
+          <polyline
+            *ngIf="seriesB.length > 1"
+            [attr.points]="toPolyline(seriesB)"
+            fill="none"
+            stroke="rgba(13,110,253,0.9)"
+            stroke-width="2"
+          />
+        </svg>
+      </ng-container>
+  
+      <ng-template #emptyTpl>
+        <div class="text-muted">Sin datos suficientes para graficar.</div>
+      </ng-template>
+    </div>
+  </div>
