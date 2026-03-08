@@ -125,16 +125,16 @@ GET /api/v1/history/predictions
 
 ## Checklist
 
--   [ ] AssetsService
--   [ ] LatestService
--   [ ] HistoryService
--   [ ] Interfaces TypeScript
--   [ ] Manejo de errores API
+-   [x] AssetsService
+-   [x] LatestService
+-   [x] HistoryService
+-   [x] Interfaces TypeScript
+-   [x] Manejo de errores API
 
 ### Evidencia
 
--   [ ] JSON examples guardados en `docs/api/`
--   [ ] Logs de respuesta
+-   [x] JSON examples guardados en `docs/api/`
+-   [x] Logs de respuesta
 
 ------------------------------------------------------------------------
 
