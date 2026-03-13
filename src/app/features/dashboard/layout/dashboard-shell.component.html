@@ -1,35 +1,91 @@
-<!-- src/app/features/dashboard/layout/dashboard-shell.component.html -->
-<div class="ev-shell d-flex">
-  <!-- Sidebar -->
-  <aside class="ev-sidebar" [class.collapsed]="!isSidebarOpen()">
+<div
+  class="ev-shell d-flex"
+  [class.mobile]="isMobile()"
+  [class.sidebar-open]="isSidebarOpen()"
+>
+  <!-- Backdrop mobile -->
+  <div
+    class="ev-backdrop"
+    *ngIf="isMobile() && isSidebarOpen()"
+    (click)="closeSidebar()"
+  ></div>
+
+  <!-- Sidebar / drawer -->
+  <aside
+    class="ev-sidebar"
+    [class.open]="isSidebarOpen()"
+    [class.collapsed]="!isMobile() && !isSidebarOpen()"
+  >
     <div class="brand px-3 py-3">
-      <a routerLink="/dashboard" class="brand-link">
+      <a
+        routerLink="/dashboard"
+        class="brand-link"
+        (click)="isMobile() ? closeSidebar() : null"
+      >
         <i class="bi bi-house-fill"></i>
       </a>
     </div>
 
     <nav class="menu">
-      <!-- Ejemplo de visibilidad por rol -->
-      <a routerLink="/dashboard/assets" class="menu-item" routerLinkActive="active" *hasRole="'ADMIN'">
-        <i class="bi bi-stack"></i> <span>Assets</span>
+      <a
+        routerLink="/dashboard/assets"
+        class="menu-item"
+        routerLinkActive="active"
+        *hasRole="'ADMIN'"
+        (click)="isMobile() ? closeSidebar() : null"
+      >
+        <i class="bi bi-stack"></i>
+        <span>Assets</span>
       </a>
 
-      <a routerLink="/dashboard" class="menu-item" routerLinkActive="active">
-        <i class="bi bi-speedometer2"></i> <span>Resumen</span>
+      <a
+        routerLink="/dashboard"
+        class="menu-item"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        (click)="isMobile() ? closeSidebar() : null"
+      >
+        <i class="bi bi-speedometer2"></i>
+        <span>Resumen</span>
       </a>
 
-      <a routerLink="/dashboard/history" class="menu-item" routerLinkActive="active">
-        <i class="bi bi-graph-up"></i> <span>Historicos</span>
+      <a
+        routerLink="/dashboard/history"
+        class="menu-item"
+        routerLinkActive="active"
+        (click)="isMobile() ? closeSidebar() : null"
+      >
+        <i class="bi bi-graph-up"></i>
+        <span>Históricos</span>
       </a>
     </nav>
   </aside>
 
   <!-- Main -->
   <div class="ev-main flex-grow-1 d-flex flex-column">
-    <header class="ev-topbar d-flex align-items-center">
-      <button class="btn btn-link toggle" (click)="toggleSidebar()" aria-label="Alternar sidebar">
-        <i class="bi" [ngClass]="isSidebarOpen() ? 'bi-layout-sidebar-inset' : 'bi-layout-sidebar'"></i>
-      </button>
+    <header class="ev-topbar d-flex align-items-center justify-content-between">
+      <div class="d-flex align-items-center gap-2">
+        <button
+          class="btn btn-outline-secondary btn-sm hamburger d-lg-none"
+          type="button"
+          (click)="toggleSidebar()"
+          aria-label="Abrir menú"
+        >
+          <i class="bi bi-list fs-4"></i>
+        </button>
+
+        <button
+          class="btn btn-link toggle d-none d-lg-inline-flex text-dark"
+          type="button"
+          (click)="toggleSidebar()"
+          aria-label="Alternar sidebar"
+        >
+          <i
+            class="bi"
+            [ngClass]="isSidebarOpen() ? 'bi-layout-sidebar-inset' : 'bi-layout-sidebar'"
+          ></i>
+        </button>
+      </div>
 
       <div class="ms-auto d-flex align-items-center gap-3">
         <span class="small text-muted d-none d-sm-inline">
@@ -40,7 +96,7 @@
           </ng-container>
         </span>
 
-        <button class="btn btn-outline-secondary btn-sm" (click)="openUserModal()">
+        <button class="btn btn-outline-secondary btn-sm" type="button" (click)="openUserModal()">
           <i class="bi bi-person-circle"></i>
         </button>
       </div>
@@ -52,10 +108,10 @@
   </div>
 </div>
 
-<!-- Modal de usuario -->
 <dialog id="userDlg" class="ev-dialog">
   <form method="dialog">
     <h3 class="h6 mb-3">Cuenta</h3>
+
     <div class="vstack gap-1 small">
       <div><span class="text-muted">Email:</span> <strong>{{ email() || '—' }}</strong></div>
       <div>
@@ -69,8 +125,12 @@
     </div>
 
     <div class="d-flex justify-content-between mt-4">
-      <button class="btn btn-light" (click)="closeUserModal()" value="close">Cerrar</button>
-      <button class="btn btn-danger" (click)="logout(); closeUserModal()">Cerrar sesión</button>
+      <button class="btn btn-light" type="button" (click)="closeUserModal()" value="close">
+        Cerrar
+      </button>
+      <button class="btn btn-danger" type="button" (click)="logout(); closeUserModal()">
+        Cerrar sesión
+      </button>
     </div>
   </form>
 </dialog>

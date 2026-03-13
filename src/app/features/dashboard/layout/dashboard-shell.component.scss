@@ -1,25 +1,42 @@
-@use "sass:map";
-
-/* Tokens Inspira EV */
 :root {
-  --ev-primary: #003E6B; /* azul profundo */
-  --ev-accent:  #2BD4E0; /* turquesa */
+  --ev-primary: #003e6b;
+  --ev-accent: #2bd4e0;
+  --ev-sidebar-width: 260px;
+  --ev-sidebar-collapsed: 72px;
+  --ev-topbar-height: 56px;
 }
 
-.ev-shell { min-height: 100vh; background: #f7f9fb; }
+.ev-shell {
+  min-height: 100vh;
+  background: #f7f9fb;
+  position: relative;
+}
 
-/* Sidebar */
+.ev-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(13, 27, 42, 0.45);
+  z-index: 1030;
+}
+
 .ev-sidebar {
-  width: 260px; min-width: 260px; background: #0D1B2A; color: #fff;
-  transition: width .2s ease;
-  
-  /* Refineria 2 */
+  width: var(--ev-sidebar-width);
+  min-width: var(--ev-sidebar-width);
+  background: #0d1b2a;
+  color: #fff;
+  transition:
+    transform 0.25s ease,
+    width 0.25s ease,
+    min-width 0.25s ease;
+  z-index: 1040;
+
   .brand {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 64px; /* o el alto que uses para tu topbar */
+    height: 64px;
   }
+
   .brand-link {
     color: #fff;
     text-decoration: none;
@@ -32,39 +49,123 @@
     }
   }
 
-  .menu { display: flex; flex-direction: column; padding: .5rem; }
+  .menu {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+  }
+
   .menu-item {
-    color: #cbd5e1; padding: .6rem .9rem; border-radius: .5rem; text-decoration: none;
-    display: flex; align-items: center; gap: .5rem;
-    &:hover { background: rgba(255,255,255,.06); color: #fff; }
-    &.active { background: rgba(43,212,224,.15); color: #fff; }
+    color: #cbd5e1;
+    padding: 0.7rem 0.9rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+    }
+
+    &.active {
+      background: rgba(43, 212, 224, 0.15);
+      color: #fff;
+    }
   }
-  &.collapsed { width: 72px; min-width: 72px;
-    .menu-item { justify-content: center; }
-    .menu-item i { font-size: 1.1rem; }
-    .menu-item :not(i) { display: none; }
+
+  &.collapsed {
+    width: var(--ev-sidebar-collapsed);
+    min-width: var(--ev-sidebar-collapsed);
+
+    .menu-item {
+      justify-content: center;
+    }
+
+    .menu-item span {
+      display: none;
+    }
   }
 }
 
-/* Topbar */
+.ev-main {
+  min-width: 0;
+  width: 100%;
+}
+
 .ev-topbar {
-  height: 56px; padding: 0 1rem; background: #fff; border-bottom: 1px solid #e5ebf0;
-  .toggle { color: var(--ev-primary); }
+  height: var(--ev-topbar-height);
+  padding: 0 1rem;
+  background: #fff;
+  border-bottom: 1px solid #e5ebf0;
+  position: sticky;
+  top: 0;
+  z-index: 1020;
 }
 
-/* Content */
-.ev-content { padding: 1rem; }
-.ev-card { border: 1px solid #e5ebf0; }
-.ev-card .card-title { color: var(--ev-primary); }
+.toggle,
+.hamburger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggle {
+  color: var(--ev-primary);
+  text-decoration: none;
+}
+
+.ev-content {
+  padding: 1rem;
+}
 
 .ev-dialog {
-  border: 0; border-radius: .75rem; width: min(92vw, 420px); padding: 1.25rem;
-  box-shadow: 0 12px 40px rgba(0,0,0,.18);
+  border: 0;
+  border-radius: 0.75rem;
+  width: min(92vw, 420px);
+  padding: 1.25rem;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
 }
-.ev-dialog::backdrop { background: rgba(13,27,42,.4); }
 
-/* Responsive tweaks */
-@media (max-width: 992px) {
-  .ev-sidebar { position: fixed; z-index: 1040; height: 100vh; }
-  .ev-shell { padding-left: 0; }
+.ev-dialog::backdrop {
+  background: rgba(13, 27, 42, 0.4);
+}
+
+/* Desktop */
+@media (min-width: 992px) {
+  .ev-sidebar {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+  }
+}
+
+/* Mobile */
+@media (max-width: 991.98px) {
+  .ev-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    transform: translateX(-100%);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+  }
+
+  .ev-sidebar.open {
+    transform: translateX(0);
+  }
+
+  .ev-main {
+    width: 100%;
+  }
+
+  .ev-content {
+    padding: 0.75rem;
+  }
+
+  .hamburger {
+    min-width: 44px;
+    min-height: 44px;
+  }
 }
