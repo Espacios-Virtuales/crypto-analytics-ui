@@ -1,132 +1,176 @@
 :host {
-    display: block;
+  display: block;
+}
+
+.history-page {
+  color: #1f2937;
+
+  .history-hero {
+    padding: 1.25rem 1.5rem;
+    border-radius: 1rem;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
   }
-  
+
+  .history-title {
+    margin: 0 0 0.35rem;
+    font-size: 1.65rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: #111827;
+  }
+
+  .history-subtitle {
+    margin: 0;
+    max-width: 720px;
+    color: #6b7280;
+    font-size: 0.95rem;
+  }
+
+  .history-filters {
+    padding: 0.25rem 0;
+  }
+
+  .form-label {
+    margin-bottom: 0.45rem;
+    color: #374151;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  .history-select,
+  .history-input {
+    min-height: 46px;
+    border-radius: 0.85rem;
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    color: #111827;
+    box-shadow: none;
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease,
+      background 0.2s ease;
+  }
+
+  .history-select:hover,
+  .history-input:hover {
+    border-color: #cbd5e1;
+  }
+
+  .history-select:focus,
+  .history-input:focus {
+    border-color: #d4af37;
+    box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.14);
+    background: #ffffff;
+  }
+
+  .history-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 1rem;
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+
+    .card-header {
+      background: #f8fafc;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 0.9rem 1rem;
+      color: #111827;
+    }
+
+    .card-body {
+      padding: 1rem;
+      color: #111827;
+    }
+  }
+
+  .history-table {
+    margin-bottom: 0;
+
+    thead th {
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #6b7280;
+      border-bottom: 1px solid #e5e7eb;
+      background: #f9fafb;
+      white-space: nowrap;
+    }
+
+    tbody td {
+      font-size: 0.92rem;
+      vertical-align: middle;
+      color: #1f2937;
+      border-bottom: 1px solid #f1f5f9;
+      background: #ffffff;
+    }
+
+    tbody tr:hover {
+      background: #f8fafc;
+    }
+  }
+
+  .text-muted {
+    color: #6b7280 !important;
+  }
+
+  .btn.btn-sm {
+    border-radius: 999px;
+    font-weight: 600;
+    padding: 0.45rem 0.9rem;
+  }
+
+  .btn-primary {
+    background-color: #111827;
+    border-color: #111827;
+  }
+
+  .btn-primary:hover,
+  .btn-primary:focus {
+    background-color: #0f172a;
+    border-color: #0f172a;
+  }
+
+  .btn-outline-primary {
+    color: #374151;
+    border-color: #d1d5db;
+    background: #ffffff;
+  }
+
+  .btn-outline-primary:hover,
+  .btn-outline-primary:focus {
+    color: #111827;
+    border-color: #9ca3af;
+    background: #f9fafb;
+  }
+
+  .alert-danger {
+    border-radius: 1rem;
+    border: 1px solid #fecaca;
+  }
+}
+
+@media (max-width: 767.98px) {
   .history-page {
     .history-hero {
-      color: #333;
-      padding: 1.25rem 1.5rem;
-      border-radius: 1rem;
-      background:
-        linear-gradient(135deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(6px);
+      padding: 1rem;
+      border-radius: 0.85rem;
     }
-  
-    .history-title {
-      margin: 0 0 0.35rem;
-      font-size: 1.65rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-    }
-  
-    .history-subtitle {
-      color: #333;
-      max-width: 720px;
-    }
-  
-    .history-filters {
-      padding: 0.25rem 0;
-    }
-  
-    .form-label {
-      color: #333;
 
-      font-weight: 600;
-      letter-spacing: 0.02em;
+    .history-title {
+      font-size: 1.35rem;
     }
-  
+
     .history-select,
     .history-input {
-      min-height: 46px;
-      border-radius: 0.9rem;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background: rgba(255, 255, 255, 0.04);
-      color: #333;
-      box-shadow: none;
-      transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease,
-        background 0.2s ease,
-        transform 0.2s ease;
+      min-height: 44px;
+      border-radius: 0.8rem;
     }
-  
-    .history-select:focus,
-    .history-input:focus {
-      border-color: rgba(212, 175, 55, 0.65);
-      box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.12);
-      background: rgba(255, 255, 255, 0.06);
-    }
-  
+
     .history-card {
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 1rem;
-      overflow: hidden;
-      background: rgba(20, 24, 31, 0.86);
-      box-shadow:
-        0 10px 30px rgba(0, 0, 0, 0.18),
-        inset 0 1px 0 rgba(255, 255, 255, 0.03);
-  
-      .card-header {
-        background: linear-gradient(
-          180deg,
-          rgba(255, 255, 255, 0.035),
-          rgba(255, 255, 255, 0.015)
-        );
-        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-        padding: 0.9rem 1rem;
-      }
-  
-      .card-body {
-        padding: 1rem;
-      }
-    }
-  
-    .history-table {
-      margin-bottom: 0;
-  
-      thead th {
-        font-size: 0.78rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-        color: rgba(255, 255, 255, 0.64);
-        border-bottom-color: rgba(255, 255, 255, 0.08);
-        background: rgba(255, 255, 255, 0.02);
-        white-space: nowrap;
-      }
-  
-      tbody td {
-        border-bottom-color: rgba(255, 255, 255, 0.05);
-        font-size: 0.92rem;
-        vertical-align: middle;
-      }
-  
-      tbody tr:hover {
-        background: rgba(255, 255, 255, 0.03);
-      }
+      border-radius: 0.85rem;
     }
   }
-  
-  @media (max-width: 767.98px) {
-    .history-page {
-      .history-hero {
-        padding: 1rem;
-        border-radius: 0.85rem;
-      }
-  
-      .history-title {
-        font-size: 1.35rem;
-      }
-  
-      .history-select,
-      .history-input {
-        min-height: 44px;
-        border-radius: 0.8rem;
-      }
-  
-      .history-card {
-        border-radius: 0.85rem;
-      }
-    }
-  }
+}
