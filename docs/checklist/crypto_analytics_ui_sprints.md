@@ -146,12 +146,12 @@ Construir el dashboard principal de monitoreo.
 
 ## Componentes
 
--   [ ] Asset selector
--   [ ] Timeframe selector
--   [ ] Horizon selector
--   [ ] Cards de estado
--   [ ] Señal de trading
--   [ ] Timestamp de datos
+-   [] Asset selector
+-   [] Timeframe selector
+-   [] Horizon selector
+-   [] Cards de estado
+-   [] Señal de trading
+-   [] Timestamp de datos
 
 ### Visualización
 

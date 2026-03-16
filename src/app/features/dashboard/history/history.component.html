@@ -10,7 +10,6 @@
     </div>
   </div>
 
-  <!-- filtros mínimos -->
   <div class="history-filters row g-3 mb-4">
     <div class="col-xl-3 col-md-6 col-12">
       <label class="form-label small">Activo</label>
@@ -51,6 +50,7 @@
         class="form-control history-input"
         type="number"
         min="5"
+        max="200"
         [formControl]="form.controls.limit"
       />
     </div>
@@ -58,8 +58,6 @@
 
   <ng-container *ngIf="vm$ | async as vm; else loadingTpl">
     <ng-container *ngIf="vm; else errorTpl">
-
-      <!-- resumen -->
       <div class="row g-3 mb-4">
         <div class="col-lg-4 col-md-6 col-12">
           <div class="card history-card shadow-sm h-100">
@@ -97,14 +95,13 @@
                 {{ latestRsi(vm) | number:'1.2-2' }}
               </div>
               <div class="small text-muted">
-                {{ vm.features.meta.features_version }}
+                Indicador técnico reciente
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- gráficos -->
       <div class="row g-4 mb-4">
         <div class="col-12">
           <app-line-chart
@@ -127,14 +124,13 @@
         </div>
       </div>
 
-      <!-- tabs simples -->
       <div class="d-flex flex-wrap gap-2 mb-3">
         <button
           type="button"
           class="btn btn-sm"
           [class.btn-primary]="activeTable === 'prices'"
           [class.btn-outline-primary]="activeTable !== 'prices'"
-          (click)="activeTable = 'prices'">
+          (click)="setActiveTable('prices')">
           Prices
         </button>
 
@@ -143,7 +139,7 @@
           class="btn btn-sm"
           [class.btn-primary]="activeTable === 'features'"
           [class.btn-outline-primary]="activeTable !== 'features'"
-          (click)="activeTable = 'features'">
+          (click)="setActiveTable('features')">
           Features
         </button>
 
@@ -152,12 +148,11 @@
           class="btn btn-sm"
           [class.btn-primary]="activeTable === 'predictions'"
           [class.btn-outline-primary]="activeTable !== 'predictions'"
-          (click)="activeTable = 'predictions'">
+          (click)="setActiveTable('predictions')">
           Predictions
         </button>
       </div>
 
-      <!-- tabla activa -->
       <div class="card history-card shadow-sm" *ngIf="activeTable === 'prices'">
         <div class="card-header d-flex justify-content-between align-items-center">
           <strong>Prices</strong>
@@ -196,7 +191,7 @@
         <div class="card-header d-flex justify-content-between align-items-center">
           <strong>Features</strong>
           <small class="text-muted">
-            {{ vm.features.meta.features_version }}
+            {{ vm.features.meta.asset }} / {{ vm.features.meta.timeframe }}
           </small>
         </div>
 
@@ -261,7 +256,6 @@
           </table>
         </div>
       </div>
-
     </ng-container>
   </ng-container>
 
