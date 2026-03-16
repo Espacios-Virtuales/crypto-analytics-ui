@@ -28,6 +28,12 @@ type HistoryFormValue = {
   to: string;
 };
 
+type HistoryVm = {
+  prices: any;
+  features: any;
+  predictions: any;
+};
+
 @Component({
   selector: 'app-history',
   standalone: true,
@@ -39,6 +45,8 @@ export class HistoryComponent {
   private fb = inject(FormBuilder);
   private assetsService = inject(AssetsService);
   private historyService = inject(HistoryService);
+
+  activeTable: 'prices' | 'features' | 'predictions' = 'prices';
 
   readonly form = this.fb.nonNullable.group({
     asset: this.fb.nonNullable.control<string>('BTC'),
@@ -55,17 +63,17 @@ export class HistoryComponent {
   readonly assets$ = this.assetsService.list().pipe(
     tap((assets: AssetInfo[]) => {
       if (!assets.length) return;
-  
+
       const currentAsset = this.form.controls.asset.value;
       const selectedAsset =
         assets.find((a: AssetInfo) => a.asset === currentAsset) ?? assets[0];
-  
+
       const nextTimeframe =
         selectedAsset.timeframes?.[0] ?? this.form.controls.timeframe.value ?? '1m';
-  
+
       const nextHorizon =
         selectedAsset.horizons?.[0] ?? this.form.controls.horizon.value ?? '5m';
-  
+
       this.form.patchValue(
         {
           asset: selectedAsset.asset,
@@ -82,26 +90,24 @@ export class HistoryComponent {
     this.assets$,
     this.form.controls.asset.valueChanges.pipe(startWith(this.form.controls.asset.value)),
   ]).pipe(
-    map(([assets, asset]) => {
-      return assets.find((a: AssetInfo) => a.asset === asset) ?? null;
-    }),
+    map(([assets, asset]) => assets.find((a: AssetInfo) => a.asset === asset) ?? null),
     tap((assetMeta) => {
       if (!assetMeta) return;
-  
+
       const currentTimeframe = this.form.controls.timeframe.value;
       const currentHorizon = this.form.controls.horizon.value;
-  
+
       const validTimeframes = assetMeta.timeframes ?? [];
       const validHorizons = assetMeta.horizons ?? [];
-  
+
       const nextTimeframe = validTimeframes.includes(currentTimeframe)
         ? currentTimeframe
         : (validTimeframes[0] ?? '1m');
-  
+
       const nextHorizon = validHorizons.includes(currentHorizon)
         ? currentHorizon
         : (validHorizons[0] ?? '5m');
-  
+
       this.form.patchValue(
         {
           timeframe: nextTimeframe,
@@ -120,8 +126,6 @@ export class HistoryComponent {
       const pricesQuery: HistoryQuery = {
         asset: value.asset,
         timeframe: value.timeframe,
-        from: value.from || undefined,
-        to: value.to || undefined,
         limit: value.limit,
         order: value.order,
       };
@@ -130,8 +134,6 @@ export class HistoryComponent {
         asset: value.asset,
         timeframe: value.timeframe,
         features_version: value.features_version || undefined,
-        from: value.from || undefined,
-        to: value.to || undefined,
         limit: value.limit,
         order: value.order,
       };
@@ -141,8 +143,6 @@ export class HistoryComponent {
         timeframe: value.timeframe,
         horizon: value.horizon || undefined,
         model_version: value.model_version || undefined,
-        from: value.from || undefined,
-        to: value.to || undefined,
         limit: value.limit,
         order: value.order,
       };
@@ -161,39 +161,43 @@ export class HistoryComponent {
     shareReplay(1)
   );
 
+  latestClose(vm: HistoryVm): number {
+    return vm?.prices?.data?.[0]?.close ?? 0;
+  }
+
+  latestPrediction(vm: HistoryVm): number {
+    return vm?.predictions?.data?.[0]?.y_hat ?? 0;
+  }
+
+  latestRsi(vm: HistoryVm): number {
+    return vm?.features?.data?.[0]?.rsi ?? 0;
+  }
+
   toPriceSeries(rows: { ts_utc: string; close: number }[]): LineChartPoint[] {
-    return [...rows]
-      .reverse()
-      .map((row) => ({
-        xLabel: row.ts_utc,
-        value: row.close,
-      }));
+    return [...rows].reverse().map((row) => ({
+      xLabel: row.ts_utc,
+      value: row.close,
+    }));
   }
 
   toPredictionSeries(rows: { ts_utc: string; y_hat: number }[]): LineChartPoint[] {
-    return [...rows]
-      .reverse()
-      .map((row) => ({
-        xLabel: row.ts_utc,
-        value: row.y_hat,
-      }));
+    return [...rows].reverse().map((row) => ({
+      xLabel: row.ts_utc,
+      value: row.y_hat,
+    }));
   }
 
   toRsiSeries(rows: { ts_utc: string; rsi: number }[]): LineChartPoint[] {
-    return [...rows]
-      .reverse()
-      .map((row) => ({
-        xLabel: row.ts_utc,
-        value: row.rsi,
-      }));
+    return [...rows].reverse().map((row) => ({
+      xLabel: row.ts_utc,
+      value: row.rsi,
+    }));
   }
-  
+
   toMacdSeries(rows: { ts_utc: string; macd: number }[]): LineChartPoint[] {
-    return [...rows]
-      .reverse()
-      .map((row) => ({
-        xLabel: row.ts_utc,
-        value: row.macd,
-      }));
+    return [...rows].reverse().map((row) => ({
+      xLabel: row.ts_utc,
+      value: row.macd,
+    }));
   }
 }
