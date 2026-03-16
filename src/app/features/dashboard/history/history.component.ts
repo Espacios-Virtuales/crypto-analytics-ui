@@ -2,13 +2,14 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { combineLatest, of } from 'rxjs';
-import { startWith, switchMap, catchError, map, tap, shareReplay } from 'rxjs/operators';
+import { catchError, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
+
 import { AssetsService } from '../../../core/services/assets.service';
 import { AssetInfo } from '../../../core/models/assets.model';
 import { HistoryService } from '../../../core/services/history.service';
 import {
-  HistoryQuery,
   FeaturesHistoryQuery,
+  HistoryQuery,
   PredictionsHistoryQuery,
 } from '../../../core/models/history.model';
 import {
@@ -20,18 +21,58 @@ type HistoryFormValue = {
   asset: string;
   timeframe: string;
   horizon: string;
-  features_version: string;
-  model_version: string;
   limit: number;
-  order: 'asc' | 'desc';
-  from: string;
-  to: string;
+};
+
+type PriceRow = {
+  ts_utc: string;
+  close: number;
+  volume: number;
+};
+
+type FeatureRow = {
+  ts_utc: string;
+  rsi: number;
+  macd: number;
+  volatility: number;
+};
+
+type PredictionRow = {
+  ts_utc: string;
+  y_hat: number;
+  confidence: number;
+};
+
+type PricesResponse = {
+  meta: {
+    asset: string;
+    timeframe: string;
+  };
+  data: PriceRow[];
+};
+
+type FeaturesResponse = {
+  meta: {
+    asset: string;
+    timeframe: string;
+    features_version?: string;
+  };
+  data: FeatureRow[];
+};
+
+type PredictionsResponse = {
+  meta: {
+    asset: string;
+    timeframe: string;
+    horizon: string;
+  };
+  data: PredictionRow[];
 };
 
 type HistoryVm = {
-  prices: any;
-  features: any;
-  predictions: any;
+  prices: PricesResponse;
+  features: FeaturesResponse;
+  predictions: PredictionsResponse;
 };
 
 @Component({
@@ -42,9 +83,9 @@ type HistoryVm = {
   styleUrl: './history.component.scss',
 })
 export class HistoryComponent {
-  private fb = inject(FormBuilder);
-  private assetsService = inject(AssetsService);
-  private historyService = inject(HistoryService);
+  private readonly fb = inject(FormBuilder);
+  private readonly assetsService = inject(AssetsService);
+  private readonly historyService = inject(HistoryService);
 
   activeTable: 'prices' | 'features' | 'predictions' = 'prices';
 
@@ -52,12 +93,7 @@ export class HistoryComponent {
     asset: this.fb.nonNullable.control<string>('BTC'),
     timeframe: this.fb.nonNullable.control<string>('1m'),
     horizon: this.fb.nonNullable.control<string>('5m'),
-    features_version: this.fb.nonNullable.control<string>('f1'),
-    model_version: this.fb.nonNullable.control<string>('m1'),
     limit: this.fb.nonNullable.control<number>(20),
-    order: this.fb.nonNullable.control<'asc' | 'desc'>('desc'),
-    from: this.fb.nonNullable.control<string>(''),
-    to: this.fb.nonNullable.control<string>(''),
   });
 
   readonly assets$ = this.assetsService.list().pipe(
@@ -66,13 +102,17 @@ export class HistoryComponent {
 
       const currentAsset = this.form.controls.asset.value;
       const selectedAsset =
-        assets.find((a: AssetInfo) => a.asset === currentAsset) ?? assets[0];
+        assets.find((item) => item.asset === currentAsset) ?? assets[0];
 
       const nextTimeframe =
-        selectedAsset.timeframes?.[0] ?? this.form.controls.timeframe.value ?? '1m';
+        selectedAsset.timeframes?.includes(this.form.controls.timeframe.value)
+          ? this.form.controls.timeframe.value
+          : (selectedAsset.timeframes?.[0] ?? '1m');
 
       const nextHorizon =
-        selectedAsset.horizons?.[0] ?? this.form.controls.horizon.value ?? '5m';
+        selectedAsset.horizons?.includes(this.form.controls.horizon.value)
+          ? this.form.controls.horizon.value
+          : (selectedAsset.horizons?.[0] ?? '5m');
 
       this.form.patchValue(
         {
@@ -88,9 +128,11 @@ export class HistoryComponent {
 
   readonly selectedAssetMeta$ = combineLatest([
     this.assets$,
-    this.form.controls.asset.valueChanges.pipe(startWith(this.form.controls.asset.value)),
+    this.form.controls.asset.valueChanges.pipe(
+      startWith(this.form.controls.asset.value)
+    ),
   ]).pipe(
-    map(([assets, asset]) => assets.find((a: AssetInfo) => a.asset === asset) ?? null),
+    map(([assets, asset]) => assets.find((item) => item.asset === asset) ?? null),
     tap((assetMeta) => {
       if (!assetMeta) return;
 
@@ -121,30 +163,28 @@ export class HistoryComponent {
 
   readonly vm$ = this.form.valueChanges.pipe(
     startWith(this.form.getRawValue()),
-    map((value) => ({ ...this.form.getRawValue(), ...value }) as HistoryFormValue),
+    map((value) => this.normalizeFormValue(value as HistoryFormValue)),
     switchMap((value) => {
       const pricesQuery: HistoryQuery = {
         asset: value.asset,
         timeframe: value.timeframe,
         limit: value.limit,
-        order: value.order,
+        order: 'desc',
       };
 
       const featuresQuery: FeaturesHistoryQuery = {
         asset: value.asset,
         timeframe: value.timeframe,
-        features_version: value.features_version || undefined,
         limit: value.limit,
-        order: value.order,
+        order: 'desc',
       };
 
       const predictionsQuery: PredictionsHistoryQuery = {
         asset: value.asset,
         timeframe: value.timeframe,
-        horizon: value.horizon || undefined,
-        model_version: value.model_version || undefined,
+        horizon: value.horizon,
         limit: value.limit,
-        order: value.order,
+        order: 'desc',
       };
 
       return combineLatest({
@@ -173,31 +213,50 @@ export class HistoryComponent {
     return vm?.features?.data?.[0]?.rsi ?? 0;
   }
 
-  toPriceSeries(rows: { ts_utc: string; close: number }[]): LineChartPoint[] {
+  toPriceSeries(rows: PriceRow[] = []): LineChartPoint[] {
     return [...rows].reverse().map((row) => ({
       xLabel: row.ts_utc,
       value: row.close,
     }));
   }
 
-  toPredictionSeries(rows: { ts_utc: string; y_hat: number }[]): LineChartPoint[] {
+  toPredictionSeries(rows: PredictionRow[] = []): LineChartPoint[] {
     return [...rows].reverse().map((row) => ({
       xLabel: row.ts_utc,
       value: row.y_hat,
     }));
   }
 
-  toRsiSeries(rows: { ts_utc: string; rsi: number }[]): LineChartPoint[] {
+  toRsiSeries(rows: FeatureRow[] = []): LineChartPoint[] {
     return [...rows].reverse().map((row) => ({
       xLabel: row.ts_utc,
       value: row.rsi,
     }));
   }
 
-  toMacdSeries(rows: { ts_utc: string; macd: number }[]): LineChartPoint[] {
+  toMacdSeries(rows: FeatureRow[] = []): LineChartPoint[] {
     return [...rows].reverse().map((row) => ({
       xLabel: row.ts_utc,
       value: row.macd,
     }));
+  }
+
+  setActiveTable(table: 'prices' | 'features' | 'predictions'): void {
+    this.activeTable = table;
+  }
+
+  private normalizeFormValue(value: HistoryFormValue): HistoryFormValue {
+    return {
+      asset: value.asset,
+      timeframe: value.timeframe,
+      horizon: value.horizon,
+      limit: this.normalizeLimit(value.limit),
+    };
+  }
+
+  private normalizeLimit(limit: number): number {
+    const parsed = Number(limit);
+    if (Number.isNaN(parsed)) return 20;
+    return Math.max(5, Math.min(200, parsed));
   }
 }
