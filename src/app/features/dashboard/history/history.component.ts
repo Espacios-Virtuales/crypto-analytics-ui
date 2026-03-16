@@ -162,16 +162,38 @@ export class HistoryComponent {
   );
 
   toPriceSeries(rows: { ts_utc: string; close: number }[]): LineChartPoint[] {
-    return [...rows].reverse().map((row) => ({
-      xLabel: row.ts_utc,
-      value: row.close,
-    }));
+    return [...rows]
+      .reverse()
+      .map((row) => ({
+        xLabel: row.ts_utc,
+        value: row.close,
+      }));
   }
 
   toPredictionSeries(rows: { ts_utc: string; y_hat: number }[]): LineChartPoint[] {
-    return [...rows].reverse().map((row) => ({
-      xLabel: row.ts_utc,
-      value: row.y_hat,
-    }));
+    return [...rows]
+      .reverse()
+      .map((row) => ({
+        xLabel: row.ts_utc,
+        value: row.y_hat,
+      }));
+  }
+
+  toRsiSeries(rows: { ts_utc: string; rsi: number }[]): LineChartPoint[] {
+    return [...rows]
+      .reverse()
+      .map((row) => ({
+        xLabel: row.ts_utc,
+        value: row.rsi,
+      }));
+  }
+  
+  toMacdSeries(rows: { ts_utc: string; macd: number }[]): LineChartPoint[] {
+    return [...rows]
+      .reverse()
+      .map((row) => ({
+        xLabel: row.ts_utc,
+        value: row.macd,
+      }));
   }
 }
