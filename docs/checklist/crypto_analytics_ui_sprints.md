@@ -146,12 +146,12 @@ Construir el dashboard principal de monitoreo.
 
 ## Componentes
 
--   [] Asset selector
--   [] Timeframe selector
--   [] Horizon selector
--   [] Cards de estado
--   [] Señal de trading
--   [] Timestamp de datos
+-   [x] Asset selector
+-   [x] Timeframe selector
+-   [x] Horizon selector
+-   [x] Cards de estado
+-   [x] Señal de trading
+-   [x] Timestamp de datos
 
 ### Visualización
 
@@ -218,9 +218,9 @@ Desplegar en Vercel
 
 ## Elementos
 
--   [ ] Configurar
--   [ ] Construir 
--   [ ] Testear
+-   [x] Configurar
+-   [x] Construir 
+-   [x] Testear
 
 ------------------------------------------------------------------------
 
@@ -246,25 +246,13 @@ Preparar arquitectura para integración futura de trading.
   Sprint 0   Completado
   Sprint 1   Completado
   Sprint 2   Completado
-  Sprint 3   En progreso
-  Sprint 4   Pendiente
+  Sprint 3   Completado
+  Sprint 4   Completado
   Sprint 5   Pendiente
   Sprint 6   Pendiente
-  Sprint 7   Pendiente
+  Sprint 7   Completado
   Sprint 8   Futuro
 
 ------------------------------------------------------------------------
 
-# Próximo Sprint recomendado
 
-**Sprint 3 --- API Data Integration**
-
-Prioridad:
-
-1.  AssetsService
-2.  LatestService
-3.  HistoryService
-4.  Cards Dashboard
-
-Esto permitirá que el **dashboard consuma datos reales del backend de
-analítica cripto**.
