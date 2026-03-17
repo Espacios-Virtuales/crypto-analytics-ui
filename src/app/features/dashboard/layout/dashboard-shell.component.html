@@ -37,18 +37,6 @@
         <i class="bi bi-speedometer2"></i>
         <span>Resumen</span>
       </a>
-
-      <a
-        routerLink="/dashboard/assets"
-        class="menu-item"
-        routerLinkActive="active"
-        *hasRole="'ADMIN'"
-        (click)="isMobile() ? closeSidebar() : null"
-      >
-        <i class="bi bi-stack"></i>
-        <span>Assets</span>
-      </a>
-
       <a
         routerLink="/dashboard/history"
         class="menu-item"
