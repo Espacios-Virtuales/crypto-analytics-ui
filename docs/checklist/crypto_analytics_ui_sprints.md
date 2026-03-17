@@ -146,12 +146,14 @@ Construir el dashboard principal de monitoreo.
 
 ## Componentes
 
--   [x] Asset selector
--   [x] Timeframe selector
--   [x] Horizon selector
--   [x] Cards de estado
--   [x] Señal de trading
--   [x] Timestamp de datos
+
+- [x] Asset selector
+- [x] Timeframe selector
+- [x] Horizon selector
+- [x] Selector de moneda (USD / CLP / Market)
+- [x] Cards de estado
+- [x] Contexto monetario FX
+- [x] Timestamp de datos
 
 ### Visualización
 
@@ -172,10 +174,12 @@ Permitir explorar datos históricos por activo.
 
 ## Funciones
 
--   [ ] Tabla dinámica
--   [ ] Selección de activo
--   [ ] Selección de timeframe
--   [ ] Indicadores calculados
+
+- [ ] Tabla histórica dinámica
+- [ ] Selección de activo
+- [ ] Selección de timeframe
+- [ ] Integración de features
+- [ ] Integración de predicciones
 
 ### Datos mostrados
 
@@ -228,7 +232,7 @@ Desplegar en Vercel
 
 ## Objetivo
 
-Preparar arquitectura para integración futura de trading.
+Preparar maqueta para integración futura de trading.
 
 ## Elementos
 
@@ -251,7 +255,7 @@ Preparar arquitectura para integración futura de trading.
   Sprint 5   Pendiente
   Sprint 6   Pendiente
   Sprint 7   Completado
-  Sprint 8   Futuro
+  Sprint 8   pendiente
 
 ------------------------------------------------------------------------
 
