@@ -146,12 +146,14 @@ Construir el dashboard principal de monitoreo.
 
 ## Componentes
 
--   [] Asset selector
--   [] Timeframe selector
--   [] Horizon selector
--   [] Cards de estado
--   [] Señal de trading
--   [] Timestamp de datos
+
+- [x] Asset selector
+- [x] Timeframe selector
+- [x] Horizon selector
+- [x] Selector de moneda (USD / CLP / Market)
+- [x] Cards de estado
+- [x] Contexto monetario FX
+- [x] Timestamp de datos
 
 ### Visualización
 
@@ -172,10 +174,12 @@ Permitir explorar datos históricos por activo.
 
 ## Funciones
 
--   [ ] Tabla dinámica
--   [ ] Selección de activo
--   [ ] Selección de timeframe
--   [ ] Indicadores calculados
+
+- [ ] Tabla histórica dinámica
+- [ ] Selección de activo
+- [ ] Selección de timeframe
+- [ ] Integración de features
+- [ ] Integración de predicciones
 
 ### Datos mostrados
 
@@ -218,9 +222,9 @@ Desplegar en Vercel
 
 ## Elementos
 
--   [ ] Configurar
--   [ ] Construir 
--   [ ] Testear
+-   [x] Configurar
+-   [x] Construir 
+-   [x] Testear
 
 ------------------------------------------------------------------------
 
@@ -228,7 +232,7 @@ Desplegar en Vercel
 
 ## Objetivo
 
-Preparar arquitectura para integración futura de trading.
+Preparar maqueta para integración futura de trading.
 
 ## Elementos
 
@@ -246,25 +250,13 @@ Preparar arquitectura para integración futura de trading.
   Sprint 0   Completado
   Sprint 1   Completado
   Sprint 2   Completado
-  Sprint 3   En progreso
-  Sprint 4   Pendiente
+  Sprint 3   Completado
+  Sprint 4   Completado
   Sprint 5   Pendiente
   Sprint 6   Pendiente
-  Sprint 7   Pendiente
-  Sprint 8   Futuro
+  Sprint 7   Completado
+  Sprint 8   pendiente
 
 ------------------------------------------------------------------------
 
-# Próximo Sprint recomendado
 
-**Sprint 3 --- API Data Integration**
-
-Prioridad:
-
-1.  AssetsService
-2.  LatestService
-3.  HistoryService
-4.  Cards Dashboard
-
-Esto permitirá que el **dashboard consuma datos reales del backend de
-analítica cripto**.

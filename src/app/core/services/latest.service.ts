@@ -16,11 +16,11 @@ export class LatestService {
   getPrice(query: LatestQuery): Observable<LatestPriceResponse> {
     return this.api.get<LatestPriceResponse>('/latest/price', query);
   }
-  
+
   getFeature(query: LatestQuery): Observable<LatestFeatureResponse> {
     return this.api.get<LatestFeatureResponse>('/latest/feature', query);
   }
-  
+
   getPrediction(query: LatestPredictionQuery): Observable<LatestPredictionResponse> {
     return this.api.get<LatestPredictionResponse>('/latest/prediction', query);
   }

@@ -17,7 +17,7 @@ import { UserSession } from '../../../core/models/auth.model';
 @Component({
   selector: 'app-dashboard-layout',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, RouterOutlet, CommonModule, HasRoleDirective],
+  imports: [RouterLink, RouterLinkActive, RouterOutlet, CommonModule],
   templateUrl: './dashboard-shell.component.html',
   styleUrls: ['./dashboard-shell.component.scss'],
 })

@@ -1,0 +1,264 @@
+:host {
+    display: block;
+  }
+  
+  .dashboard-page {
+    color: #1f2937;
+  }
+  
+  .dashboard-title {
+    color: #111827;
+    letter-spacing: -0.02em;
+  }
+  
+  .dashboard-subtitle,
+  .text-muted {
+    color: #6b7280 !important;
+  }
+  
+  .form-label {
+    margin-bottom: 0.45rem;
+    font-weight: 600;
+    color: #374151 !important;
+    letter-spacing: 0.01em;
+  }
+  
+  .form-select {
+    min-height: 46px;
+    border-radius: 0.85rem;
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    color: #111827;
+    box-shadow: none;
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease,
+      background 0.2s ease;
+  }
+  
+  .form-select:hover {
+    border-color: #cbd5e1;
+  }
+  
+  .form-select:focus {
+    border-color: #d4af37;
+    box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.14);
+    background: #ffffff;
+  }
+  
+  .card {
+    border: 1px solid #e5e7eb;
+    border-radius: 1rem;
+    background: #ffffff;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+    overflow: hidden;
+  }
+  
+  .card-body {
+    padding: 1.2rem;
+    color: #111827;
+  }
+  
+  .dashboard-context .card-body {
+    padding-top: 0.95rem;
+    padding-bottom: 0.95rem;
+  }
+  
+  .context-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.85rem 1rem;
+  }
+  
+  .context-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  
+  .context-label {
+    font-size: 0.76rem;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  
+  .dashboard-card .card-body {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .metric-head {
+    gap: 0.65rem;
+  }
+  
+  .metric-icon {
+    flex-shrink: 0;
+    font-size: 1.8rem;
+  }
+  
+  .bi-currency-bitcoin.metric-icon {
+    color: #d4af37 !important;
+  }
+  
+  .bi-activity.metric-icon {
+    color: #2563eb !important;
+  }
+  
+  .bi-cpu.metric-icon {
+    color: #111827 !important;
+  }
+  
+  .metric-label {
+    color: #6b7280;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  
+  .metric-value {
+    color: #111827;
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.15;
+    word-break: break-word;
+  }
+  
+  .metric-meta {
+    color: #4b5563;
+    font-size: 0.9rem;
+  }
+  
+  .metric-sub {
+    color: #6b7280;
+    font-size: 0.86rem;
+    line-height: 1.45;
+  }
+  
+  .dashboard-footer .card-body {
+    padding-top: 0.95rem;
+    padding-bottom: 0.95rem;
+  }
+  
+  .footer-line {
+    color: #6b7280;
+    font-size: 0.88rem;
+    line-height: 1.5;
+  }
+  
+  .bi-clock {
+    color: #6b7280;
+  }
+  
+  .alert {
+    border-radius: 1rem;
+    border: 1px solid #fcd34d;
+    background: #fffbea;
+    color: #92400e;
+  }
+  
+  .dashboard-cards > [class*='col-'] {
+    display: flex;
+  }
+  
+  .dashboard-cards > [class*='col-'] > .card {
+    width: 100%;
+  }
+  
+  @media (max-width: 991.98px) {
+    .dashboard-page {
+      padding-top: 1.25rem !important;
+      padding-bottom: 1.25rem !important;
+    }
+  
+    .dashboard-title {
+      font-size: 1.65rem;
+    }
+  
+    .context-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  
+    .metric-value {
+      font-size: 1.55rem;
+    }
+  
+    .card-body {
+      padding: 1rem;
+    }
+  }
+  
+  @media (max-width: 767.98px) {
+    .dashboard-page {
+      padding-left: 0.85rem;
+      padding-right: 0.85rem;
+    }
+  
+    .dashboard-title {
+      font-size: 1.45rem;
+      margin-bottom: 0.25rem;
+    }
+  
+    .form-label {
+      font-size: 0.78rem;
+    }
+  
+    .form-select {
+      min-height: 44px;
+      border-radius: 0.8rem;
+      font-size: 0.95rem;
+    }
+  
+    .card {
+      border-radius: 0.9rem;
+    }
+  
+    .card-body {
+      padding: 0.95rem;
+    }
+  
+    .context-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+  
+    .metric-value {
+      font-size: 1.35rem;
+    }
+  
+    .metric-meta,
+    .metric-sub,
+    .footer-line {
+      font-size: 0.8rem;
+    }
+  }
+  
+  @media (max-width: 575.98px) {
+    .dashboard-page {
+      padding-left: 0.75rem;
+      padding-right: 0.75rem;
+    }
+  
+    .dashboard-title {
+      font-size: 1.3rem;
+    }
+  
+    .context-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .metric-value {
+      font-size: 1.2rem;
+    }
+  
+    .card-body {
+      padding: 0.9rem;
+    }
+  
+    .dashboard-filters,
+    .dashboard-cards {
+      --bs-gutter-x: 0.9rem;
+      --bs-gutter-y: 0.9rem;
+    }
+  }
