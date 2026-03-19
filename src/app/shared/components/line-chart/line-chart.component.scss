@@ -1,0 +1,160 @@
+:host {
+    display: block;
+  }
+  
+  .line-chart-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 1rem;
+    background: #ffffff;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+    overflow: hidden;
+  }
+  
+  .line-chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    background: #f8fafc;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 0.9rem 1rem;
+    color: #111827;
+  }
+  
+  .chart-title strong {
+    font-size: 0.98rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  
+  .chart-legend {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+  
+  .legend-swatch {
+    display: inline-block;
+    width: 18px;
+    height: 0;
+    border-top-width: 3px;
+    border-top-style: solid;
+    border-radius: 999px;
+    position: relative;
+  }
+  
+  .legend-swatch::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    right: -1px;
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: currentColor;
+  }
+  
+  .legend-swatch-a {
+    color: #111827;
+    border-top-color: #111827;
+  }
+  
+  .legend-swatch-b {
+    color: #2563eb;
+    border-top-color: #2563eb;
+  }
+  
+  .legend-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #4b5563;
+  }
+  
+  .card-body {
+    padding: 1rem 1rem 1.15rem;
+    color: #111827;
+  }
+  
+  svg {
+    display: block;
+    width: 100%;
+    overflow: visible;
+  }
+  
+  text {
+    fill: #6b7280;
+    font-family: inherit;
+    font-size: 10px;
+    font-weight: 500;
+  }
+  
+  line {
+    shape-rendering: crispEdges;
+  }
+  
+  polyline {
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  
+  circle {
+    stroke: #ffffff;
+    stroke-width: 1.25;
+  }
+  
+  .text-muted {
+    color: #6b7280 !important;
+  }
+  
+  @media (max-width: 767.98px) {
+    .line-chart-header {
+      padding: 0.8rem 0.9rem;
+      align-items: flex-start;
+    }
+  
+    .chart-title strong {
+      font-size: 0.92rem;
+    }
+  
+    .chart-legend {
+      gap: 0.75rem;
+    }
+  
+    .legend-label {
+      font-size: 0.72rem;
+    }
+  
+    .card-body {
+      padding: 0.9rem 0.9rem 1rem;
+    }
+  
+    text {
+      font-size: 9px;
+    }
+  }
+  
+  @media (max-width: 575.98px) {
+    .line-chart-header {
+      flex-direction: column;
+    }
+  
+    .chart-legend {
+      width: 100%;
+      justify-content: flex-start;
+    }
+  
+    .card-body {
+      padding: 0.85rem 0.85rem 0.95rem;
+    }
+  
+    text {
+      font-size: 8.5px;
+    }
+  }
