@@ -107,7 +107,7 @@
       background: #ffffff;
     }
 
-    tbody tr:hover {
+    tbody tr:hover td {
       background: #f8fafc;
     }
   }
@@ -150,6 +150,17 @@
     border-radius: 1rem;
     border: 1px solid #fecaca;
   }
+
+  .history-monetary-context {
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.75rem;
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+
+    strong {
+      font-weight: 600;
+    }
+  }
 }
 
 @media (max-width: 767.98px) {
@@ -171,6 +182,10 @@
 
     .history-card {
       border-radius: 0.85rem;
+    }
+
+    .history-monetary-context {
+      padding: 0.65rem 0.75rem;
     }
   }
 }

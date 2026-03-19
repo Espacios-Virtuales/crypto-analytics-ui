@@ -17,11 +17,14 @@ import {
   LineChartPoint,
 } from '../../../shared/components/line-chart/line-chart.component';
 
+type DisplayQuoteOption = 'USD' | 'CLP';
+
 type HistoryFormValue = {
   asset: string;
   timeframe: string;
   horizon: string;
   limit: number;
+  displayQuote: DisplayQuoteOption;
 };
 
 type PriceRow = {
@@ -87,6 +90,9 @@ export class HistoryComponent {
   private readonly assetsService = inject(AssetsService);
   private readonly historyService = inject(HistoryService);
 
+  // Stub temporal para piloto. Luego reemplazar por contrato FX real.
+  readonly fxRateUsdClp = 950;
+
   activeTable: 'prices' | 'features' | 'predictions' = 'prices';
 
   readonly form = this.fb.nonNullable.group({
@@ -94,6 +100,7 @@ export class HistoryComponent {
     timeframe: this.fb.nonNullable.control<string>('1m'),
     horizon: this.fb.nonNullable.control<string>('5m'),
     limit: this.fb.nonNullable.control<number>(20),
+    displayQuote: this.fb.nonNullable.control<DisplayQuoteOption>('USD'),
   });
 
   readonly assets$ = this.assetsService.list().pipe(
@@ -202,28 +209,56 @@ export class HistoryComponent {
   );
 
   latestClose(vm: HistoryVm): number {
-    return vm?.prices?.data?.[0]?.close ?? 0;
+    return this.convertMonetaryValue(vm?.prices?.data?.[0]?.close ?? 0);
   }
 
   latestPrediction(vm: HistoryVm): number {
-    return vm?.predictions?.data?.[0]?.y_hat ?? 0;
+    return this.convertMonetaryValue(vm?.predictions?.data?.[0]?.y_hat ?? 0);
   }
 
   latestRsi(vm: HistoryVm): number {
     return vm?.features?.data?.[0]?.rsi ?? 0;
   }
 
+  monetaryCode(): DisplayQuoteOption {
+    return this.form.controls.displayQuote.value;
+  }
+
+  monetaryContextLabel(): string {
+    return this.monetaryCode() === 'CLP'
+      ? `Conversión referencial USD→CLP`
+      : 'Valores en USD';
+  }
+
+  formatMoney(value: number, currency: DisplayQuoteOption): string {
+    if (currency === 'CLP') {
+      return `${value.toLocaleString('es-CL', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      })} ${currency}`;
+    }
+
+    return `${value.toLocaleString('es-CL', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })} ${currency}`;
+  }
+
+  formatTableMoney(value: number): string {
+    return this.formatMoney(this.convertMonetaryValue(value), this.monetaryCode());
+  }
+
   toPriceSeries(rows: PriceRow[] = []): LineChartPoint[] {
     return [...rows].reverse().map((row) => ({
       xLabel: row.ts_utc,
-      value: row.close,
+      value: this.convertMonetaryValue(row.close),
     }));
   }
 
   toPredictionSeries(rows: PredictionRow[] = []): LineChartPoint[] {
     return [...rows].reverse().map((row) => ({
       xLabel: row.ts_utc,
-      value: row.y_hat,
+      value: this.convertMonetaryValue(row.y_hat),
     }));
   }
 
@@ -245,12 +280,17 @@ export class HistoryComponent {
     this.activeTable = table;
   }
 
+  private convertMonetaryValue(value: number): number {
+    return this.monetaryCode() === 'CLP' ? value * this.fxRateUsdClp : value;
+  }
+
   private normalizeFormValue(value: HistoryFormValue): HistoryFormValue {
     return {
       asset: value.asset,
       timeframe: value.timeframe,
       horizon: value.horizon,
       limit: this.normalizeLimit(value.limit),
+      displayQuote: value.displayQuote ?? 'USD',
     };
   }
 
