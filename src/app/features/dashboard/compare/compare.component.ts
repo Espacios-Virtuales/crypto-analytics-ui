@@ -37,7 +37,7 @@ export class CompareComponent {
     tap((assets: AssetInfo[]) => {
       if (!assets.length) return;
 
-      const selectedAssets = this.form.controls.assets.value.filter((asset) =>
+      const currentAssets = this.form.controls.assets.value.filter((asset) =>
         assets.some((item) => item.asset === asset)
       );
 
@@ -45,8 +45,8 @@ export class CompareComponent {
       const currentTimeframe = this.form.controls.timeframe.value;
       const currentHorizon = this.form.controls.horizon.value;
 
-      const nextAssets = selectedAssets.length
-        ? selectedAssets
+      const nextAssets = currentAssets.length
+        ? currentAssets
         : assets.slice(0, 3).map((item) => item.asset);
 
       const nextTimeframe = firstAsset.timeframes?.includes(currentTimeframe)
@@ -138,11 +138,11 @@ export class CompareComponent {
   badgeClass(signal: CompareSignal): string {
     switch (signal) {
       case 'BUY':
-        return 'bg-success-subtle text-success-emphasis border border-success-subtle';
+        return 'compare-badge-buy';
       case 'SELL':
-        return 'bg-danger-subtle text-danger-emphasis border border-danger-subtle';
+        return 'compare-badge-sell';
       default:
-        return 'bg-secondary-subtle text-secondary-emphasis border border-secondary-subtle';
+        return 'compare-badge-hold';
     }
   }
 
@@ -174,7 +174,7 @@ export class CompareComponent {
 
   private normalizeFormValue(value: CompareFormValue): CompareFormValue {
     return {
-      assets: (value.assets ?? []).slice(0, 6),
+      assets: [...new Set((value.assets ?? []).filter(Boolean))].slice(0, 6),
       timeframe: value.timeframe ?? '1m',
       horizon: value.horizon ?? '5m',
     };
