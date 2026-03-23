@@ -1,0 +1,208 @@
+:host {
+    display: block;
+  }
+  
+  .compare-page {
+    color: #1f2937;
+  
+    .compare-hero {
+      padding: 1.25rem 1.5rem;
+      border-radius: 1rem;
+      background: #ffffff;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+    }
+  
+    .compare-title {
+      margin: 0 0 0.35rem;
+      font-size: 1.65rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #111827;
+    }
+  
+    .compare-subtitle {
+      max-width: 840px;
+      color: #6b7280;
+      font-size: 0.95rem;
+    }
+  
+    .form-label {
+      margin-bottom: 0.45rem;
+      color: #374151;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+    }
+  
+    .form-select {
+      min-height: 46px;
+      border-radius: 0.85rem;
+      border: 1px solid #d1d5db;
+      background: #ffffff;
+      color: #111827;
+      box-shadow: none;
+      transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+    }
+  
+    .form-select:hover {
+      border-color: #cbd5e1;
+    }
+  
+    .form-select:focus {
+      border-color: #d4af37;
+      box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.14);
+      background: #ffffff;
+    }
+  
+    .asset-chip-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+  
+    .asset-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.65rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      background: #ffffff;
+      color: #374151;
+      cursor: pointer;
+      transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        transform 0.2s ease;
+  
+      &:hover {
+        border-color: #9ca3af;
+        background: #f9fafb;
+      }
+  
+      input {
+        margin: 0;
+      }
+    }
+  
+    .asset-chip-active {
+      border-color: #111827;
+      background: #f3f4f6;
+      color: #111827;
+    }
+  
+    .compare-context {
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.75rem;
+      background: rgba(0, 0, 0, 0.03);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+  
+      strong {
+        font-weight: 600;
+      }
+    }
+  
+    .compare-card {
+      border: 1px solid #e5e7eb;
+      border-radius: 1rem;
+      overflow: hidden;
+      background: #ffffff;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+  
+      .card-header {
+        background: #f8fafc;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 0.9rem 1rem;
+        color: #111827;
+      }
+  
+      .card-body {
+        padding: 1rem;
+        color: #111827;
+      }
+    }
+  
+    .compare-table {
+      margin-bottom: 0;
+  
+      thead th {
+        font-size: 0.76rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #6b7280;
+        border-bottom: 1px solid #e5e7eb;
+        background: #f9fafb;
+        white-space: nowrap;
+      }
+  
+      tbody td {
+        font-size: 0.92rem;
+        vertical-align: middle;
+        color: #1f2937;
+        border-bottom: 1px solid #f1f5f9;
+        background: #ffffff;
+        white-space: nowrap;
+      }
+  
+      tbody tr:hover td {
+        background: #f8fafc;
+      }
+    }
+  
+    .compare-badge {
+      font-weight: 700;
+      padding: 0.45rem 0.75rem;
+    }
+  
+    .compare-badge-buy {
+      background: #dcfce7;
+      color: #166534;
+      border: 1px solid #bbf7d0;
+    }
+  
+    .compare-badge-sell {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+  
+    .compare-badge-hold {
+      background: #e5e7eb;
+      color: #374151;
+      border: 1px solid #d1d5db;
+    }
+  
+    .text-muted {
+      color: #6b7280 !important;
+    }
+  }
+  
+  @media (max-width: 767.98px) {
+    .compare-page {
+      .compare-hero {
+        padding: 1rem;
+        border-radius: 0.85rem;
+      }
+  
+      .compare-title {
+        font-size: 1.35rem;
+      }
+  
+      .form-select {
+        min-height: 44px;
+        border-radius: 0.8rem;
+      }
+  
+      .compare-card {
+        border-radius: 0.85rem;
+      }
+  
+      .asset-chip {
+        padding: 0.55rem 0.8rem;
+      }
+    }
+  }

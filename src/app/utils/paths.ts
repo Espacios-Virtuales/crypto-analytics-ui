@@ -6,6 +6,8 @@ export const PATHS = {
     health: 'health',
     assets: 'assets',
     history: 'history',
+    compare: 'compare',
+
 
   } as const;
   

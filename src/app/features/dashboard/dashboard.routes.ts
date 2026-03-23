@@ -40,6 +40,12 @@ export const DASHBOARD_ROUTES: Routes = [
         title: 'Histórico',
         loadComponent: () =>
           lazy(import('./history/history.component'), 'HistoryComponent'),
+      },
+      {
+        path: PATHS.compare,
+        title: 'Compare',
+        loadComponent: () =>
+          lazy(import('./compare/compare.component'), 'CompareComponent'),
       }
     ],
   },
