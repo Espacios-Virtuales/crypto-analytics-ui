@@ -174,18 +174,26 @@ Permitir explorar datos históricos por activo.
 
 ## Funciones
 
-
 - [x] Tabla histórica dinámica
 - [x] Selección de activo
-- [x] Selección de timeframe
+- [x]  Selección de timeframe
 - [x] Integración de features
 - [x] Integración de predicciones
+- [x] Tabs para una sola tabla activa
+- [x] Charts reutilizando app-line-chart
+- [x] Mejora del eje X y eje Y
+- [x] Leyenda clara de series
+- [x] Contexto monetario visible en histórico
 
 ### Datos mostrados
+- [x] Precio histórico
+- [x] Features técnicas
+- [x] Predicciones históricas
 
--   Precio
--   Features
--   Predicciones
+### Resultado
+- [x] Histórico funcional y legible
+- [x] Visualización temporal refinada
+- [x] Conversión monetaria temporal para piloto (USD -> CLP)
 
 ------------------------------------------------------------------------
 
@@ -195,22 +203,37 @@ Permitir explorar datos históricos por activo.
 
 Comparar múltiples activos simultáneamente.
 
+Sprint 6 --- Comparador de Activos
+Objetivo
+
+Comparar múltiples activos simultáneamente con una lectura ejecutiva del mercado.
+
 ## Funcionalidades
+- [x] Multi asset selector
+- [x] Tabla comparativa
+- [x] Diferencia de señal derivada (BUY / SELL / HOLD)
+- [x] Integración de precio, predicción y features latest
+- [x] Correlación básica
+- [x] Preparación visual para Trading Mode
+- [x] Vista comparativa
 
--   [ ] Multi asset selector
--   [ ] Tabla comparativa
--   [ ] Correlación básica
--   [ ] Diferencia de señal
+##  Columnas base implementadas:
 
-### Vista
+- [x] Asset
+- [x] Price
+- [x] Prediction
+- [x] Signal
+- [x] Confidence
+- [x] RSI
+- [x] MACD
+- [x] Horizon
+- [x] Updated
 
-Comparación ejemplo:
-
-  Asset   Signal   Confidence   Horizon
-  ------- -------- ------------ ---------
-  BTC     BUY      0.82         5m
-  ETH     HOLD     0.55         5m
-  SOL     SELL     0.77         5m
+## Resultado
+- [x] Compare multi-activo funcional
+- [x] Servicio agregador reutilizando LatestService
+- [x] Base sólida para análisis cruzado
+- [] Pendiente cierre fino de correlación básica
 
 ------------------------------------------------------------------------
 
@@ -235,12 +258,15 @@ Desplegar en Vercel
 Preparar maqueta para integración futura de trading.
 
 ## Elementos
+-   [] Trading mode flag
+-   [] Señales explicables
+-   [] Risk score
+-   [] Hooks para ejecución futura
+-   [] Placeholder visual “Trading Mode (Fase 3)”
 
--   [ ] Trading mode flag
--   [ ] Señales explicables
--   [ ] Risk score
--   [ ] Hooks para ejecución futura
-
+## Resultado esperado
+-   [] Base visual y estructural para Fase 3
+-   [] Separación clara entre lectura de mercado y futura ejecución
 ------------------------------------------------------------------------
 
 # Estado actual esperado
@@ -252,7 +278,7 @@ Preparar maqueta para integración futura de trading.
   Sprint 2   Completado
   Sprint 3   Completado
   Sprint 4   Completado
-  Sprint 5   Pendiente
+  Sprint 5   Completado
   Sprint 6   Pendiente
   Sprint 7   Completado
   Sprint 8   pendiente
