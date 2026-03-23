@@ -175,11 +175,11 @@ Permitir explorar datos históricos por activo.
 ## Funciones
 
 
-- [ ] Tabla histórica dinámica
-- [ ] Selección de activo
-- [ ] Selección de timeframe
-- [ ] Integración de features
-- [ ] Integración de predicciones
+- [x] Tabla histórica dinámica
+- [x] Selección de activo
+- [x] Selección de timeframe
+- [x] Integración de features
+- [x] Integración de predicciones
 
 ### Datos mostrados
 
