@@ -1,122 +1,180 @@
 <div class="compare-page container-fluid py-4">
-    <div class="row mb-4">
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="compare-hero">
+        <h2 class="compare-title">Comparador de activos</h2>
+        <p class="compare-subtitle mb-0">
+          Lectura comparativa del mercado usando precio actual, predicción e indicadores
+          técnicos recientes.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <ng-container *ngIf="selectionSummary$ | async as summary">
+    <div class="row g-3 mb-4">
       <div class="col-12">
-        <div class="compare-hero">
-          <h2 class="compare-title">Comparador de activos</h2>
-          <p class="compare-subtitle mb-0">
-            Lectura comparativa del mercado usando precio actual, predicción e indicadores
-            técnicos recientes.
-          </p>
+        <label class="form-label small">Activos</label>
+        <div class="asset-chip-grid">
+          <label
+            class="asset-chip"
+            *ngFor="let item of summary.availableAssets"
+            [class.asset-chip-active]="isSelected(item.asset)"
+          >
+            <input
+              type="checkbox"
+              class="form-check-input"
+              [checked]="isSelected(item.asset)"
+              (change)="toggleAsset(item.asset, $any($event.target).checked)"
+            />
+            <span>{{ item.asset }}</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="col-lg-6 col-md-6 col-12">
+        <label class="form-label small">Timeframe</label>
+        <select class="form-select" [formControl]="form.controls.timeframe">
+          <option *ngFor="let tf of summary.timeframes" [value]="tf">
+            {{ tf }}
+          </option>
+        </select>
+      </div>
+
+      <div class="col-lg-6 col-md-6 col-12">
+        <label class="form-label small">Horizonte</label>
+        <select class="form-select" [formControl]="form.controls.horizon">
+          <option *ngFor="let hz of summary.horizons" [value]="hz">
+            {{ hz }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="vm$ | async as vm; else loadingTpl">
+    <div class="compare-context mb-4">
+      <small class="text-muted">
+        Activos seleccionados: <strong>{{ vm.meta.count }}</strong>
+        · Timeframe: <strong>{{ vm.meta.timeframe }}</strong>
+        · Horizonte: <strong>{{ vm.meta.horizon }}</strong>
+        <ng-container *ngIf="vm.leaderAsset">
+          · Referencia correlación: <strong>{{ vm.leaderAsset }}</strong>
+        </ng-container>
+      </small>
+    </div>
+
+    <div class="card compare-card shadow-sm mb-4" *ngIf="vm.rows.length; else emptyTpl">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <strong>Resumen comparativo</strong>
+        <small class="text-muted">Ordenado por confianza y fuerza de señal</small>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-sm table-hover align-middle mb-0 compare-table">
+          <thead>
+            <tr>
+              <th>Asset</th>
+              <th>Price</th>
+              <th>Prediction</th>
+              <th>Signal</th>
+              <th>Confidence</th>
+              <th>RSI</th>
+              <th>MACD</th>
+              <th>Horizon</th>
+              <th>Updated</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of vm.rows">
+              <td class="fw-semibold">{{ row.asset }}</td>
+              <td>{{ formatPrice(row.price) }}</td>
+              <td>{{ formatPrice(row.prediction) }}</td>
+              <td>
+                <span class="badge rounded-pill compare-badge" [ngClass]="badgeClass(row.signal)">
+                  {{ row.signal }}
+                </span>
+              </td>
+              <td>{{ formatPercent(row.confidence) }}</td>
+              <td>{{ formatNumber(row.rsi, 2, 2) }}</td>
+              <td>{{ formatNumber(row.macd, 2, 4) }}</td>
+              <td>{{ row.horizon }}</td>
+              <td>{{ row.asof_ts_utc ?? '—' }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card compare-card shadow-sm mb-4" *ngIf="vm.correlations.length">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <strong>Correlación básica</strong>
+        <small class="text-muted">Comparación frente al activo líder</small>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-sm table-hover align-middle mb-0 compare-table">
+          <thead>
+            <tr>
+              <th>Asset</th>
+              <th>Against</th>
+              <th>Correlation</th>
+              <th>Interpretación</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of vm.correlations">
+              <td class="fw-semibold">{{ item.asset }}</td>
+              <td>{{ item.against }}</td>
+              <td>{{ formatCorrelation(item.value) }}</td>
+              <td>
+                <span
+                  class="badge rounded-pill compare-badge"
+                  [ngClass]="correlationBadgeClass(item.value)"
+                >
+                  {{ item.label }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card compare-card shadow-sm trading-placeholder">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <strong>Trading Mode (Fase 3)</strong>
+        <small class="text-muted">Placeholder visual</small>
+      </div>
+
+      <div class="card-body">
+        <p class="mb-2">
+          Próximamente este módulo integrará ejecución de estrategias, gestión de riesgo y
+          órdenes automatizadas.
+        </p>
+        <div class="trading-pill-group">
+          <span class="trading-pill">Trading mode flag</span>
+          <span class="trading-pill">Señales explicables</span>
+          <span class="trading-pill">Risk score</span>
+          <span class="trading-pill">Hooks de ejecución</span>
         </div>
       </div>
     </div>
-  
-    <ng-container *ngIf="selectionSummary$ | async as summary">
-      <div class="row g-3 mb-4">
-        <div class="col-12">
-          <label class="form-label small">Activos</label>
-          <div class="asset-chip-grid">
-            <label
-              class="asset-chip"
-              *ngFor="let item of summary.availableAssets"
-              [class.asset-chip-active]="isSelected(item.asset)"
-            >
-              <input
-                type="checkbox"
-                class="form-check-input"
-                [checked]="isSelected(item.asset)"
-                (change)="toggleAsset(item.asset, $any($event.target).checked)"
-              />
-              <span>{{ item.asset }}</span>
-            </label>
-          </div>
-        </div>
-  
-        <div class="col-lg-6 col-md-6 col-12">
-          <label class="form-label small">Timeframe</label>
-          <select class="form-select" [formControl]="form.controls.timeframe">
-            <option *ngFor="let tf of summary.timeframes" [value]="tf">
-              {{ tf }}
-            </option>
-          </select>
-        </div>
-  
-        <div class="col-lg-6 col-md-6 col-12">
-          <label class="form-label small">Horizonte</label>
-          <select class="form-select" [formControl]="form.controls.horizon">
-            <option *ngFor="let hz of summary.horizons" [value]="hz">
-              {{ hz }}
-            </option>
-          </select>
-        </div>
+  </ng-container>
+
+  <ng-template #loadingTpl>
+    <div class="card compare-card shadow-sm">
+      <div class="card-body text-muted">
+        Cargando comparador...
       </div>
-    </ng-container>
-  
-    <ng-container *ngIf="vm$ | async as vm; else loadingTpl">
-      <div class="compare-context mb-4">
-        <small class="text-muted">
-          Activos seleccionados: <strong>{{ vm.meta.count }}</strong>
-          · Timeframe: <strong>{{ vm.meta.timeframe }}</strong>
-          · Horizonte: <strong>{{ vm.meta.horizon }}</strong>
-        </small>
+    </div>
+  </ng-template>
+
+  <ng-template #emptyTpl>
+    <div class="card compare-card shadow-sm">
+      <div class="card-body text-muted">
+        Selecciona al menos un activo para comparar.
       </div>
-  
-      <div class="card compare-card shadow-sm" *ngIf="vm.rows.length; else emptyTpl">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <strong>Resumen comparativo</strong>
-          <small class="text-muted">Ordenado por confianza y fuerza de señal</small>
-        </div>
-  
-        <div class="table-responsive">
-          <table class="table table-sm table-hover align-middle mb-0 compare-table">
-            <thead>
-              <tr>
-                <th>Asset</th>
-                <th>Price</th>
-                <th>Prediction</th>
-                <th>Signal</th>
-                <th>Confidence</th>
-                <th>RSI</th>
-                <th>MACD</th>
-                <th>Horizon</th>
-                <th>Updated</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let row of vm.rows">
-                <td class="fw-semibold">{{ row.asset }}</td>
-                <td>{{ formatPrice(row.price) }}</td>
-                <td>{{ formatPrice(row.prediction) }}</td>
-                <td>
-                  <span class="badge rounded-pill compare-badge" [ngClass]="badgeClass(row.signal)">
-                    {{ row.signal }}
-                  </span>
-                </td>
-                <td>{{ formatPercent(row.confidence) }}</td>
-                <td>{{ formatNumber(row.rsi, 2, 2) }}</td>
-                <td>{{ formatNumber(row.macd, 2, 4) }}</td>
-                <td>{{ row.horizon }}</td>
-                <td>{{ row.asof_ts_utc ?? '—' }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </ng-container>
-  
-    <ng-template #loadingTpl>
-      <div class="card compare-card shadow-sm">
-        <div class="card-body text-muted">
-          Cargando comparador...
-        </div>
-      </div>
-    </ng-template>
-  
-    <ng-template #emptyTpl>
-      <div class="card compare-card shadow-sm">
-        <div class="card-body text-muted">
-          Selecciona al menos un activo para comparar.
-        </div>
-      </div>
-    </ng-template>
-  </div>
+    </div>
+  </ng-template>
+</div>
