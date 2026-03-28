@@ -7,6 +7,7 @@ export const PATHS = {
     assets: 'assets',
     history: 'history',
     compare: 'compare',
+    trading: 'trading',
 
 
   } as const;

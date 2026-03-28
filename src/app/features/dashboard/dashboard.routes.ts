@@ -46,6 +46,12 @@ export const DASHBOARD_ROUTES: Routes = [
         title: 'Compare',
         loadComponent: () =>
           lazy(import('./compare/compare.component'), 'CompareComponent'),
+      },
+      {
+        path: PATHS.trading,
+        title: 'trading-mode',
+        loadComponent: () =>
+          lazy(import('./trading-mode/trading-mode.component'), 'TradingModeComponent'),
       }
     ],
   },

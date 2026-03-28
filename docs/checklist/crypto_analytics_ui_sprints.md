@@ -233,7 +233,15 @@ Comparar múltiples activos simultáneamente con una lectura ejecutiva del merca
 - [x] Compare multi-activo funcional
 - [x] Servicio agregador reutilizando LatestService
 - [x] Base sólida para análisis cruzado
-- [] Pendiente cierre fino de correlación básica
+
+### Interpretación
+
+- Correlación calculada contra activo líder (primer seleccionado)
+- Clasificación:
+  - Alta correlación (> 0.7)
+  - Media (0.3 – 0.7)
+  - Neutral (-0.3 – 0.3)
+  - Inversa (< -0.3)
 
 ------------------------------------------------------------------------
 
@@ -258,7 +266,7 @@ Desplegar en Vercel
 Preparar maqueta para integración futura de trading.
 
 ## Elementos
--   [] Trading mode flag
+-   [x] Trading mode placeholder en UI
 -   [] Señales explicables
 -   [] Risk score
 -   [] Hooks para ejecución futura

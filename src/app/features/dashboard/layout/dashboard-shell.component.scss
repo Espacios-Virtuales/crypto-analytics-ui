@@ -22,6 +22,9 @@
 .ev-sidebar {
   width: var(--ev-sidebar-width);
   min-width: var(--ev-sidebar-width);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
   background: #0d1b2a;
   color: #fff;
   transition:
@@ -53,6 +56,7 @@
     display: flex;
     flex-direction: column;
     padding: 0.5rem;
+    flex: 1; // 🌿 este ocupa el espacio disponible
   }
 
   .menu-item {
@@ -75,6 +79,12 @@
     }
   }
 
+  .sidebar-footer {
+    padding: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    margin-top: auto; // ✴️ este lo ancla abajo
+  }
+
   &.collapsed {
     width: var(--ev-sidebar-collapsed);
     min-width: var(--ev-sidebar-collapsed);
@@ -88,7 +98,6 @@
     }
   }
 }
-
 .ev-main {
   min-width: 0;
   width: 100%;
