@@ -3,7 +3,8 @@ import { Observable, combineLatest, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { LatestService } from './latest.service';
-import { CompareRow, CompareSignal, CompareVm } from '../models/compare.model';
+import { CompareRow, CompareVm } from '../models/compare.model';
+import { buildSignalReading } from '../../shared/utils/signal-reading.utils';
 
 @Injectable({ providedIn: 'root' })
 export class CompareService {
@@ -67,7 +68,7 @@ export class CompareService {
         const confidence = prediction?.data?.confidence ?? null;
         const rsi = feature?.data?.rsi ?? null;
         const macd = feature?.data?.macd ?? null;
-        const signal = this.getSignal(currentPrice, predictedPrice);
+        const reading = buildSignalReading(currentPrice, predictedPrice, confidence);
 
         return {
           asset,
@@ -78,8 +79,8 @@ export class CompareService {
           confidence,
           rsi,
           macd,
-          signal,
-          signalStrength: this.getSignalStrength(currentPrice, predictedPrice),
+          signal: reading.signal,
+          signalStrength: reading.absoluteStrength,
           asof_ts_utc:
             price?.meta?.asof_ts_utc ??
             prediction?.meta?.asof_ts_utc ??
@@ -130,27 +131,5 @@ export class CompareService {
 
   private normalizeAssets(assets: string[]): string[] {
     return [...new Set(assets.filter(Boolean))].slice(0, 6);
-  }
-
-  private getSignal(price: number, prediction: number): CompareSignal {
-    if (!price || !prediction) {
-      return 'HOLD';
-    }
-
-    const diffRatio = Math.abs(prediction - price) / price;
-
-    if (diffRatio < 0.001) {
-      return 'HOLD';
-    }
-
-    return prediction > price ? 'BUY' : 'SELL';
-  }
-
-  private getSignalStrength(price: number, prediction: number): number {
-    if (!price || !prediction) {
-      return 0;
-    }
-
-    return Math.abs(prediction - price) / price;
   }
 }

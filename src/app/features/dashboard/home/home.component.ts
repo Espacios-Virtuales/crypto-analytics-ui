@@ -12,9 +12,14 @@ import {
   LatestPredictionResponse,
   LatestPriceResponse,
 } from '../../../core/models/latest.model';
+import {
+  buildSignalReading,
+  expectedReturnClass,
+  signalBadgeClass,
+  SignalReading,
+} from '../../../shared/utils/signal-reading.utils';
 
 type DisplayQuoteOption = 'MARKET' | 'USD' | 'CLP';
-type DerivedSignal = 'BUY' | 'SELL' | 'HOLD';
 
 @Component({
   selector: 'app-home',
@@ -199,36 +204,20 @@ export class HomeComponent {
     return !!this.fxContext(pulse);
   }
 
-  derivedSignal(pulse: any): DerivedSignal {
-    const price = this.basePriceValue(pulse?.price);
-    const prediction = this.basePredictionValue(pulse?.prediction);
-
-    if (!price || !prediction) return 'HOLD';
-
-    const diffRatio = Math.abs(prediction - price) / price;
-    if (diffRatio < 0.001) return 'HOLD';
-
-    return prediction > price ? 'BUY' : 'SELL';
+  signalReading(pulse: any): SignalReading {
+    return buildSignalReading(
+      this.basePriceValue(pulse?.price),
+      this.basePredictionValue(pulse?.prediction),
+      pulse?.prediction?.data?.confidence ?? null
+    );
   }
 
-  signalStrength(pulse: any): number {
-    const price = this.basePriceValue(pulse?.price);
-    const prediction = this.basePredictionValue(pulse?.prediction);
-
-    if (!price || !prediction) return 0;
-
-    return Math.abs(prediction - price) / price;
+  signalBadgeClass(reading: SignalReading): string {
+    return signalBadgeClass(reading.signal);
   }
 
-  signalBadgeClass(signal: DerivedSignal): string {
-    switch (signal) {
-      case 'BUY':
-        return 'signal-buy';
-      case 'SELL':
-        return 'signal-sell';
-      default:
-        return 'signal-hold';
-    }
+  expectedReturnClass(reading: SignalReading): string {
+    return expectedReturnClass(reading.tone);
   }
 
   formatMetric(value: number, currency: string): string {

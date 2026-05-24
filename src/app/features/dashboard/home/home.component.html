@@ -183,7 +183,7 @@
 
             <div class="col-xl-3 col-lg-6 col-md-12">
               <div class="card dashboard-card shadow-sm h-100">
-                <div class="card-body">
+                <div class="card-body" *ngIf="signalReading(pulse) as reading">
                   <div class="metric-head d-flex align-items-center mb-3">
                     <i class="bi bi-signpost-split metric-icon"></i>
                     <span class="metric-label">Señal derivada</span>
@@ -192,18 +192,22 @@
                   <div class="metric-value">
                     <span
                       class="signal-pill"
-                      [ngClass]="signalBadgeClass(derivedSignal(pulse))"
+                      [ngClass]="signalBadgeClass(reading)"
                     >
-                      {{ derivedSignal(pulse) }}
+                      {{ reading.signal }}
                     </span>
                   </div>
 
-                  <div class="metric-meta mt-2">
-                    Fuerza {{ signalStrength(pulse) | percent:'1.1-2' }}
+                  <div class="expected-return mt-3" [ngClass]="expectedReturnClass(reading)">
+                    {{ reading.expectedReturn | percent:'1.2-2' }}
                   </div>
 
-                  <div class="metric-sub mt-2">
-                    Basada en diferencia precio actual vs predicción.
+                  <div class="metric-meta mt-2">
+                    {{ reading.text }}
+                  </div>
+
+                  <div class="metric-sub mt-1">
+                    Confianza {{ reading.confidenceLevel }}
                   </div>
                 </div>
               </div>
@@ -231,6 +235,10 @@
                   Sin contexto FX adicional para esta visualización.
                 </div>
               </ng-template>
+
+              <div class="footer-line footer-disclaimer mt-2">
+                Lectura analítica asistiva. No constituye recomendación financiera.
+              </div>
             </div>
           </div>
         </ng-container>
