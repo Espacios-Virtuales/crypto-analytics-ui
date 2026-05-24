@@ -183,6 +183,22 @@
                       Predicción en moneda mercado.
                     </div>
                   </ng-template>
+
+                  <div class="technical-accordion mt-3" *ngIf="modelExplanation(pulse.prediction) as explanation">
+                    <button
+                      type="button"
+                      class="technical-accordion-toggle"
+                      [attr.aria-expanded]="explanationOpen"
+                      (click)="toggleExplanation()"
+                    >
+                      <span>Ver detalle técnico</span>
+                      <i class="bi" [ngClass]="explanationOpen ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+                    </button>
+
+                    <div class="technical-accordion-body metric-sub mt-2" *ngIf="explanationOpen">
+                      {{ explanation }}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

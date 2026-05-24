@@ -37,6 +37,7 @@ export class HomeComponent {
   private readonly fb = inject(FormBuilder);
   private readonly assetsService = inject(AssetsService);
   private readonly latestService = inject(LatestService);
+  explanationOpen = false;
 
   readonly assets$ = this.assetsService.list().pipe(
     tap((assets) => {
@@ -154,6 +155,15 @@ export class HomeComponent {
       timeframe: asset.timeframes?.[0] ?? '1m',
       horizon: asset.horizons?.[0] ?? '5m',
     });
+  }
+
+  toggleExplanation(): void {
+    this.explanationOpen = !this.explanationOpen;
+  }
+
+  modelExplanation(prediction: LatestPredictionResponse | null | undefined): string | null {
+    const explanation = prediction?.data?.explanation?.trim();
+    return explanation || null;
   }
 
   shownPriceValue(price: LatestPriceResponse | null | undefined): number {

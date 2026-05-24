@@ -151,6 +151,20 @@
     line-height: 1.35;
   }
 
+  .technical-accordion-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #374151;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-align: left;
+  }
+
   .signal-pill {
     display: inline-flex;
     align-items: center;
