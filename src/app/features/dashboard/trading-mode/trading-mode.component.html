@@ -1,208 +1,169 @@
 <div class="trading-mode-page container-fluid py-4">
-    <div class="row mb-4">
-      <div class="col-12">
-        <div class="trading-mode-hero">
-          <h2 class="trading-mode-title">Trading Mode</h2>
-          <p class="trading-mode-subtitle mb-0">
-            Maqueta emulada de ejecución visual basada en lectura de mercado, señal y riesgo.
-          </p>
-        </div>
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="trading-mode-hero">
+        <h2 class="trading-mode-title">Trading Mode</h2>
+        <p class="trading-mode-subtitle mb-0">
+          Lectura avanzada de mercado para evaluación visual multi-señal.
+        </p>
       </div>
     </div>
-  
-    <ng-container *ngIf="options$ | async as options">
-      <div class="row g-3 mb-4">
-        <div class="col-lg-4 col-md-4 col-12">
-          <label class="form-label small">Activo</label>
-          <select class="form-select" [formControl]="form.controls.asset">
-            <option *ngFor="let item of options.assets" [value]="item.asset">
-              {{ item.asset }}
-            </option>
-          </select>
-        </div>
-  
-        <div class="col-lg-4 col-md-4 col-12">
-          <label class="form-label small">Timeframe</label>
-          <select class="form-select" [formControl]="form.controls.timeframe">
-            <option *ngFor="let tf of options.timeframes" [value]="tf">
-              {{ tf }}
-            </option>
-          </select>
-        </div>
-  
-        <div class="col-lg-4 col-md-4 col-12">
-          <label class="form-label small">Horizonte</label>
-          <select class="form-select" [formControl]="form.controls.horizon">
-            <option *ngFor="let hz of options.horizons" [value]="hz">
-              {{ hz }}
-            </option>
-          </select>
-        </div>
-      </div>
-    </ng-container>
-  
-    <ng-container *ngIf="vm$ | async as vm; else loadingTpl">
-      <ng-container *ngIf="vm; else errorTpl">
-        <div class="tm-context mb-4">
-          <small class="text-muted">
-            Modo: <strong>{{ vm.mode }}</strong>
-            · Asset: <strong>{{ vm.asset }}</strong>
-            · Timeframe: <strong>{{ vm.timeframe }}</strong>
-            · Horizonte: <strong>{{ vm.horizon }}</strong>
-          </small>
-        </div>
-  
-        <div class="row g-3 mb-4">
-          <div class="col-xl-3 col-md-6 col-12">
-            <div class="card tm-card shadow-sm h-100">
-              <div class="card-body">
-                <div class="small text-muted mb-2">Precio actual</div>
-                <div class="fs-4 fw-bold">{{ formatPrice(vm.price) }}</div>
-                <div class="small text-muted mt-2">Snapshot del mercado</div>
-              </div>
-            </div>
-          </div>
-  
-          <div class="col-xl-3 col-md-6 col-12">
-            <div class="card tm-card shadow-sm h-100">
-              <div class="card-body">
-                <div class="small text-muted mb-2">Predicción</div>
-                <div class="fs-4 fw-bold">{{ formatPrice(vm.prediction) }}</div>
-                <div class="small text-muted mt-2">
-                  Movimiento esperado {{ formatPercent(vm.expectedMovePct) }}
-                </div>
-              </div>
-            </div>
-          </div>
-  
-          <div class="col-xl-3 col-md-6 col-12">
-            <div class="card tm-card shadow-sm h-100">
-              <div class="card-body">
-                <div class="small text-muted mb-2">Señal</div>
-                <div class="mb-2">
-                  <span class="badge rounded-pill tm-badge" [ngClass]="signalBadgeClass(vm.signal)">
-                    {{ vm.signal }}
-                  </span>
-                </div>
-                <div class="small text-muted">
-                  Confianza {{ formatPercent(vm.confidence) }}
-                </div>
-              </div>
-            </div>
-          </div>
-  
-          <div class="col-xl-3 col-md-6 col-12">
-            <div class="card tm-card shadow-sm h-100">
-              <div class="card-body">
-                <div class="small text-muted mb-2">Riesgo</div>
-                <div class="mb-2">
-                  <span class="badge rounded-pill tm-badge" [ngClass]="riskBadgeClass(vm.riskProfile)">
-                    {{ vm.riskProfile }}
-                  </span>
-                </div>
-                <div class="small text-muted">
-                  Posición sugerida {{ formatPercent(vm.positionSizePct) }}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-  
-        <div class="card tm-card shadow-sm mb-4">
-          <div class="card-header d-flex justify-content-between align-items-center">
-            <strong>Simulación de trade</strong>
-            <small class="text-muted">Paper mode · sin ejecución real</small>
-          </div>
-  
-          <div class="card-body">
-            <div class="row g-3 mb-3">
-              <div class="col-lg-3 col-md-6 col-12">
-                <div class="tm-panel">
-                  <div class="tm-panel-label">Entrada simulada</div>
-                  <div class="tm-panel-value">{{ formatPrice(vm.price) }}</div>
-                </div>
-              </div>
-  
-              <div class="col-lg-3 col-md-6 col-12">
-                <div class="tm-panel">
-                  <div class="tm-panel-label">Take Profit</div>
-                  <div class="tm-panel-value">{{ formatPrice(vm.takeProfit) }}</div>
-                </div>
-              </div>
-  
-              <div class="col-lg-3 col-md-6 col-12">
-                <div class="tm-panel">
-                  <div class="tm-panel-label">Stop Loss</div>
-                  <div class="tm-panel-value">{{ formatPrice(vm.stopLoss) }}</div>
-                </div>
-              </div>
-  
-              <div class="col-lg-3 col-md-6 col-12">
-                <div class="tm-panel">
-                  <div class="tm-panel-label">Tamaño posición</div>
-                  <div class="tm-panel-value">{{ formatPercent(vm.positionSizePct) }}</div>
-                </div>
-              </div>
-            </div>
-  
-            <div class="tm-readout row g-3">
-              <div class="col-lg-6 col-12">
-                <div class="tm-readout-card">
-                  <div class="small text-muted mb-2">Lectura técnica</div>
-                  <div>RSI: <strong>{{ vm.rsi == null ? '—' : vm.rsi | number:'1.2-2' }}</strong></div>
-                  <div>MACD: <strong>{{ vm.macd == null ? '—' : vm.macd | number:'1.2-4' }}</strong></div>
-                </div>
-              </div>
-  
-              <div class="col-lg-6 col-12">
-                <div class="tm-readout-card">
-                  <div class="small text-muted mb-2">Estado de simulación</div>
-                  <div>Modo: <strong>{{ vm.mode }}</strong></div>
-                  <div>Actualizado: <strong>{{ vm.asof_ts_utc | cryptoTimestamp }}</strong></div>
-                </div>
-              </div>
-            </div>
-  
-            <div class="tm-actions mt-4">
-              <button type="button" class="btn btn-dark" disabled>
-                Ejecutar compra simulada
-              </button>
-              <button type="button" class="btn btn-outline-dark" disabled>
-                Ejecutar venta simulada
-              </button>
-            </div>
-          </div>
-        </div>
-  
-        <div class="card tm-card shadow-sm">
-          <div class="card-header d-flex justify-content-between align-items-center">
-            <strong>Notas de Fase 3</strong>
-            <small class="text-muted">Próxima evolución</small>
-          </div>
-          <div class="card-body">
-            <div class="tm-pill-group">
-              <span class="tm-pill">Trading mode flag</span>
-              <span class="tm-pill">Risk score</span>
-              <span class="tm-pill">Señales explicables</span>
-              <span class="tm-pill">Órdenes futuras</span>
-              <span class="tm-pill">Gestión de estrategia</span>
-            </div>
-          </div>
-        </div>
-      </ng-container>
-    </ng-container>
-  
-    <ng-template #loadingTpl>
-      <div class="card tm-card shadow-sm">
-        <div class="card-body text-muted">
-          Cargando trading mode...
-        </div>
-      </div>
-    </ng-template>
-  
-    <ng-template #errorTpl>
-      <div class="alert alert-danger mb-0">
-        No fue posible cargar la maqueta de trading mode.
-      </div>
-    </ng-template>
   </div>
+
+  <ng-container *ngIf="options$ | async as options">
+    <div class="row g-3 mb-4">
+      <div class="col-lg-4 col-md-4 col-12">
+        <label class="form-label small">Activo</label>
+        <select class="form-select" [formControl]="form.controls.asset">
+          <option *ngFor="let item of options.assets" [value]="item.asset">
+            {{ item.asset }}
+          </option>
+        </select>
+      </div>
+
+      <div class="col-lg-4 col-md-4 col-12">
+        <label class="form-label small">Timeframe</label>
+        <select class="form-select" [formControl]="form.controls.timeframe">
+          <option *ngFor="let tf of options.timeframes" [value]="tf">
+            {{ tf }}
+          </option>
+        </select>
+      </div>
+
+      <div class="col-lg-4 col-md-4 col-12">
+        <label class="form-label small">Horizonte</label>
+        <select class="form-select" [formControl]="form.controls.horizon">
+          <option *ngFor="let hz of options.horizons" [value]="hz">
+            {{ hz }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="vm$ | async as vm; else loadingTpl">
+    <ng-container *ngIf="vm; else errorTpl">
+      <div class="tm-executive card tm-card shadow-sm mb-4">
+        <div class="card-body">
+          <div class="tm-executive-grid">
+            <div>
+              <span class="tm-label">Asset</span>
+              <strong>{{ vm.asset }}</strong>
+            </div>
+            <div>
+              <span class="tm-label">Timeframe</span>
+              <strong>{{ vm.timeframe }}</strong>
+            </div>
+            <div>
+              <span class="tm-label">Horizon</span>
+              <strong>{{ vm.horizon }}</strong>
+            </div>
+            <div>
+              <span class="tm-label">Última actualización</span>
+              <strong>{{ vm.asof_ts_utc | cryptoTimestamp }}</strong>
+            </div>
+            <div>
+              <span class="tm-label">Estado de señal</span>
+              <span class="badge rounded-pill tm-badge" [ngClass]="signalBadgeClass(vm.signal.signal)">
+                {{ vm.signal.signal }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row g-3 mb-4">
+        <div class="col-xl-3 col-md-6 col-12">
+          <div class="card tm-card shadow-sm h-100">
+            <div class="card-body">
+              <div class="small text-muted mb-2">Expected return</div>
+              <div class="tm-metric" [ngClass]="expectedReturnClass(vm.signal)">
+                {{ formatSignedPercent(vm.signal.expectedReturn) }}
+              </div>
+              <div class="small text-muted mt-2">Strength {{ formatStrength(vm.signal.absoluteStrength) }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 col-12">
+          <div class="card tm-card shadow-sm h-100">
+            <div class="card-body">
+              <div class="small text-muted mb-2">Confianza</div>
+              <div class="tm-metric">{{ vm.signal.confidenceLevel }}</div>
+              <div class="small text-muted mt-2">{{ vm.signal.text }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 col-12">
+          <div class="card tm-card shadow-sm h-100">
+            <div class="card-body">
+              <div class="small text-muted mb-2">Precio actual</div>
+              <div class="tm-metric">{{ formatPrice(vm.price) }}</div>
+              <div class="small text-muted mt-2">Snapshot del mercado</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-3 col-md-6 col-12">
+          <div class="card tm-card shadow-sm h-100">
+            <div class="card-body">
+              <div class="small text-muted mb-2">Prediction y_hat</div>
+              <div class="tm-metric">{{ formatPrice(vm.prediction) }}</div>
+              <div class="small text-muted mt-2">{{ vm.horizon }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card tm-card shadow-sm mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <strong>Estado del mercado</strong>
+          <small class="text-muted">Lectura técnica</small>
+        </div>
+
+        <div class="card-body">
+          <div class="market-state-grid">
+            <div class="market-state-block">
+              <span class="tm-label">RSI</span>
+              <strong>{{ vm.technical.rsiContext }}</strong>
+              <small>{{ vm.technical.rsiText }}</small>
+            </div>
+
+            <div class="market-state-block">
+              <span class="tm-label">MACD</span>
+              <strong>{{ vm.technical.macdContext }}</strong>
+              <small>{{ vm.technical.macdText }}</small>
+            </div>
+
+            <div class="market-state-block">
+              <span class="tm-label">Volatilidad</span>
+              <strong>{{ vm.technical.volatilityLevel }}</strong>
+              <small>{{ vm.technical.volatilityText }}</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tm-disclaimer card tm-card shadow-sm">
+        <div class="card-body">
+          Modo de lectura avanzada. No ejecuta órdenes ni constituye recomendación financiera.
+        </div>
+      </div>
+    </ng-container>
+  </ng-container>
+
+  <ng-template #loadingTpl>
+    <div class="card tm-card shadow-sm">
+      <div class="card-body text-muted">
+        Cargando trading mode...
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #errorTpl>
+    <div class="alert alert-danger mb-0">
+      No fue posible cargar trading mode.
+    </div>
+  </ng-template>
+</div>

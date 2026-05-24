@@ -11,6 +11,7 @@ import { MarketSelectionService } from '../../../core/services/market-selection.
 import { AssetInfo } from '../../../core/models/assets.model';
 import { CompareRow, CompareSignal } from '../../../core/models/compare.model';
 import { CryptoTimestampPipe } from '../../../shared/pipes/crypto-timestamp.pipe';
+import { expectedReturnClass } from '../../../shared/utils/signal-reading.utils';
 
 type CompareFormValue = {
   assets: string[];
@@ -226,6 +227,28 @@ export class CompareComponent {
       maximumFractionDigits: 0,
       style: 'percent',
     });
+  }
+
+  formatSignedPercent(value: number): string {
+    const formatted = Math.abs(value).toLocaleString('es-CL', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+      style: 'percent',
+    });
+
+    if (value > 0) return `+${formatted}`;
+    if (value < 0) return `-${formatted}`;
+    return formatted;
+  }
+
+  expectedReturnClass(row: CompareRow): string {
+    if (row.expectedReturn > 0) return expectedReturnClass('positive');
+    if (row.expectedReturn < 0) return expectedReturnClass('negative');
+    return expectedReturnClass('neutral');
+  }
+
+  combinedReading(row: CompareRow): string {
+    return `${row.asset} · ${row.signal} · ${row.confidenceLevel} · ${this.formatSignedPercent(row.expectedReturn)}`;
   }
 
   formatNumber(value: number | null, min = 2, max = 2): string {

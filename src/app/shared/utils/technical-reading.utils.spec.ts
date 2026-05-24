@@ -1,6 +1,8 @@
 import {
   buildTechnicalReading,
+  macdContext,
   macdReading,
+  rsiContext,
   rsiReading,
   volatilityLevel,
 } from './technical-reading.utils';
@@ -10,12 +12,14 @@ describe('technical-reading utils', () => {
     expect(rsiReading(25)).toBe('RSI bajo: posible sobreventa');
     expect(rsiReading(75)).toBe('RSI alto: posible sobrecompra');
     expect(rsiReading(50)).toBe('RSI neutral');
+    expect(rsiContext(25)).toBe('Sobreventa');
   });
 
   it('translates MACD readings', () => {
     expect(macdReading(1)).toBe('MACD positivo: momentum positivo');
     expect(macdReading(-1)).toBe('MACD negativo: momentum negativo');
     expect(macdReading(0)).toBe('MACD neutral');
+    expect(macdContext(-1)).toBe('Momentum negativo');
   });
 
   it('classifies volatility', () => {
