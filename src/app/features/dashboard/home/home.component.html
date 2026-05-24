@@ -116,7 +116,7 @@
   
             <div class="col-xl-3 col-lg-6 col-md-12">
               <div class="card dashboard-card shadow-sm h-100">
-                <div class="card-body">
+                <div class="card-body" *ngIf="technicalReading(pulse) as technical">
                   <div class="metric-head d-flex align-items-center mb-3">
                     <i class="bi bi-activity metric-icon"></i>
                     <span class="metric-label">Indicadores técnicos</span>
@@ -132,6 +132,12 @@
   
                   <div class="metric-sub mt-2">
                     Volatilidad {{ pulse.feature.data.volatility | number:'1.4-6' }}
+                  </div>
+
+                  <div class="technical-reading mt-3">
+                    <div>{{ technical.rsiText }}</div>
+                    <div>{{ technical.macdText }}</div>
+                    <div>{{ technical.volatilityText }}</div>
                   </div>
                 </div>
               </div>

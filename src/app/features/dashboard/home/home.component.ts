@@ -18,6 +18,10 @@ import {
   signalBadgeClass,
   SignalReading,
 } from '../../../shared/utils/signal-reading.utils';
+import {
+  buildTechnicalReading,
+  TechnicalReading,
+} from '../../../shared/utils/technical-reading.utils';
 
 type DisplayQuoteOption = 'MARKET' | 'USD' | 'CLP';
 
@@ -218,6 +222,14 @@ export class HomeComponent {
 
   expectedReturnClass(reading: SignalReading): string {
     return expectedReturnClass(reading.tone);
+  }
+
+  technicalReading(pulse: any): TechnicalReading {
+    return buildTechnicalReading(
+      pulse?.feature?.data?.rsi ?? null,
+      pulse?.feature?.data?.macd ?? null,
+      pulse?.feature?.data?.volatility ?? null
+    );
   }
 
   formatMetric(value: number, currency: string): string {
