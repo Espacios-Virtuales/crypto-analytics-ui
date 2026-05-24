@@ -17,6 +17,7 @@ import {
   LineChartComponent,
   LineChartPoint,
 } from '../../../shared/components/line-chart/line-chart.component';
+import { CryptoTimestampPipe } from '../../../shared/pipes/crypto-timestamp.pipe';
 
 type DisplayQuoteOption = 'USD' | 'CLP';
 
@@ -82,7 +83,7 @@ type HistoryVm = {
 @Component({
   selector: 'app-history',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LineChartComponent],
+  imports: [CommonModule, ReactiveFormsModule, LineChartComponent, CryptoTimestampPipe],
   templateUrl: './history.component.html',
   styleUrl: './history.component.scss',
 })

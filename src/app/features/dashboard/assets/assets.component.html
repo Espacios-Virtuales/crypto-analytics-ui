@@ -51,7 +51,7 @@
         </span>
         <span class="asset-card-meta">TF {{ item.timeframes.join(', ') || '-' }}</span>
         <span class="asset-card-meta">H {{ item.horizons.join(', ') || '-' }}</span>
-        <span class="asset-card-meta">Último {{ item.last.price_ts_utc ?? '-' }}</span>
+        <span class="asset-card-meta">Último {{ item.last.price_ts_utc | cryptoTimestamp:'-' }}</span>
       </button>
     </div>
 
@@ -73,7 +73,7 @@
             </div>
             <div>
               <span class="status-label">Último precio</span>
-              <strong>{{ vm.asset.last.price_ts_utc ?? '-' }}</strong>
+              <strong>{{ vm.asset.last.price_ts_utc | cryptoTimestamp:'-' }}</strong>
             </div>
             <div>
               <span class="status-label">Modelo</span>
@@ -121,7 +121,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let price of vm.prices; trackBy: trackByPrice">
-                <td>{{ price.ts_utc }}</td>
+                <td>{{ price.ts_utc | cryptoTimestamp }}</td>
                 <td>{{ formatPrice(price.open) }}</td>
                 <td>{{ formatPrice(price.high) }}</td>
                 <td>{{ formatPrice(price.low) }}</td>

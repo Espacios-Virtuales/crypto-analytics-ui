@@ -158,7 +158,7 @@
                 <div class="tm-readout-card">
                   <div class="small text-muted mb-2">Estado de simulación</div>
                   <div>Modo: <strong>{{ vm.mode }}</strong></div>
-                  <div>Actualizado: <strong>{{ vm.asof_ts_utc ?? '—' }}</strong></div>
+                  <div>Actualizado: <strong>{{ vm.asof_ts_utc | cryptoTimestamp }}</strong></div>
                 </div>
               </div>
             </div>

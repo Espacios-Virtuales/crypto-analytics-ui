@@ -99,7 +99,7 @@
               <td>{{ formatNumber(row.rsi, 2, 2) }}</td>
               <td>{{ formatNumber(row.macd, 2, 4) }}</td>
               <td>{{ row.horizon }}</td>
-              <td>{{ row.asof_ts_utc ?? '—' }}</td>
+              <td>{{ row.asof_ts_utc | cryptoTimestamp }}</td>
             </tr>
           </tbody>
         </table>

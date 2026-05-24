@@ -10,6 +10,7 @@ import { HistoryService } from '../../../core/services/history.service';
 import { MarketSelectionService } from '../../../core/services/market-selection.service';
 import { AssetInfo } from '../../../core/models/assets.model';
 import { CompareRow, CompareSignal } from '../../../core/models/compare.model';
+import { CryptoTimestampPipe } from '../../../shared/pipes/crypto-timestamp.pipe';
 
 type CompareFormValue = {
   assets: string[];
@@ -38,7 +39,7 @@ type CompareViewModel = {
 @Component({
   selector: 'app-compare',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, CryptoTimestampPipe],
   templateUrl: './compare.component.html',
   styleUrl: './compare.component.scss',
 })

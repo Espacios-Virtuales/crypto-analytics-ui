@@ -8,6 +8,7 @@ import { AssetsService } from '../../../core/services/assets.service';
 import { LatestService } from '../../../core/services/latest.service';
 import { MarketSelectionService } from '../../../core/services/market-selection.service';
 import { AssetInfo } from '../../../core/models/assets.model';
+import { CryptoTimestampPipe } from '../../../shared/pipes/crypto-timestamp.pipe';
 
 type TradingSignal = 'BUY' | 'SELL' | 'HOLD';
 type RiskProfile = 'LOW' | 'MEDIUM' | 'HIGH';
@@ -40,7 +41,7 @@ type TradingVm = {
 @Component({
   selector: 'app-trading-mode',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, CryptoTimestampPipe],
   templateUrl: './trading-mode.component.html',
   styleUrl: './trading-mode.component.scss',
 })

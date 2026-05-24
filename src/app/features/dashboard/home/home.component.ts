@@ -23,13 +23,14 @@ import {
   buildTechnicalReading,
   TechnicalReading,
 } from '../../../shared/utils/technical-reading.utils';
+import { CryptoTimestampPipe } from '../../../shared/pipes/crypto-timestamp.pipe';
 
 type DisplayQuoteOption = 'MARKET' | 'USD' | 'CLP';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, CryptoTimestampPipe],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 

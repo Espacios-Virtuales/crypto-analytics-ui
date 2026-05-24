@@ -13,6 +13,7 @@ import {
   LineChartComponent,
   LineChartPoint,
 } from '../../../shared/components/line-chart/line-chart.component';
+import { CryptoTimestampPipe } from '../../../shared/pipes/crypto-timestamp.pipe';
 
 type AssetsViewModel = {
   asset: AssetInfo | null;
@@ -25,7 +26,7 @@ type AssetsViewModel = {
 @Component({
   selector: 'app-assets',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, LineChartComponent],
+  imports: [CommonModule, ReactiveFormsModule, LineChartComponent, CryptoTimestampPipe],
   templateUrl: './assets.component.html',
   styleUrl: './assets.component.scss',
 })

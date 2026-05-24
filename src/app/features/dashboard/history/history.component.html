@@ -190,7 +190,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let row of vm.prices.data">
-                <td>{{ row.ts_utc }}</td>
+                <td>{{ row.ts_utc | cryptoTimestamp }}</td>
                 <td>{{ formatTableMoney(row.close) }}</td>
                 <td>{{ row.volume | number:'1.2-2' }}</td>
               </tr>
@@ -225,7 +225,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let row of vm.features.data">
-                <td>{{ row.ts_utc }}</td>
+                <td>{{ row.ts_utc | cryptoTimestamp }}</td>
                 <td>{{ row.rsi | number:'1.2-2' }}</td>
                 <td>{{ row.macd | number:'1.2-4' }}</td>
                 <td>{{ row.volatility | number:'1.2-4' }}</td>
@@ -260,7 +260,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let row of vm.predictions.data">
-                <td>{{ row.ts_utc }}</td>
+                <td>{{ row.ts_utc | cryptoTimestamp }}</td>
                 <td>{{ formatTableMoney(row.y_hat) }}</td>
                 <td>{{ row.confidence | number:'1.2-4' }}</td>
               </tr>

@@ -240,7 +240,7 @@
             <div class="card-body py-3">
               <div class="footer-line d-flex align-items-center mb-2">
                 <i class="bi bi-clock me-2"></i>
-                <span>Datos actualizados: {{ pulse.price.meta.asof_ts_utc }}</span>
+                <span>Datos actualizados: {{ pulse.price.meta.asof_ts_utc | cryptoTimestamp }}</span>
               </div>
   
               <div class="footer-line" *ngIf="hasFxContext(pulse); else fxFallbackTpl">
@@ -248,7 +248,7 @@
                   FX {{ fx.base_currency }}→{{ fx.display_quote_currency }}:
                   {{ fx.fx_rate | number:'1.2-4' }}
                   · Provider: {{ fx.provider }}
-                  · Actualizado: {{ fx.fx_asof_ts_utc }}
+                  · Actualizado: {{ fx.fx_asof_ts_utc | cryptoTimestamp }}
                 </ng-container>
               </div>
   
