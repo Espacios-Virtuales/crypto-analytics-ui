@@ -13,7 +13,7 @@
   <div class="history-filters row g-3 mb-3">
     <div class="col-xl-3 col-md-6 col-12">
       <label class="form-label small">Activo</label>
-      <select class="form-select history-select" [formControl]="form.controls.asset">
+      <select class="form-select history-select" [formControl]="form.controls.asset" (change)="resetOffset()">
         <ng-container *ngIf="assets$ | async as assets">
           <option *ngFor="let item of assets" [value]="item.asset">
             {{ item.asset }}
@@ -24,7 +24,7 @@
 
     <div class="col-xl-3 col-md-6 col-12">
       <label class="form-label small">Timeframe</label>
-      <select class="form-select history-select" [formControl]="form.controls.timeframe">
+      <select class="form-select history-select" [formControl]="form.controls.timeframe" (change)="resetOffset()">
         <ng-container *ngIf="selectedAssetMeta$ | async as assetMeta">
           <option *ngFor="let tf of assetMeta?.timeframes ?? []" [value]="tf">
             {{ tf }}
@@ -35,7 +35,7 @@
 
     <div class="col-xl-3 col-md-6 col-12">
       <label class="form-label small">Horizonte</label>
-      <select class="form-select history-select" [formControl]="form.controls.horizon">
+      <select class="form-select history-select" [formControl]="form.controls.horizon" (change)="resetOffset()">
         <ng-container *ngIf="selectedAssetMeta$ | async as assetMeta">
           <option *ngFor="let hz of assetMeta?.horizons ?? []" [value]="hz">
             {{ hz }}
@@ -53,14 +53,12 @@
     </div>
 
     <div class="col-xl-3 col-md-6 col-12">
-      <label class="form-label small">Límite</label>
-      <input
-        class="form-control history-input"
-        type="number"
-        min="5"
-        max="200"
-        [formControl]="form.controls.limit"
-      />
+      <label class="form-label small">Registros</label>
+      <select class="form-select history-select" [formControl]="form.controls.limit" (change)="resetOffset()">
+        <option [ngValue]="25">25</option>
+        <option [ngValue]="50">50</option>
+        <option [ngValue]="100">100</option>
+      </select>
     </div>
   </div>
 
@@ -142,33 +140,53 @@
         </div>
       </div>
 
-      <div class="d-flex flex-wrap gap-2 mb-3">
-        <button
-          type="button"
-          class="btn btn-sm"
-          [class.btn-primary]="activeTable === 'prices'"
-          [class.btn-outline-primary]="activeTable !== 'prices'"
-          (click)="setActiveTable('prices')">
-          Prices
-        </button>
+      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <div class="d-flex flex-wrap gap-2">
+          <button
+            type="button"
+            class="btn btn-sm"
+            [class.btn-primary]="activeTable === 'prices'"
+            [class.btn-outline-primary]="activeTable !== 'prices'"
+            (click)="setActiveTable('prices')">
+            Prices
+          </button>
 
-        <button
-          type="button"
-          class="btn btn-sm"
-          [class.btn-primary]="activeTable === 'features'"
-          [class.btn-outline-primary]="activeTable !== 'features'"
-          (click)="setActiveTable('features')">
-          Features
-        </button>
+          <button
+            type="button"
+            class="btn btn-sm"
+            [class.btn-primary]="activeTable === 'features'"
+            [class.btn-outline-primary]="activeTable !== 'features'"
+            (click)="setActiveTable('features')">
+            Features
+          </button>
 
-        <button
-          type="button"
-          class="btn btn-sm"
-          [class.btn-primary]="activeTable === 'predictions'"
-          [class.btn-outline-primary]="activeTable !== 'predictions'"
-          (click)="setActiveTable('predictions')">
-          Predictions
-        </button>
+          <button
+            type="button"
+            class="btn btn-sm"
+            [class.btn-primary]="activeTable === 'predictions'"
+            [class.btn-outline-primary]="activeTable !== 'predictions'"
+            (click)="setActiveTable('predictions')">
+            Predictions
+          </button>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-secondary"
+            [disabled]="!canGoPrevious()"
+            (click)="previousPage()">
+            Anterior
+          </button>
+          <small class="text-muted">{{ paginationLabel(vm) }}</small>
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-secondary"
+            [disabled]="!canGoNext(vm)"
+            (click)="nextPage(vm)">
+            Siguiente
+          </button>
+        </div>
       </div>
 
       <div class="card history-card shadow-sm" *ngIf="activeTable === 'prices'">

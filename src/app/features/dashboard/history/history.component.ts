@@ -26,6 +26,7 @@ type HistoryFormValue = {
   timeframe: string;
   horizon: string;
   limit: number;
+  offset: number;
   displayQuote: DisplayQuoteOption;
 };
 
@@ -52,6 +53,9 @@ type PricesResponse = {
   meta: {
     asset: string;
     timeframe: string;
+    limit?: number;
+    offset?: number;
+    total?: number;
   };
   data: PriceRow[];
 };
@@ -61,6 +65,9 @@ type FeaturesResponse = {
     asset: string;
     timeframe: string;
     features_version?: string;
+    limit?: number;
+    offset?: number;
+    total?: number;
   };
   data: FeatureRow[];
 };
@@ -70,6 +77,9 @@ type PredictionsResponse = {
     asset: string;
     timeframe: string;
     horizon: string;
+    limit?: number;
+    offset?: number;
+    total?: number;
   };
   data: PredictionRow[];
 };
@@ -103,7 +113,8 @@ export class HistoryComponent {
     asset: this.fb.nonNullable.control<string>(this.initialSelection.asset),
     timeframe: this.fb.nonNullable.control<string>(this.initialSelection.timeframe),
     horizon: this.fb.nonNullable.control<string>(this.initialSelection.horizon),
-    limit: this.fb.nonNullable.control<number>(20),
+    limit: this.fb.nonNullable.control<number>(25),
+    offset: this.fb.nonNullable.control<number>(0),
     displayQuote: this.fb.nonNullable.control<DisplayQuoteOption>('USD'),
   });
 
@@ -179,6 +190,7 @@ export class HistoryComponent {
         asset: value.asset,
         timeframe: value.timeframe,
         limit: value.limit,
+        offset: value.offset,
         order: 'desc',
       };
 
@@ -186,6 +198,7 @@ export class HistoryComponent {
         asset: value.asset,
         timeframe: value.timeframe,
         limit: value.limit,
+        offset: value.offset,
         order: 'desc',
       };
 
@@ -194,6 +207,7 @@ export class HistoryComponent {
         timeframe: value.timeframe,
         horizon: value.horizon,
         limit: value.limit,
+        offset: value.offset,
         order: 'desc',
       };
 
@@ -283,6 +297,56 @@ export class HistoryComponent {
     this.activeTable = table;
   }
 
+  resetOffset(): void {
+    if (this.form.controls.offset.value !== 0) {
+      this.form.controls.offset.setValue(0);
+    }
+  }
+
+  previousPage(): void {
+    const limit = this.form.controls.limit.value;
+    const offset = this.form.controls.offset.value;
+    this.form.controls.offset.setValue(Math.max(0, offset - limit));
+  }
+
+  nextPage(vm: HistoryVm): void {
+    if (!this.canGoNext(vm)) return;
+
+    const limit = this.form.controls.limit.value;
+    const offset = this.form.controls.offset.value;
+    this.form.controls.offset.setValue(offset + limit);
+  }
+
+  canGoPrevious(): boolean {
+    return this.form.controls.offset.value > 0;
+  }
+
+  canGoNext(vm: HistoryVm): boolean {
+    const total = this.activeTotal(vm);
+    const rows = this.activeRowsLength(vm);
+    const limit = this.form.controls.limit.value;
+    const offset = this.form.controls.offset.value;
+
+    if (total != null) {
+      return offset + limit < total;
+    }
+
+    return rows === limit;
+  }
+
+  paginationLabel(vm: HistoryVm): string {
+    const rows = this.activeRowsLength(vm);
+    const total = this.activeTotal(vm);
+    const offset = this.form.controls.offset.value;
+
+    if (!rows) return 'Sin registros';
+
+    const start = offset + 1;
+    const end = offset + rows;
+
+    return total == null ? `${start}-${end}` : `${start}-${end} de ${total}`;
+  }
+
   private convertMonetaryValue(value: number): number {
     return this.monetaryCode() === 'CLP' ? value * this.fxRateUsdClp : value;
   }
@@ -293,13 +357,42 @@ export class HistoryComponent {
       timeframe: value.timeframe,
       horizon: value.horizon,
       limit: this.normalizeLimit(value.limit),
+      offset: this.normalizeOffset(value.offset),
       displayQuote: value.displayQuote ?? 'USD',
     };
   }
 
   private normalizeLimit(limit: number): number {
     const parsed = Number(limit);
-    if (Number.isNaN(parsed)) return 20;
-    return Math.max(5, Math.min(200, parsed));
+    if (Number.isNaN(parsed)) return 25;
+    return [25, 50, 100].includes(parsed) ? parsed : 25;
+  }
+
+  private normalizeOffset(offset: number): number {
+    const parsed = Number(offset);
+    if (Number.isNaN(parsed)) return 0;
+    return Math.max(0, parsed);
+  }
+
+  private activeTotal(vm: HistoryVm): number | null {
+    switch (this.activeTable) {
+      case 'features':
+        return vm.features.meta.total ?? null;
+      case 'predictions':
+        return vm.predictions.meta.total ?? null;
+      default:
+        return vm.prices.meta.total ?? null;
+    }
+  }
+
+  private activeRowsLength(vm: HistoryVm): number {
+    switch (this.activeTable) {
+      case 'features':
+        return vm.features.data.length;
+      case 'predictions':
+        return vm.predictions.data.length;
+      default:
+        return vm.prices.data.length;
+    }
   }
 }

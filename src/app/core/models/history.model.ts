@@ -70,6 +70,7 @@ export interface HistoryMetaBase {
     from?: string;
     to?: string;
     limit?: number;
+    offset?: number;
     order?: 'asc' | 'desc';
   }
   

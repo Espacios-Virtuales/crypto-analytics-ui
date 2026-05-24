@@ -1,6 +1,5 @@
 @use '@angular/material' as mat;
 
-/* Tema claro */
 $ev-theme: mat.define-theme((
   color: (
     theme-type: light,
@@ -8,14 +7,30 @@ $ev-theme: mat.define-theme((
     tertiary: mat.$blue-palette,
     use-system-variables: true,
     system-variables-prefix: 'ev'
-  ),
-  // typography:  ⟵ lo omitimos por ahora
-  // density: -1
+  )
 ));
 
-@include mat.all-component-themes($ev-theme);
+@mixin ev-material-component-themes($theme) {
+  @include mat.core-theme($theme);
+  @include mat.option-theme($theme);
+  @include mat.optgroup-theme($theme);
+  @include mat.pseudo-checkbox-theme($theme);
+  @include mat.dialog-theme($theme);
+  @include mat.form-field-theme($theme);
+  @include mat.input-theme($theme);
+  @include mat.select-theme($theme);
+  @include mat.checkbox-theme($theme);
+  @include mat.button-theme($theme);
+  @include mat.icon-button-theme($theme);
+  @include mat.icon-theme($theme);
+  @include mat.table-theme($theme);
+  @include mat.paginator-theme($theme);
+  @include mat.progress-spinner-theme($theme);
+  @include mat.snack-bar-theme($theme);
+}
 
-/* Modo oscuro (opt-in) */
+@include ev-material-component-themes($ev-theme);
+
 $ev-theme-dark: mat.define-theme((
   color: (
     theme-type: dark,
@@ -23,11 +38,12 @@ $ev-theme-dark: mat.define-theme((
     tertiary: mat.$blue-palette,
     use-system-variables: true,
     system-variables-prefix: 'ev'
-  ),
-  // density: -1
+  )
 ));
 
-.ev-dark { @include mat.all-component-themes($ev-theme-dark); }
+.ev-dark {
+  @include ev-material-component-themes($ev-theme-dark);
+}
 
 /* Utilidades opcionales */
 :root {
@@ -37,4 +53,3 @@ $ev-theme-dark: mat.define-theme((
 }
 .ev-card { border-radius: var(--ev-radius); box-shadow: var(--ev-shadow-1); transition: box-shadow .18s, transform .18s; }
 .ev-card:hover { box-shadow: var(--ev-shadow-2); transform: translateY(-1px); }
-

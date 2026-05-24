@@ -1,5 +1,51 @@
 /* src/styles.scss */
-@import "bootstrap-icons/font/bootstrap-icons.css";
+@font-face {
+  font-display: block;
+  font-family: 'bootstrap-icons';
+  src: url('../node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2') format('woff2');
+}
+
+.bi::before,
+[class^='bi-']::before,
+[class*=' bi-']::before {
+  display: inline-block;
+  font-family: bootstrap-icons !important;
+  font-style: normal;
+  font-weight: normal !important;
+  font-variant: normal;
+  line-height: 1;
+  text-transform: none;
+  vertical-align: -.125em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.bi-activity::before { content: '\f66b'; }
+.bi-bar-chart-line::before { content: '\f17c'; }
+.bi-bell::before { content: '\f18a'; }
+.bi-box::before { content: '\f1c8'; }
+.bi-check-circle::before { content: '\f26b'; }
+.bi-chevron-down::before { content: '\f282'; }
+.bi-chevron-up::before { content: '\f286'; }
+.bi-clock::before { content: '\f293'; }
+.bi-cloud::before { content: '\f2c1'; }
+.bi-cpu::before { content: '\f2d6'; }
+.bi-currency-bitcoin::before { content: '\f635'; }
+.bi-eye::before { content: '\f341'; }
+.bi-gear::before { content: '\f3e5'; }
+.bi-graph-up::before { content: '\f3f2'; }
+.bi-house-fill::before { content: '\f424'; }
+.bi-info-circle::before { content: '\f431'; }
+.bi-layout-sidebar::before { content: '\f45f'; }
+.bi-layout-sidebar-inset::before { content: '\f45d'; }
+.bi-lightning-charge::before { content: '\f46d'; }
+.bi-list::before { content: '\f479'; }
+.bi-person-circle::before { content: '\f4d7'; }
+.bi-plug::before { content: '\f4f7'; }
+.bi-signpost-split::before { content: '\f549'; }
+.bi-speedometer2::before { content: '\f580'; }
+.bi-trash::before { content: '\f5de'; }
+.bi-x-circle::before { content: '\f623'; }
 
 /* Google Fonts: */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
