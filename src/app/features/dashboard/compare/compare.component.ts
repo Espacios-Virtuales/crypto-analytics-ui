@@ -106,12 +106,17 @@ export class CompareComponent {
       const selectedAssets = formValue.assets ?? [];
       const firstSelectedAsset =
         assets.find((item) => item.asset === selectedAssets[0]) ?? assets[0] ?? null;
+      const selected = this.marketSelection.resolve(assets, {
+        asset: firstSelectedAsset?.asset ?? '',
+        timeframe: formValue.timeframe,
+        horizon: formValue.horizon,
+      });
 
       return {
         availableAssets: assets,
         selectedAssets,
-        timeframes: firstSelectedAsset?.timeframes ?? [],
-        horizons: firstSelectedAsset?.horizons ?? [],
+        timeframes: selected.timeframes,
+        horizons: selected.horizons,
       };
     }),
     tap((summary) => {

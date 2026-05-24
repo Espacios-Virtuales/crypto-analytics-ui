@@ -11,5 +11,5 @@ export function formatDashboardTimestamp(
   if (!match) return value;
 
   const [, year, month, day, hour, minute] = match;
-  return `${day}-${month}-${year} ; ${hour}:${minute}`;
+  return `${day}-${month}-${year} / ${hour}:${minute}`;
 }
