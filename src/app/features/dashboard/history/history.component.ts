@@ -18,6 +18,7 @@ import {
   LineChartPoint,
 } from '../../../shared/components/line-chart/line-chart.component';
 import { CryptoTimestampPipe } from '../../../shared/pipes/crypto-timestamp.pipe';
+import { HISTORY_LIMIT_OPTIONS } from '../../../shared/constants/market-options';
 
 type DisplayQuoteOption = 'USD' | 'CLP';
 
@@ -106,6 +107,7 @@ export class HistoryComponent {
 
   // Stub temporal para piloto. Luego reemplazar por contrato FX real.
   readonly fxRateUsdClp = 950;
+  readonly historyLimitOptions = HISTORY_LIMIT_OPTIONS;
 
   activeTable: 'prices' | 'features' | 'predictions' = 'prices';
 
@@ -137,7 +139,7 @@ export class HistoryComponent {
     shareReplay(1)
   );
 
-  readonly selectedAssetMeta$ = combineLatest([
+  readonly selectedMarketOptions$ = combineLatest([
     this.assets$,
     this.form.controls.asset.valueChanges.pipe(
       startWith(this.form.controls.asset.value)
@@ -149,24 +151,19 @@ export class HistoryComponent {
         asset,
       });
 
-      return selected.selectedAsset;
+      return selected;
     }),
-    tap((assetMeta) => {
-      if (!assetMeta) return;
-
+    tap((selected) => {
       const currentTimeframe = this.form.controls.timeframe.value;
       const currentHorizon = this.form.controls.horizon.value;
 
-      const validTimeframes = assetMeta.timeframes ?? [];
-      const validHorizons = assetMeta.horizons ?? [];
-
-      const nextTimeframe = validTimeframes.includes(currentTimeframe)
+      const nextTimeframe = selected.timeframes.includes(currentTimeframe)
         ? currentTimeframe
-        : (validTimeframes[0] ?? '');
+        : (selected.timeframes[0] ?? '');
 
-      const nextHorizon = validHorizons.includes(currentHorizon)
+      const nextHorizon = selected.horizons.includes(currentHorizon)
         ? currentHorizon
-        : (validHorizons[0] ?? '');
+        : (selected.horizons[0] ?? '');
 
       this.form.patchValue(
         {
@@ -365,7 +362,7 @@ export class HistoryComponent {
   private normalizeLimit(limit: number): number {
     const parsed = Number(limit);
     if (Number.isNaN(parsed)) return 25;
-    return [25, 50, 100].includes(parsed) ? parsed : 25;
+    return this.historyLimitOptions.includes(parsed as any) ? parsed : 25;
   }
 
   private normalizeOffset(offset: number): number {

@@ -27,10 +27,7 @@
       <div class="col-lg-3 col-md-6 col-12">
         <label class="form-label small">Puntos históricos</label>
         <select class="form-select" [formControl]="form.controls.limit">
-          <option [ngValue]="20">20</option>
-          <option [ngValue]="30">30</option>
-          <option [ngValue]="60">60</option>
-          <option [ngValue]="120">120</option>
+          <option *ngFor="let limit of historyLimitOptions" [ngValue]="limit">{{ limit }}</option>
         </select>
       </div>
     </div>

@@ -25,8 +25,8 @@
     <div class="col-xl-3 col-md-6 col-12">
       <label class="form-label small">Timeframe</label>
       <select class="form-select history-select" [formControl]="form.controls.timeframe" (change)="resetOffset()">
-        <ng-container *ngIf="selectedAssetMeta$ | async as assetMeta">
-          <option *ngFor="let tf of assetMeta?.timeframes ?? []" [value]="tf">
+        <ng-container *ngIf="selectedMarketOptions$ | async as options">
+          <option *ngFor="let tf of options.timeframes" [value]="tf">
             {{ tf }}
           </option>
         </ng-container>
@@ -36,8 +36,8 @@
     <div class="col-xl-3 col-md-6 col-12">
       <label class="form-label small">Horizonte</label>
       <select class="form-select history-select" [formControl]="form.controls.horizon" (change)="resetOffset()">
-        <ng-container *ngIf="selectedAssetMeta$ | async as assetMeta">
-          <option *ngFor="let hz of assetMeta?.horizons ?? []" [value]="hz">
+        <ng-container *ngIf="selectedMarketOptions$ | async as options">
+          <option *ngFor="let hz of options.horizons" [value]="hz">
             {{ hz }}
           </option>
         </ng-container>
@@ -55,9 +55,7 @@
     <div class="col-xl-3 col-md-6 col-12">
       <label class="form-label small">Registros</label>
       <select class="form-select history-select" [formControl]="form.controls.limit" (change)="resetOffset()">
-        <option [ngValue]="25">25</option>
-        <option [ngValue]="50">50</option>
-        <option [ngValue]="100">100</option>
+        <option *ngFor="let limit of historyLimitOptions" [ngValue]="limit">{{ limit }}</option>
       </select>
     </div>
   </div>

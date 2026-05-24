@@ -149,10 +149,15 @@ export class HomeComponent {
   );
 
   onAssetChange(asset: AssetInfo): void {
-    this.form.patchValue({
+    const selected = this.marketSelection.resolve([asset], {
+      ...this.form.getRawValue(),
       asset: asset.asset,
-      timeframe: asset.timeframes?.[0] ?? '',
-      horizon: asset.horizons?.[0] ?? '',
+    });
+
+    this.form.patchValue({
+      asset: selected.asset,
+      timeframe: selected.timeframe,
+      horizon: selected.horizon,
     });
   }
 

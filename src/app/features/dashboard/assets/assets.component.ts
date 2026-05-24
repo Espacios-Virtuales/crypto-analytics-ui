@@ -14,6 +14,7 @@ import {
   LineChartPoint,
 } from '../../../shared/components/line-chart/line-chart.component';
 import { CryptoTimestampPipe } from '../../../shared/pipes/crypto-timestamp.pipe';
+import { HISTORY_LIMIT_OPTIONS } from '../../../shared/constants/market-options';
 
 type AssetsViewModel = {
   asset: AssetInfo | null;
@@ -36,11 +37,12 @@ export class AssetsComponent {
   private readonly historyService = inject(HistoryService);
   private readonly marketSelection = inject(MarketSelectionService);
   private readonly initialSelection = this.marketSelection.snapshot();
+  readonly historyLimitOptions = HISTORY_LIMIT_OPTIONS;
 
   readonly form = this.fb.nonNullable.group({
     asset: this.fb.nonNullable.control(this.initialSelection.asset),
     timeframe: this.fb.nonNullable.control(this.initialSelection.timeframe),
-    limit: this.fb.nonNullable.control(30),
+    limit: this.fb.nonNullable.control(25),
   });
 
   readonly assets$ = this.assetsService.list().pipe(
@@ -59,7 +61,7 @@ export class AssetsComponent {
       return {
         assets,
         selected,
-        timeframes: selected?.timeframes?.length ? selected.timeframes : [],
+        timeframes: this.marketSelection.timeframesForAsset(selected),
       };
     }),
     tap(({ assets }) => this.patchValidSelection(assets)),
@@ -96,7 +98,7 @@ export class AssetsComponent {
         .getPrices({
           asset: asset.asset,
           timeframe,
-          limit: formValue.limit ?? 30,
+          limit: this.normalizeLimit(formValue.limit ?? 25),
           order: 'desc',
         })
         .pipe(
@@ -174,22 +176,32 @@ export class AssetsComponent {
     const selected =
       assets.find((item) => item.asset === current.asset) ?? assets[0];
 
-    const nextTimeframe = selected.timeframes?.includes(current.timeframe)
-      ? current.timeframe
-      : (selected.timeframes?.[0] ?? '');
+    const resolved = this.marketSelection.resolve(assets, current);
+    const nextLimit = this.normalizeLimit(current.limit);
 
-    if (selected.asset !== current.asset || nextTimeframe !== current.timeframe) {
+    if (
+      selected.asset !== current.asset ||
+      resolved.timeframe !== current.timeframe ||
+      nextLimit !== current.limit
+    ) {
       this.form.patchValue(
         {
           asset: selected.asset,
-          timeframe: nextTimeframe,
+          timeframe: resolved.timeframe,
+          limit: nextLimit,
         },
         { emitEvent: false }
       );
       this.marketSelection.update({
         asset: selected.asset,
-        timeframe: nextTimeframe,
+        timeframe: resolved.timeframe,
       });
     }
+  }
+
+  private normalizeLimit(limit: number): number {
+    const parsed = Number(limit);
+    if (Number.isNaN(parsed)) return 25;
+    return this.historyLimitOptions.includes(parsed as any) ? parsed : 25;
   }
 }

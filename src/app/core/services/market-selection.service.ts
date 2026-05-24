@@ -2,6 +2,11 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 import { AssetInfo } from '../models/assets.model';
+import {
+  MARKET_HORIZON_OPTIONS,
+  MARKET_TIMEFRAME_OPTIONS,
+  mergeMarketOptions,
+} from '../../shared/constants/market-options';
 
 export interface MarketSelection {
   asset: string;
@@ -64,8 +69,8 @@ export class MarketSelectionService {
     const selectedAsset =
       assets.find((item) => item.asset === current.asset) ?? assets[0];
 
-    const timeframes = selectedAsset.timeframes ?? [];
-    const horizons = selectedAsset.horizons ?? [];
+    const timeframes = this.timeframesForAsset(selectedAsset);
+    const horizons = this.horizonsForAsset(selectedAsset);
 
     return {
       asset: selectedAsset.asset,
@@ -79,5 +84,13 @@ export class MarketSelectionService {
       timeframes,
       horizons,
     };
+  }
+
+  timeframesForAsset(asset: AssetInfo | null | undefined): string[] {
+    return mergeMarketOptions(asset?.timeframes, MARKET_TIMEFRAME_OPTIONS);
+  }
+
+  horizonsForAsset(asset: AssetInfo | null | undefined): string[] {
+    return mergeMarketOptions(asset?.horizons, MARKET_HORIZON_OPTIONS);
   }
 }

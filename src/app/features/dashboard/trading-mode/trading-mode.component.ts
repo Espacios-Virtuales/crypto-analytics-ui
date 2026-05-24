@@ -76,13 +76,12 @@ export class TradingModeComponent {
     this.form.valueChanges.pipe(startWith(this.form.getRawValue())),
   ]).pipe(
     map(([assets, value]) => {
-      const selected =
-        assets.find((item) => item.asset === value.asset) ?? assets[0] ?? null;
+      const selected = this.marketSelection.resolve(assets, value);
 
       return {
         assets,
-        timeframes: selected?.timeframes ?? [],
-        horizons: selected?.horizons ?? [],
+        timeframes: selected.timeframes,
+        horizons: selected.horizons,
       };
     }),
     tap((options) => {
