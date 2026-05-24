@@ -14,6 +14,7 @@ import {
 } from '../../../core/models/latest.model';
 
 type DisplayQuoteOption = 'MARKET' | 'USD' | 'CLP';
+type DerivedSignal = 'BUY' | 'SELL' | 'HOLD';
 
 @Component({
   selector: 'app-home',
@@ -196,6 +197,38 @@ export class HomeComponent {
 
   hasFxContext(pulse: any): boolean {
     return !!this.fxContext(pulse);
+  }
+
+  derivedSignal(pulse: any): DerivedSignal {
+    const price = this.basePriceValue(pulse?.price);
+    const prediction = this.basePredictionValue(pulse?.prediction);
+
+    if (!price || !prediction) return 'HOLD';
+
+    const diffRatio = Math.abs(prediction - price) / price;
+    if (diffRatio < 0.001) return 'HOLD';
+
+    return prediction > price ? 'BUY' : 'SELL';
+  }
+
+  signalStrength(pulse: any): number {
+    const price = this.basePriceValue(pulse?.price);
+    const prediction = this.basePredictionValue(pulse?.prediction);
+
+    if (!price || !prediction) return 0;
+
+    return Math.abs(prediction - price) / price;
+  }
+
+  signalBadgeClass(signal: DerivedSignal): string {
+    switch (signal) {
+      case 'BUY':
+        return 'signal-buy';
+      case 'SELL':
+        return 'signal-sell';
+      default:
+        return 'signal-hold';
+    }
   }
 
   formatMetric(value: number, currency: string): string {
