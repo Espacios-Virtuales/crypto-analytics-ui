@@ -9,15 +9,17 @@ import { LatestService } from '../../../core/services/latest.service';
 import { MarketSelectionService } from '../../../core/services/market-selection.service';
 import { AssetInfo } from '../../../core/models/assets.model';
 import { CryptoTimestampPipe } from '../../../shared/pipes/crypto-timestamp.pipe';
-
-type TradingSignal = 'BUY' | 'SELL' | 'HOLD';
-type RiskProfile = 'LOW' | 'MEDIUM' | 'HIGH';
-
-type TradingFormValue = {
-  asset: string;
-  timeframe: string;
-  horizon: string;
-};
+import {
+  buildSignalReading,
+  expectedReturnClass,
+  SignalAction,
+  SignalReading,
+  signalBadgeClass,
+} from '../../../shared/utils/signal-reading.utils';
+import {
+  buildTechnicalReading,
+  TechnicalReading,
+} from '../../../shared/utils/technical-reading.utils';
 
 type TradingVm = {
   asset: string;
@@ -25,16 +27,8 @@ type TradingVm = {
   horizon: string;
   price: number;
   prediction: number;
-  confidence: number | null;
-  rsi: number | null;
-  macd: number | null;
-  signal: TradingSignal;
-  riskProfile: RiskProfile;
-  positionSizePct: number;
-  stopLoss: number;
-  takeProfit: number;
-  expectedMovePct: number;
-  mode: 'PAPER';
+  signal: SignalReading;
+  technical: TechnicalReading;
   asof_ts_utc: string | null;
 };
 
@@ -149,13 +143,7 @@ export class TradingModeComponent {
           const confidence = prediction?.data?.confidence ?? null;
           const rsi = feature?.data?.rsi ?? null;
           const macd = feature?.data?.macd ?? null;
-
-          const signal = this.getSignal(currentPrice, predictedPrice);
-          const expectedMovePct = this.getExpectedMovePct(currentPrice, predictedPrice);
-          const riskProfile = this.getRiskProfile(confidence, rsi);
-          const positionSizePct = this.getPositionSizePct(confidence, riskProfile);
-          const stopLoss = this.getStopLoss(currentPrice, signal, riskProfile);
-          const takeProfit = this.getTakeProfit(currentPrice, signal, expectedMovePct);
+          const volatility = feature?.data?.volatility ?? null;
 
           return {
             asset: value.asset,
@@ -163,16 +151,8 @@ export class TradingModeComponent {
             horizon: value.horizon,
             price: currentPrice,
             prediction: predictedPrice,
-            confidence,
-            rsi,
-            macd,
-            signal,
-            riskProfile,
-            positionSizePct,
-            stopLoss,
-            takeProfit,
-            expectedMovePct,
-            mode: 'PAPER',
+            signal: buildSignalReading(currentPrice, predictedPrice, confidence),
+            technical: buildTechnicalReading(rsi, macd, volatility),
             asof_ts_utc:
               price?.meta?.asof_ts_utc ??
               prediction?.meta?.asof_ts_utc ??
@@ -189,26 +169,8 @@ export class TradingModeComponent {
     shareReplay(1)
   );
 
-  signalBadgeClass(signal: TradingSignal): string {
-    switch (signal) {
-      case 'BUY':
-        return 'tm-badge-buy';
-      case 'SELL':
-        return 'tm-badge-sell';
-      default:
-        return 'tm-badge-hold';
-    }
-  }
-
-  riskBadgeClass(risk: RiskProfile): string {
-    switch (risk) {
-      case 'LOW':
-        return 'tm-badge-buy';
-      case 'HIGH':
-        return 'tm-badge-sell';
-      default:
-        return 'tm-badge-hold';
-    }
+  signalBadgeClass(signal: SignalAction): string {
+    return signalBadgeClass(signal).replace('signal-', 'tm-badge-');
   }
 
   formatPrice(value: number): string {
@@ -218,75 +180,27 @@ export class TradingModeComponent {
     });
   }
 
-  formatPercent(value: number | null): string {
-    if (value == null) return '—';
+  formatSignedPercent(value: number): string {
+    const formatted = Math.abs(value).toLocaleString('es-CL', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+      style: 'percent',
+    });
 
+    if (value > 0) return `+${formatted}`;
+    if (value < 0) return `-${formatted}`;
+    return formatted;
+  }
+
+  formatStrength(value: number): string {
     return value.toLocaleString('es-CL', {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 1,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
       style: 'percent',
     });
   }
 
-  private getSignal(price: number, prediction: number): TradingSignal {
-    if (!price || !prediction) return 'HOLD';
-
-    const diffRatio = Math.abs(prediction - price) / price;
-    if (diffRatio < 0.001) return 'HOLD';
-
-    return prediction > price ? 'BUY' : 'SELL';
-  }
-
-  private getExpectedMovePct(price: number, prediction: number): number {
-    if (!price || !prediction) return 0;
-    return (prediction - price) / price;
-  }
-
-  private getRiskProfile(confidence: number | null, rsi: number | null): RiskProfile {
-    if ((confidence ?? 0) >= 0.75 && rsi != null && rsi > 35 && rsi < 65) {
-      return 'LOW';
-    }
-
-    if ((confidence ?? 0) < 0.45 || rsi == null || rsi < 25 || rsi > 75) {
-      return 'HIGH';
-    }
-
-    return 'MEDIUM';
-  }
-
-  private getPositionSizePct(confidence: number | null, risk: RiskProfile): number {
-    const base =
-      risk === 'LOW' ? 0.12 :
-      risk === 'MEDIUM' ? 0.08 :
-      0.04;
-
-    const multiplier =
-      confidence == null ? 0.75 :
-      confidence >= 0.8 ? 1 :
-      confidence >= 0.6 ? 0.85 :
-      0.65;
-
-    return +(base * multiplier).toFixed(4);
-  }
-
-  private getStopLoss(price: number, signal: TradingSignal, risk: RiskProfile): number {
-    const riskPct =
-      risk === 'LOW' ? 0.008 :
-      risk === 'MEDIUM' ? 0.012 :
-      0.018;
-
-    if (signal === 'BUY') return +(price * (1 - riskPct)).toFixed(2);
-    if (signal === 'SELL') return +(price * (1 + riskPct)).toFixed(2);
-
-    return +price.toFixed(2);
-  }
-
-  private getTakeProfit(price: number, signal: TradingSignal, expectedMovePct: number): number {
-    const move = Math.max(Math.abs(expectedMovePct), 0.01);
-
-    if (signal === 'BUY') return +(price * (1 + move)).toFixed(2);
-    if (signal === 'SELL') return +(price * (1 - move)).toFixed(2);
-
-    return +price.toFixed(2);
+  expectedReturnClass(reading: SignalReading): string {
+    return expectedReturnClass(reading.tone);
   }
 }
