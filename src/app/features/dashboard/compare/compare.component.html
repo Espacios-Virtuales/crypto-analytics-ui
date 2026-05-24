@@ -140,6 +140,35 @@
         </table>
       </div>
     </div>
+
+    <div class="card compare-card trading-placeholder shadow-sm mb-4" *ngIf="vm.rows.length">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <strong>Trading Mode visual</strong>
+        <small class="text-muted">Sin ejecución automática</small>
+      </div>
+
+      <div class="card-body">
+        <div class="trading-grid">
+          <div class="trading-panel">
+            <span class="trading-label">BUY</span>
+            <strong>{{ signalCount(vm.rows, 'BUY') }}</strong>
+          </div>
+          <div class="trading-panel">
+            <span class="trading-label">SELL</span>
+            <strong>{{ signalCount(vm.rows, 'SELL') }}</strong>
+          </div>
+          <div class="trading-panel">
+            <span class="trading-label">HOLD</span>
+            <strong>{{ signalCount(vm.rows, 'HOLD') }}</strong>
+          </div>
+          <div class="trading-panel trading-panel-wide" *ngIf="strongestRow(vm.rows) as strongest">
+            <span class="trading-label">Mayor fuerza</span>
+            <strong>{{ strongest.asset }} · {{ strongest.signal }}</strong>
+            <small>{{ formatStrength(strongest.signalStrength) }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
   </ng-container>
 
   <ng-template #loadingTpl>

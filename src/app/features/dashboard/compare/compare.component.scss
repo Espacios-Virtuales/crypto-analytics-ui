@@ -184,22 +184,42 @@
     }
   }
 
-  .trading-pill-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.65rem;
+  .trading-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.85rem;
   }
 
-  .trading-pill {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.45rem 0.75rem;
-    border-radius: 999px;
-    background: #f3f4f6;
+  .trading-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-height: 86px;
+    justify-content: center;
+    padding: 0.85rem;
     border: 1px solid #e5e7eb;
-    color: #374151;
-    font-size: 0.82rem;
-    font-weight: 600;
+    border-radius: 0.75rem;
+    background: #ffffff;
+
+    strong {
+      color: #111827;
+      font-size: 1.25rem;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+    }
+
+    small {
+      color: #6b7280;
+      font-weight: 600;
+    }
+  }
+
+  .trading-label {
+    color: #6b7280;
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
   }
 
   .text-muted {
@@ -231,8 +251,16 @@
       padding: 0.55rem 0.8rem;
     }
 
-    .trading-pill {
-      font-size: 0.78rem;
+    .trading-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+}
+
+@media (max-width: 575.98px) {
+  .compare-page {
+    .trading-grid {
+      grid-template-columns: 1fr;
     }
   }
 }

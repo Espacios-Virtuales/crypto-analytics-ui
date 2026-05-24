@@ -222,6 +222,25 @@ export class CompareComponent {
     });
   }
 
+  signalCount(rows: CompareRow[], signal: CompareSignal): number {
+    return rows.filter((row) => row.signal === signal).length;
+  }
+
+  strongestRow(rows: CompareRow[]): CompareRow | null {
+    return rows.reduce<CompareRow | null>((best, row) => {
+      if (!best) return row;
+      return row.signalStrength > best.signalStrength ? row : best;
+    }, null);
+  }
+
+  formatStrength(value: number): string {
+    return value.toLocaleString('es-CL', {
+      minimumFractionDigits: 1,
+      maximumFractionDigits: 2,
+      style: 'percent',
+    });
+  }
+
   correlationBadgeClass(value: number): string {
     if (value > 0.7) return 'compare-badge-buy';
     if (value > 0.3) return 'compare-badge-hold';
