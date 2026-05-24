@@ -75,12 +75,13 @@
           <thead>
             <tr>
               <th>Asset</th>
+              <th>Lectura</th>
               <th>Price</th>
               <th>Prediction</th>
+              <th>Expected</th>
               <th>Signal</th>
               <th>Confidence</th>
-              <th>RSI</th>
-              <th>MACD</th>
+              <th>Técnico</th>
               <th>Horizon</th>
               <th>Updated</th>
             </tr>
@@ -88,16 +89,32 @@
           <tbody>
             <tr *ngFor="let row of vm.rows">
               <td class="fw-semibold">{{ row.asset }}</td>
+              <td>
+                <div class="executive-reading fw-bold">{{ combinedReading(row) }}</div>
+              </td>
               <td>{{ formatPrice(row.price) }}</td>
               <td>{{ formatPrice(row.prediction) }}</td>
+              <td>
+                <span class="fw-bold" [ngClass]="expectedReturnClass(row)">
+                  {{ formatSignedPercent(row.expectedReturn) }}
+                </span>
+              </td>
               <td>
                 <span class="badge rounded-pill compare-badge" [ngClass]="badgeClass(row.signal)">
                   {{ row.signal }}
                 </span>
               </td>
-              <td>{{ formatPercent(row.confidence) }}</td>
-              <td>{{ formatNumber(row.rsi, 2, 2) }}</td>
-              <td>{{ formatNumber(row.macd, 2, 4) }}</td>
+              <td>
+                <div>{{ row.confidenceLevel }}</div>
+                <small class="text-muted">{{ formatPercent(row.confidence) }}</small>
+              </td>
+              <td>
+                <div class="technical-context">
+                  <span>RSI: {{ row.rsiContext }}</span>
+                  <span>MACD: {{ row.macdContext }}</span>
+                  <span>Vol: {{ row.volatilityLevel }}</span>
+                </div>
+              </td>
               <td>{{ row.horizon }}</td>
               <td>{{ row.asof_ts_utc | cryptoTimestamp }}</td>
             </tr>

@@ -5,6 +5,7 @@ import { catchError, map } from 'rxjs/operators';
 import { LatestService } from './latest.service';
 import { CompareRow, CompareVm } from '../models/compare.model';
 import { buildSignalReading } from '../../shared/utils/signal-reading.utils';
+import { buildTechnicalReading } from '../../shared/utils/technical-reading.utils';
 
 @Injectable({ providedIn: 'root' })
 export class CompareService {
@@ -68,7 +69,9 @@ export class CompareService {
         const confidence = prediction?.data?.confidence ?? null;
         const rsi = feature?.data?.rsi ?? null;
         const macd = feature?.data?.macd ?? null;
+        const volatility = feature?.data?.volatility ?? null;
         const reading = buildSignalReading(currentPrice, predictedPrice, confidence);
+        const technical = buildTechnicalReading(rsi, macd, volatility);
 
         return {
           asset,
@@ -76,9 +79,15 @@ export class CompareService {
           horizon,
           price: currentPrice,
           prediction: predictedPrice,
+          expectedReturn: reading.expectedReturn,
           confidence,
+          confidenceLevel: reading.confidenceLevel,
           rsi,
+          rsiContext: technical.rsiContext,
           macd,
+          macdContext: technical.macdContext,
+          volatility,
+          volatilityLevel: technical.volatilityLevel,
           signal: reading.signal,
           signalStrength: reading.absoluteStrength,
           asof_ts_utc:
@@ -107,9 +116,15 @@ export class CompareService {
       horizon,
       price: 0,
       prediction: 0,
+      expectedReturn: 0,
       confidence: null,
+      confidenceLevel: 'Baja',
       rsi: null,
+      rsiContext: 'Sin lectura',
       macd: null,
+      macdContext: 'Sin lectura',
+      volatility: null,
+      volatilityLevel: 'Baja',
       signal: 'HOLD',
       signalStrength: 0,
       asof_ts_utc: null,

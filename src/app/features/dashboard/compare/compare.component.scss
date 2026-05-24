@@ -73,10 +73,6 @@
     background: #ffffff;
     color: #374151;
     cursor: pointer;
-    transition:
-      border-color 0.2s ease,
-      background 0.2s ease,
-      transform 0.2s ease;
 
     &:hover {
       border-color: #9ca3af;
@@ -176,12 +172,26 @@
     border: 1px solid #d1d5db;
   }
 
-  .trading-placeholder {
-    .card-body {
-      p {
-        color: #4b5563;
-      }
-    }
+  .executive-reading {
+    color: #111827;
+  }
+
+  .expected-return-positive {
+    color: #166534;
+  }
+
+  .expected-return-negative {
+    color: #991b1b;
+  }
+
+  .expected-return-neutral {
+    color: #374151;
+  }
+
+  .technical-context {
+    display: grid;
+    color: #374151;
+    font-size: 0.82rem;
   }
 
   .trading-grid {
