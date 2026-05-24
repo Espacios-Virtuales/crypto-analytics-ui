@@ -267,14 +267,14 @@ Preparar maqueta para integración futura de trading.
 
 ## Elementos
 -   [x] Trading mode placeholder en UI
--   [] Señales explicables
--   [] Risk score
--   [] Hooks para ejecución futura
--   [] Placeholder visual “Trading Mode (Fase 3)”
+-   [x] Señales explicables
+-   [x] Risk score
+-   [x] Hooks para ejecución futura
+-   [x] Placeholder visual “Trading Mode (Fase 3)”
 
 ## Resultado esperado
--   [] Base visual y estructural para Fase 3
--   [] Separación clara entre lectura de mercado y futura ejecución
+-   [x] Base visual y estructural para Fase 3
+-   [x] Separación clara entre lectura de mercado y futura ejecución
 ------------------------------------------------------------------------
 
 # Estado actual esperado
@@ -287,9 +287,9 @@ Preparar maqueta para integración futura de trading.
   Sprint 3   Completado
   Sprint 4   Completado
   Sprint 5   Completado
-  Sprint 6   Pendiente
+  Sprint 6   Completado
   Sprint 7   Completado
-  Sprint 8   pendiente
+  Sprint 8   Completado
 
 ------------------------------------------------------------------------
 
