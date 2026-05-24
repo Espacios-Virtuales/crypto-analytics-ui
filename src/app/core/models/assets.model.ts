@@ -14,8 +14,8 @@ export interface AssetLast {
   export interface AssetInfo {
     asset: string;          // "BTC"
     ready: boolean;
-    timeframes: string[];   // ["1m"]
-    horizons: string[];     // ["5m"]
+    timeframes: string[];
+    horizons: string[];
     last: AssetLast;
     versions: AssetVersions;
   }

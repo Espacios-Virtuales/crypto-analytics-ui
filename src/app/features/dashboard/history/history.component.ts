@@ -2,9 +2,10 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { combineLatest, of } from 'rxjs';
-import { catchError, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
+import { catchError, filter, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 
 import { AssetsService } from '../../../core/services/assets.service';
+import { MarketSelectionService } from '../../../core/services/market-selection.service';
 import { AssetInfo } from '../../../core/models/assets.model';
 import { HistoryService } from '../../../core/services/history.service';
 import {
@@ -89,6 +90,8 @@ export class HistoryComponent {
   private readonly fb = inject(FormBuilder);
   private readonly assetsService = inject(AssetsService);
   private readonly historyService = inject(HistoryService);
+  private readonly marketSelection = inject(MarketSelectionService);
+  private readonly initialSelection = this.marketSelection.snapshot();
 
   // Stub temporal para piloto. Luego reemplazar por contrato FX real.
   readonly fxRateUsdClp = 950;
@@ -96,9 +99,9 @@ export class HistoryComponent {
   activeTable: 'prices' | 'features' | 'predictions' = 'prices';
 
   readonly form = this.fb.nonNullable.group({
-    asset: this.fb.nonNullable.control<string>('BTC'),
-    timeframe: this.fb.nonNullable.control<string>('1m'),
-    horizon: this.fb.nonNullable.control<string>('5m'),
+    asset: this.fb.nonNullable.control<string>(this.initialSelection.asset),
+    timeframe: this.fb.nonNullable.control<string>(this.initialSelection.timeframe),
+    horizon: this.fb.nonNullable.control<string>(this.initialSelection.horizon),
     limit: this.fb.nonNullable.control<number>(20),
     displayQuote: this.fb.nonNullable.control<DisplayQuoteOption>('USD'),
   });
@@ -107,28 +110,17 @@ export class HistoryComponent {
     tap((assets: AssetInfo[]) => {
       if (!assets.length) return;
 
-      const currentAsset = this.form.controls.asset.value;
-      const selectedAsset =
-        assets.find((item) => item.asset === currentAsset) ?? assets[0];
-
-      const nextTimeframe =
-        selectedAsset.timeframes?.includes(this.form.controls.timeframe.value)
-          ? this.form.controls.timeframe.value
-          : (selectedAsset.timeframes?.[0] ?? '1m');
-
-      const nextHorizon =
-        selectedAsset.horizons?.includes(this.form.controls.horizon.value)
-          ? this.form.controls.horizon.value
-          : (selectedAsset.horizons?.[0] ?? '5m');
+      const selected = this.marketSelection.resolve(assets, this.form.getRawValue());
 
       this.form.patchValue(
         {
-          asset: selectedAsset.asset,
-          timeframe: nextTimeframe,
-          horizon: nextHorizon,
+          asset: selected.asset,
+          timeframe: selected.timeframe,
+          horizon: selected.horizon,
         },
         { emitEvent: false }
       );
+      this.marketSelection.update(selected);
     }),
     shareReplay(1)
   );
@@ -139,7 +131,14 @@ export class HistoryComponent {
       startWith(this.form.controls.asset.value)
     ),
   ]).pipe(
-    map(([assets, asset]) => assets.find((item) => item.asset === asset) ?? null),
+    map(([assets, asset]) => {
+      const selected = this.marketSelection.resolve(assets, {
+        ...this.form.getRawValue(),
+        asset,
+      });
+
+      return selected.selectedAsset;
+    }),
     tap((assetMeta) => {
       if (!assetMeta) return;
 
@@ -151,11 +150,11 @@ export class HistoryComponent {
 
       const nextTimeframe = validTimeframes.includes(currentTimeframe)
         ? currentTimeframe
-        : (validTimeframes[0] ?? '1m');
+        : (validTimeframes[0] ?? '');
 
       const nextHorizon = validHorizons.includes(currentHorizon)
         ? currentHorizon
-        : (validHorizons[0] ?? '5m');
+        : (validHorizons[0] ?? '');
 
       this.form.patchValue(
         {
@@ -164,13 +163,16 @@ export class HistoryComponent {
         },
         { emitEvent: false }
       );
+      this.marketSelection.update(this.form.getRawValue());
     }),
     shareReplay(1)
   );
 
   readonly vm$ = this.form.valueChanges.pipe(
     startWith(this.form.getRawValue()),
+    tap((value) => this.marketSelection.update(value)),
     map((value) => this.normalizeFormValue(value as HistoryFormValue)),
+    filter((value) => !!value.asset && !!value.timeframe && !!value.horizon),
     switchMap((value) => {
       const pricesQuery: HistoryQuery = {
         asset: value.asset,

@@ -2,10 +2,11 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { combineLatest, of } from 'rxjs';
-import { catchError, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
+import { catchError, filter, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 
 import { AssetsService } from '../../../core/services/assets.service';
 import { LatestService } from '../../../core/services/latest.service';
+import { MarketSelectionService } from '../../../core/services/market-selection.service';
 import { AssetInfo } from '../../../core/models/assets.model';
 
 type TradingSignal = 'BUY' | 'SELL' | 'HOLD';
@@ -47,39 +48,30 @@ export class TradingModeComponent {
   private readonly fb = inject(FormBuilder);
   private readonly assetsService = inject(AssetsService);
   private readonly latestService = inject(LatestService);
+  private readonly marketSelection = inject(MarketSelectionService);
+  private readonly initialSelection = this.marketSelection.snapshot();
 
   readonly form = this.fb.nonNullable.group({
-    asset: this.fb.nonNullable.control<string>('BTC'),
-    timeframe: this.fb.nonNullable.control<string>('1m'),
-    horizon: this.fb.nonNullable.control<string>('5m'),
+    asset: this.fb.nonNullable.control<string>(this.initialSelection.asset),
+    timeframe: this.fb.nonNullable.control<string>(this.initialSelection.timeframe),
+    horizon: this.fb.nonNullable.control<string>(this.initialSelection.horizon),
   });
 
   readonly assets$ = this.assetsService.list().pipe(
     tap((assets: AssetInfo[]) => {
       if (!assets.length) return;
 
-      const currentAsset = this.form.controls.asset.value;
-      const selected =
-        assets.find((item) => item.asset === currentAsset) ?? assets[0];
-
-      const nextTimeframe =
-        selected.timeframes?.includes(this.form.controls.timeframe.value)
-          ? this.form.controls.timeframe.value
-          : (selected.timeframes?.[0] ?? '1m');
-
-      const nextHorizon =
-        selected.horizons?.includes(this.form.controls.horizon.value)
-          ? this.form.controls.horizon.value
-          : (selected.horizons?.[0] ?? '5m');
+      const selected = this.marketSelection.resolve(assets, this.form.getRawValue());
 
       this.form.patchValue(
         {
           asset: selected.asset,
-          timeframe: nextTimeframe,
-          horizon: nextHorizon,
+          timeframe: selected.timeframe,
+          horizon: selected.horizon,
         },
         { emitEvent: false }
       );
+      this.marketSelection.update(selected);
     }),
     shareReplay(1)
   );
@@ -94,8 +86,8 @@ export class TradingModeComponent {
 
       return {
         assets,
-        timeframes: selected?.timeframes ?? ['1m'],
-        horizons: selected?.horizons ?? ['5m'],
+        timeframes: selected?.timeframes ?? [],
+        horizons: selected?.horizons ?? [],
       };
     }),
     tap((options) => {
@@ -104,11 +96,11 @@ export class TradingModeComponent {
 
       const nextTimeframe = options.timeframes.includes(currentTimeframe)
         ? currentTimeframe
-        : (options.timeframes[0] ?? '1m');
+        : (options.timeframes[0] ?? '');
 
       const nextHorizon = options.horizons.includes(currentHorizon)
         ? currentHorizon
-        : (options.horizons[0] ?? '5m');
+        : (options.horizons[0] ?? '');
 
       if (nextTimeframe !== currentTimeframe || nextHorizon !== currentHorizon) {
         this.form.patchValue(
@@ -119,26 +111,35 @@ export class TradingModeComponent {
           { emitEvent: false }
         );
       }
+
+      this.marketSelection.update(this.form.getRawValue());
     }),
     shareReplay(1)
   );
 
   readonly vm$ = this.form.valueChanges.pipe(
     startWith(this.form.getRawValue()),
+    tap((value) => this.marketSelection.update(value)),
+    map((value) => ({
+      asset: value.asset ?? '',
+      timeframe: value.timeframe ?? '',
+      horizon: value.horizon ?? '',
+    })),
+    filter((value) => !!value.asset && !!value.timeframe && !!value.horizon),
     switchMap((value) =>
       combineLatest({
         price: this.latestService.getPrice({
-          asset: value.asset ?? 'BTC',
-          timeframe: value.timeframe ?? '1m',
+          asset: value.asset,
+          timeframe: value.timeframe,
         }),
         prediction: this.latestService.getPrediction({
-          asset: value.asset ?? 'BTC',
-          timeframe: value.timeframe ?? '1m',
-          horizon: value.horizon ?? '5m',
+          asset: value.asset,
+          timeframe: value.timeframe,
+          horizon: value.horizon,
         }),
         feature: this.latestService.getFeature({
-          asset: value.asset ?? 'BTC',
-          timeframe: value.timeframe ?? '1m',
+          asset: value.asset,
+          timeframe: value.timeframe,
         }),
       }).pipe(
         map(({ price, prediction, feature }) => {
@@ -156,9 +157,9 @@ export class TradingModeComponent {
           const takeProfit = this.getTakeProfit(currentPrice, signal, expectedMovePct);
 
           return {
-            asset: value.asset ?? 'BTC',
-            timeframe: value.timeframe ?? '1m',
-            horizon: value.horizon ?? '5m',
+            asset: value.asset,
+            timeframe: value.timeframe,
+            horizon: value.horizon,
             price: currentPrice,
             prediction: predictedPrice,
             confidence,

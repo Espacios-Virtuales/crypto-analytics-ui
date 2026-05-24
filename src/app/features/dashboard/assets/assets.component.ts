@@ -2,10 +2,11 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { combineLatest, of } from 'rxjs';
-import { catchError, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
+import { catchError, filter, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 
 import { AssetsService } from '../../../core/services/assets.service';
 import { HistoryService } from '../../../core/services/history.service';
+import { MarketSelectionService } from '../../../core/services/market-selection.service';
 import { AssetInfo } from '../../../core/models/assets.model';
 import { PricePoint } from '../../../core/models/history.model';
 import {
@@ -32,10 +33,12 @@ export class AssetsComponent {
   private readonly fb = inject(FormBuilder);
   private readonly assetsService = inject(AssetsService);
   private readonly historyService = inject(HistoryService);
+  private readonly marketSelection = inject(MarketSelectionService);
+  private readonly initialSelection = this.marketSelection.snapshot();
 
   readonly form = this.fb.nonNullable.group({
-    asset: this.fb.nonNullable.control('BTC'),
-    timeframe: this.fb.nonNullable.control('1m'),
+    asset: this.fb.nonNullable.control(this.initialSelection.asset),
+    timeframe: this.fb.nonNullable.control(this.initialSelection.timeframe),
     limit: this.fb.nonNullable.control(30),
   });
 
@@ -55,7 +58,7 @@ export class AssetsComponent {
       return {
         assets,
         selected,
-        timeframes: selected?.timeframes?.length ? selected.timeframes : ['1m'],
+        timeframes: selected?.timeframes?.length ? selected.timeframes : [],
       };
     }),
     tap(({ assets }) => this.patchValidSelection(assets)),
@@ -66,7 +69,15 @@ export class AssetsComponent {
     this.assets$,
     this.form.valueChanges.pipe(startWith(this.form.getRawValue())),
   ]).pipe(
+    tap(([, formValue]) =>
+      this.marketSelection.update({
+        asset: formValue.asset ?? '',
+        timeframe: formValue.timeframe ?? '',
+      })
+    ),
+    filter(([, formValue]) => !!formValue.asset && !!formValue.timeframe),
     switchMap(([assets, formValue]) => {
+      const timeframe = formValue.timeframe ?? '';
       const asset =
         assets.find((item) => item.asset === formValue.asset) ?? assets[0] ?? null;
 
@@ -83,7 +94,7 @@ export class AssetsComponent {
       return this.historyService
         .getPrices({
           asset: asset.asset,
-          timeframe: formValue.timeframe ?? asset.timeframes?.[0] ?? '1m',
+          timeframe,
           limit: formValue.limit ?? 30,
           order: 'desc',
         })
@@ -164,7 +175,7 @@ export class AssetsComponent {
 
     const nextTimeframe = selected.timeframes?.includes(current.timeframe)
       ? current.timeframe
-      : (selected.timeframes?.[0] ?? '1m');
+      : (selected.timeframes?.[0] ?? '');
 
     if (selected.asset !== current.asset || nextTimeframe !== current.timeframe) {
       this.form.patchValue(
@@ -174,6 +185,10 @@ export class AssetsComponent {
         },
         { emitEvent: false }
       );
+      this.marketSelection.update({
+        asset: selected.asset,
+        timeframe: nextTimeframe,
+      });
     }
   }
 }

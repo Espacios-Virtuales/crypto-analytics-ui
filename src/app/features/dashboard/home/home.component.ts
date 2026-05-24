@@ -2,10 +2,11 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { combineLatest, of } from 'rxjs';
-import { catchError, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
+import { catchError, filter, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 
 import { AssetsService } from '../../../core/services/assets.service';
 import { LatestService } from '../../../core/services/latest.service';
+import { MarketSelectionService } from '../../../core/services/market-selection.service';
 import { AssetInfo } from '../../../core/models/assets.model';
 import {
   FxContext,
@@ -37,39 +38,33 @@ export class HomeComponent {
   private readonly fb = inject(FormBuilder);
   private readonly assetsService = inject(AssetsService);
   private readonly latestService = inject(LatestService);
+  private readonly marketSelection = inject(MarketSelectionService);
   explanationOpen = false;
+  private readonly initialSelection = this.marketSelection.snapshot();
 
   readonly assets$ = this.assetsService.list().pipe(
     tap((assets) => {
       if (!assets.length) return;
 
-      const selected =
-        assets.find((a) => a.asset === this.form.controls.asset.value) ?? assets[0];
-
-      const nextTimeframe = selected.timeframes?.includes(this.form.controls.timeframe.value)
-        ? this.form.controls.timeframe.value
-        : (selected.timeframes?.[0] ?? '1m');
-
-      const nextHorizon = selected.horizons?.includes(this.form.controls.horizon.value)
-        ? this.form.controls.horizon.value
-        : (selected.horizons?.[0] ?? '5m');
+      const selected = this.marketSelection.resolve(assets, this.form.getRawValue());
 
       this.form.patchValue(
         {
           asset: selected.asset,
-          timeframe: nextTimeframe,
-          horizon: nextHorizon,
+          timeframe: selected.timeframe,
+          horizon: selected.horizon,
         },
         { emitEvent: false }
       );
+      this.marketSelection.update(selected);
     }),
     shareReplay(1)
   );
 
   readonly form = this.fb.nonNullable.group({
-    asset: this.fb.nonNullable.control('BTC'),
-    timeframe: this.fb.nonNullable.control('1m'),
-    horizon: this.fb.nonNullable.control('5m'),
+    asset: this.fb.nonNullable.control(this.initialSelection.asset),
+    timeframe: this.fb.nonNullable.control(this.initialSelection.timeframe),
+    horizon: this.fb.nonNullable.control(this.initialSelection.horizon),
     displayQuote: this.fb.nonNullable.control<DisplayQuoteOption>('MARKET'),
   });
 
@@ -78,13 +73,12 @@ export class HomeComponent {
     this.form.valueChanges.pipe(startWith(this.form.getRawValue())),
   ]).pipe(
     map(([assets, formValue]) => {
-      const selected =
-        assets.find((a) => a.asset === formValue.asset) ?? assets[0] ?? null;
+      const selected = this.marketSelection.resolve(assets, formValue);
 
       return {
         assets,
-        timeframes: selected?.timeframes ?? ['1m'],
-        horizons: selected?.horizons ?? ['5m'],
+        timeframes: selected.timeframes,
+        horizons: selected.horizons,
       };
     }),
     tap((options) => {
@@ -93,11 +87,11 @@ export class HomeComponent {
 
       const nextTimeframe = options.timeframes.includes(currentTimeframe)
         ? currentTimeframe
-        : (options.timeframes[0] ?? '1m');
+        : (options.timeframes[0] ?? '');
 
       const nextHorizon = options.horizons.includes(currentHorizon)
         ? currentHorizon
-        : (options.horizons[0] ?? '5m');
+        : (options.horizons[0] ?? '');
 
       if (nextTimeframe !== currentTimeframe || nextHorizon !== currentHorizon) {
         this.form.patchValue(
@@ -108,18 +102,22 @@ export class HomeComponent {
           { emitEvent: false }
         );
       }
+
+      this.marketSelection.update(this.form.getRawValue());
     }),
     shareReplay(1)
   );
 
   readonly pulse$ = this.form.valueChanges.pipe(
     startWith(this.form.getRawValue()),
+    tap((value) => this.marketSelection.update(value)),
     map((value) => ({
-      asset: value.asset ?? 'BTC',
-      timeframe: value.timeframe ?? '1m',
-      horizon: value.horizon ?? '5m',
+      asset: value.asset ?? '',
+      timeframe: value.timeframe ?? '',
+      horizon: value.horizon ?? '',
       displayQuote: value.displayQuote ?? 'MARKET',
     })),
+    filter((value) => !!value.asset && !!value.timeframe && !!value.horizon),
     switchMap((value) => {
       const displayQuote = this.toDisplayQuoteParam(value.displayQuote);
   
@@ -152,8 +150,8 @@ export class HomeComponent {
   onAssetChange(asset: AssetInfo): void {
     this.form.patchValue({
       asset: asset.asset,
-      timeframe: asset.timeframes?.[0] ?? '1m',
-      horizon: asset.horizons?.[0] ?? '5m',
+      timeframe: asset.timeframes?.[0] ?? '',
+      horizon: asset.horizons?.[0] ?? '',
     });
   }
 

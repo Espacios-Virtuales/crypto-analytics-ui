@@ -2,11 +2,12 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { combineLatest, of } from 'rxjs';
-import { catchError, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
+import { catchError, filter, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 
 import { AssetsService } from '../../../core/services/assets.service';
 import { CompareService } from '../../../core/services/compare.service';
 import { HistoryService } from '../../../core/services/history.service';
+import { MarketSelectionService } from '../../../core/services/market-selection.service';
 import { AssetInfo } from '../../../core/models/assets.model';
 import { CompareRow, CompareSignal } from '../../../core/models/compare.model';
 
@@ -46,11 +47,15 @@ export class CompareComponent {
   private readonly assetsService = inject(AssetsService);
   private readonly compareService = inject(CompareService);
   private readonly historyService = inject(HistoryService);
+  private readonly marketSelection = inject(MarketSelectionService);
+  private readonly initialSelection = this.marketSelection.snapshot();
 
   readonly form = this.fb.nonNullable.group({
-    assets: this.fb.nonNullable.control<string[]>(['BTC', 'ETH', 'SOL']),
-    timeframe: this.fb.nonNullable.control<string>('1m'),
-    horizon: this.fb.nonNullable.control<string>('5m'),
+    assets: this.fb.nonNullable.control<string[]>(
+      this.initialSelection.asset ? [this.initialSelection.asset] : []
+    ),
+    timeframe: this.fb.nonNullable.control<string>(this.initialSelection.timeframe),
+    horizon: this.fb.nonNullable.control<string>(this.initialSelection.horizon),
   });
 
   readonly assets$ = this.assetsService.list().pipe(
@@ -61,7 +66,6 @@ export class CompareComponent {
         assets.some((item) => item.asset === asset)
       );
 
-      const firstAsset = assets[0];
       const currentTimeframe = this.form.controls.timeframe.value;
       const currentHorizon = this.form.controls.horizon.value;
 
@@ -69,22 +73,25 @@ export class CompareComponent {
         ? currentAssets
         : assets.slice(0, 3).map((item) => item.asset);
 
-      const nextTimeframe = firstAsset.timeframes?.includes(currentTimeframe)
-        ? currentTimeframe
-        : (firstAsset.timeframes?.[0] ?? '1m');
-
-      const nextHorizon = firstAsset.horizons?.includes(currentHorizon)
-        ? currentHorizon
-        : (firstAsset.horizons?.[0] ?? '5m');
+      const selected = this.marketSelection.resolve(assets, {
+        asset: nextAssets[0],
+        timeframe: currentTimeframe,
+        horizon: currentHorizon,
+      });
 
       this.form.patchValue(
         {
           assets: nextAssets,
-          timeframe: nextTimeframe,
-          horizon: nextHorizon,
+          timeframe: selected.timeframe,
+          horizon: selected.horizon,
         },
         { emitEvent: false }
       );
+      this.marketSelection.update({
+        asset: nextAssets[0] ?? '',
+        timeframe: selected.timeframe,
+        horizon: selected.horizon,
+      });
     }),
     shareReplay(1)
   );
@@ -101,8 +108,8 @@ export class CompareComponent {
       return {
         availableAssets: assets,
         selectedAssets,
-        timeframes: firstSelectedAsset?.timeframes ?? ['1m'],
-        horizons: firstSelectedAsset?.horizons ?? ['5m'],
+        timeframes: firstSelectedAsset?.timeframes ?? [],
+        horizons: firstSelectedAsset?.horizons ?? [],
       };
     }),
     tap((summary) => {
@@ -111,11 +118,11 @@ export class CompareComponent {
 
       const nextTimeframe = summary.timeframes.includes(currentTimeframe)
         ? currentTimeframe
-        : (summary.timeframes[0] ?? '1m');
+        : (summary.timeframes[0] ?? '');
 
       const nextHorizon = summary.horizons.includes(currentHorizon)
         ? currentHorizon
-        : (summary.horizons[0] ?? '5m');
+        : (summary.horizons[0] ?? '');
 
       if (nextTimeframe !== currentTimeframe || nextHorizon !== currentHorizon) {
         this.form.patchValue(
@@ -126,13 +133,27 @@ export class CompareComponent {
           { emitEvent: false }
         );
       }
+
+      this.marketSelection.update({
+        asset: summary.selectedAssets[0] ?? '',
+        timeframe: this.form.controls.timeframe.value,
+        horizon: this.form.controls.horizon.value,
+      });
     }),
     shareReplay(1)
   );
 
   readonly vm$ = this.form.valueChanges.pipe(
     startWith(this.form.getRawValue()),
+    tap((value) =>
+      this.marketSelection.update({
+        asset: value.assets?.[0] ?? '',
+        timeframe: value.timeframe ?? '',
+        horizon: value.horizon ?? '',
+      })
+    ),
     map((value) => this.normalizeFormValue(value as CompareFormValue)),
+    filter((value) => !!value.timeframe && !!value.horizon),
     switchMap((value) =>
       combineLatest({
         compare: this.compareService.getCompare(value.assets, value.timeframe, value.horizon),
@@ -337,8 +358,8 @@ export class CompareComponent {
   private normalizeFormValue(value: CompareFormValue): CompareFormValue {
     return {
       assets: [...new Set((value.assets ?? []).filter(Boolean))].slice(0, 6),
-      timeframe: value.timeframe ?? '1m',
-      horizon: value.horizon ?? '5m',
+      timeframe: value.timeframe ?? '',
+      horizon: value.horizon ?? '',
     };
   }
 }
