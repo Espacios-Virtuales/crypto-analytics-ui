@@ -3,9 +3,8 @@ import { BehaviorSubject } from 'rxjs';
 
 import { AssetInfo } from '../models/assets.model';
 import {
-  MARKET_HORIZON_OPTIONS,
-  MARKET_TIMEFRAME_OPTIONS,
-  mergeMarketOptions,
+  normalizeMarketHorizons,
+  normalizeMarketTimeframes,
 } from '../../shared/constants/market-options';
 
 export interface MarketSelection {
@@ -87,10 +86,10 @@ export class MarketSelectionService {
   }
 
   timeframesForAsset(asset: AssetInfo | null | undefined): string[] {
-    return mergeMarketOptions(asset?.timeframes, MARKET_TIMEFRAME_OPTIONS);
+    return normalizeMarketTimeframes(asset?.timeframes);
   }
 
   horizonsForAsset(asset: AssetInfo | null | undefined): string[] {
-    return mergeMarketOptions(asset?.horizons, MARKET_HORIZON_OPTIONS);
+    return normalizeMarketHorizons(asset?.horizons);
   }
 }
