@@ -1,136 +1,43 @@
-<div class="assets-page container-fluid py-4">
-  <div class="assets-hero mb-4">
-    <h2 class="assets-title">Assets</h2>
-    <p class="assets-subtitle mb-0">Estado operativo e histórico reciente por activo.</p>
+<div class="assets-page container-fluid py-3">
+  <div class="assets-hero mb-3">
+    <h2 class="assets-title">Activos</h2>
+    <p class="assets-subtitle mb-0">Disponibilidad operacional por activo y combinación de mercado.</p>
   </div>
 
-  <ng-container *ngIf="options$ | async as options; else loadingTpl">
-    <div class="row g-3 mb-4">
-      <div class="col-lg-5 col-md-6 col-12">
-        <label class="form-label small">Activo</label>
-        <select class="form-select" [formControl]="form.controls.asset">
-          <option *ngFor="let item of options.assets; trackBy: trackByAsset" [value]="item.asset">
-            {{ item.asset }}
-          </option>
-        </select>
-      </div>
-
-      <div class="col-lg-4 col-md-6 col-12">
-        <label class="form-label small">Timeframe</label>
-        <select class="form-select" [formControl]="form.controls.timeframe">
-          <option *ngFor="let timeframe of options.timeframes" [value]="timeframe">
-            {{ timeframe }}
-          </option>
-        </select>
-      </div>
-
-      <div class="col-lg-3 col-md-6 col-12">
-        <label class="form-label small">Puntos históricos</label>
-        <select class="form-select" [formControl]="form.controls.limit">
-          <option *ngFor="let limit of historyLimitOptions" [ngValue]="limit">{{ limit }}</option>
-        </select>
+  <ng-container *ngIf="assets$ | async as assets; else loadingTpl">
+    <div class="card asset-table-card shadow-sm" *ngIf="assets.length; else emptyAssetsTpl">
+      <div class="table-responsive">
+        <table class="table table-sm table-hover align-middle mb-0 asset-table">
+          <thead>
+            <tr>
+              <th>Activos</th>
+              <th>Estado</th>
+              <th>Temporalidades</th>
+              <th>Horizontes</th>
+              <th>Último estado</th>
+              <th>Detalle técnico</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of assets; trackBy: trackByAsset">
+              <td class="asset-name">{{ item.asset }}</td>
+              <td>
+                <span class="badge" [class.text-bg-success]="item.ready" [class.text-bg-warning]="!item.ready">
+                  {{ item.ready ? 'Ready' : 'No ready' }}
+                </span>
+              </td>
+              <td>{{ item.timeframes.join(', ') || '-' }}</td>
+              <td>{{ item.horizons.join(', ') || '-' }}</td>
+              <td>
+                <strong>{{ lastStatus(item) }}</strong>
+                <span class="asset-meta d-block">{{ lastTimestamp(item) | cryptoTimestamp:'-' }}</span>
+              </td>
+              <td class="text-muted">{{ summary(item) }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
-
-    <div class="asset-grid mb-4" *ngIf="options.assets.length; else emptyAssetsTpl">
-      <button
-        type="button"
-        class="asset-card"
-        *ngFor="let item of options.assets; trackBy: trackByAsset"
-        [class.asset-card-active]="item.asset === form.controls.asset.value"
-        (click)="onAssetChange(item.asset)"
-      >
-        <span class="asset-card-main">
-          <strong>{{ item.asset }}</strong>
-          <span class="badge" [class.text-bg-success]="item.ready" [class.text-bg-warning]="!item.ready">
-            {{ item.ready ? 'READY' : 'NOT READY' }}
-          </span>
-        </span>
-        <span class="asset-card-meta">TF {{ item.timeframes.join(', ') || '-' }}</span>
-        <span class="asset-card-meta">H {{ item.horizons.join(', ') || '-' }}</span>
-        <span class="asset-card-meta">Último {{ item.last.price_ts_utc | cryptoTimestamp:'-' }}</span>
-      </button>
-    </div>
-
-    <ng-container *ngIf="vm$ | async as vm">
-      <div class="alert alert-warning" *ngIf="vm.error">
-        {{ vm.error }}
-      </div>
-
-      <div class="asset-status card shadow-sm mb-4" *ngIf="vm.asset">
-        <div class="card-body">
-          <div class="status-grid">
-            <div>
-              <span class="status-label">Activo</span>
-              <strong>{{ vm.asset.asset }}</strong>
-            </div>
-            <div>
-              <span class="status-label">Ready</span>
-              <strong>{{ vm.asset.ready ? 'Sí' : 'No' }}</strong>
-            </div>
-            <div>
-              <span class="status-label">Último precio</span>
-              <strong>{{ vm.asset.last.price_ts_utc | cryptoTimestamp:'-' }}</strong>
-            </div>
-            <div>
-              <span class="status-label">Modelo</span>
-              <strong>{{ vm.asset.versions.model_version }}</strong>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="mb-4" *ngIf="!vm.loading && vm.priceSeries.length">
-        <app-line-chart
-          title="Precio cierre reciente"
-          seriesAName="Close"
-          [seriesA]="vm.priceSeries"
-          [height]="260"
-        />
-      </div>
-
-      <div class="card asset-table-card shadow-sm">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <strong>Histórico de precios</strong>
-          <small class="text-muted">{{ form.controls.timeframe.value }}</small>
-        </div>
-
-        <div class="card-body text-muted" *ngIf="vm.loading">
-          Cargando histórico...
-        </div>
-
-        <div class="card-body text-muted" *ngIf="!vm.loading && !vm.error && !vm.prices.length">
-          No hay precios históricos para la selección actual.
-        </div>
-
-        <div class="table-responsive" *ngIf="!vm.loading && vm.prices.length">
-          <table class="table table-sm table-hover align-middle mb-0 asset-table">
-            <thead>
-              <tr>
-                <th>Timestamp</th>
-                <th>Open</th>
-                <th>High</th>
-                <th>Low</th>
-                <th>Close</th>
-                <th>Volume</th>
-                <th>Source</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let price of vm.prices; trackBy: trackByPrice">
-                <td>{{ price.ts_utc | cryptoTimestamp }}</td>
-                <td>{{ formatPrice(price.open) }}</td>
-                <td>{{ formatPrice(price.high) }}</td>
-                <td>{{ formatPrice(price.low) }}</td>
-                <td class="fw-semibold">{{ formatPrice(price.close) }}</td>
-                <td>{{ formatVolume(price.volume) }}</td>
-                <td>{{ price.source || '-' }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </ng-container>
   </ng-container>
 
   <ng-template #emptyAssetsTpl>
@@ -141,7 +48,7 @@
 
   <ng-template #loadingTpl>
     <div class="card shadow-sm">
-      <div class="card-body text-muted">Cargando assets...</div>
+      <div class="card-body text-muted">Cargando activos...</div>
     </div>
   </ng-template>
 </div>

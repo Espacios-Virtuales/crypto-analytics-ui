@@ -12,6 +12,7 @@ import {
   FxContext,
   LatestPredictionResponse,
   LatestPriceResponse,
+  LatestSignalResponse,
 } from '../../../core/models/latest.model';
 import {
   buildSignalReading,
@@ -138,6 +139,13 @@ export class HomeComponent {
           horizon: value.horizon,
           ...(displayQuote ? { display_quote: displayQuote } : {}),
         }),
+        signal: this.latestService
+          .getSignal({
+            asset: value.asset,
+            timeframe: value.timeframe,
+            horizon: value.horizon,
+          })
+          .pipe(catchError(() => of(null))),
       }).pipe(
         catchError((error) => {
           console.error('[HomeComponent] pulse error', error);
@@ -223,11 +231,22 @@ export class HomeComponent {
   }
 
   signalReading(pulse: any): SignalReading {
-    return buildSignalReading(
+    const fallback = buildSignalReading(
       this.basePriceValue(pulse?.price),
       this.basePredictionValue(pulse?.prediction),
       pulse?.prediction?.data?.confidence ?? null
     );
+    const latestSignal = pulse?.signal as LatestSignalResponse | null;
+
+    if (!latestSignal) return fallback;
+
+    return {
+      ...fallback,
+      signal: this.normalizeSignal(latestSignal.signal),
+      absoluteStrength: latestSignal.strength ?? fallback.absoluteStrength,
+      confidence: latestSignal.confidence ?? fallback.confidence,
+      text: latestSignal.reason || fallback.text,
+    };
   }
 
   signalBadgeClass(reading: SignalReading): string {
@@ -263,5 +282,10 @@ export class HomeComponent {
   private toDisplayQuoteParam(option: DisplayQuoteOption): string | undefined {
     if (option === 'MARKET') return undefined;
     return option;
+  }
+
+  private normalizeSignal(signal: string): 'BUY' | 'SELL' | 'HOLD' {
+    if (signal === 'BUY' || signal === 'SELL' || signal === 'HOLD') return signal;
+    return 'HOLD';
   }
 }

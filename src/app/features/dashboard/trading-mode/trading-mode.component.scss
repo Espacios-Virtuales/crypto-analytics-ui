@@ -8,19 +8,19 @@
   .trading-mode-hero,
   .tm-card {
     border: 1px solid #e5e7eb;
-    border-radius: 1rem;
+    border-radius: 0.5rem;
     background: #ffffff;
     box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
   }
 
   .trading-mode-hero {
-    padding: 1.25rem 1.5rem;
+    padding: 1rem 1.25rem;
   }
 
   .trading-mode-title {
     margin: 0 0 0.35rem;
     color: #111827;
-    font-size: 1.65rem;
+    font-size: 1.45rem;
     font-weight: 700;
   }
 
@@ -39,7 +39,7 @@
   .form-select {
     min-height: 46px;
     border: 1px solid #d1d5db;
-    border-radius: 0.85rem;
+    border-radius: 0.5rem;
     color: #111827;
     box-shadow: none;
   }
@@ -84,7 +84,7 @@
     min-height: 92px;
     padding: 0.85rem 0.95rem;
     border: 1px solid #e5e7eb;
-    border-radius: 0.85rem;
+    border-radius: 0.5rem;
     background: #f8fafc;
   }
 
@@ -147,6 +147,16 @@
     padding: 0.95rem 1rem;
     color: #4b5563;
     font-size: 0.92rem;
+  }
+
+  .exchange-link {
+    color: #003e6b;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .exchange-link:hover {
+    text-decoration: underline;
   }
 
   .text-muted {

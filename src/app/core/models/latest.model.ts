@@ -75,6 +75,14 @@ export interface LatestPredictionResponse {
   fx_context?: FxContext;
 }
 
+export interface LatestSignalResponse {
+  signal: 'BUY' | 'SELL' | 'HOLD' | string;
+  strength: number;
+  confidence: number;
+  reason?: string;
+  components?: Record<string, unknown>;
+}
+
 export interface LatestQuery {
   asset: string;
   timeframe: string;
@@ -82,5 +90,11 @@ export interface LatestQuery {
 }
 
 export interface LatestPredictionQuery extends LatestQuery {
+  horizon?: string;
+}
+
+export interface LatestSignalQuery {
+  asset: string;
+  timeframe: string;
   horizon?: string;
 }

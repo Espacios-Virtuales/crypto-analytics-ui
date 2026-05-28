@@ -5,7 +5,7 @@ import { lazy } from '../../../shared/lazy';
 export const ASSETS_ROUTES: Routes = [
   {
     path: PATHS.assets,
-    title: 'Assets',
+    title: 'Activos',
     loadComponent: () => lazy(import('./assets.component'), 'AssetsComponent'),
   },
 ];

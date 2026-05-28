@@ -1,17 +1,17 @@
-<div class="trading-mode-page container-fluid py-4">
-  <div class="row mb-4">
+<div class="trading-mode-page container-fluid py-3">
+  <div class="row mb-3">
     <div class="col-12">
       <div class="trading-mode-hero">
-        <h2 class="trading-mode-title">Trading Mode</h2>
+        <h2 class="trading-mode-title">Trading</h2>
         <p class="trading-mode-subtitle mb-0">
-          Lectura avanzada de mercado para evaluación visual multi-señal.
+          Lectura asistida y ruta externa de exchange. No ejecuta órdenes.
         </p>
       </div>
     </div>
   </div>
 
   <ng-container *ngIf="options$ | async as options">
-    <div class="row g-3 mb-4">
+    <div class="row g-3 mb-3">
       <div class="col-lg-4 col-md-4 col-12">
         <label class="form-label small">Activo</label>
         <select class="form-select" [formControl]="form.controls.asset">
@@ -22,7 +22,7 @@
       </div>
 
       <div class="col-lg-4 col-md-4 col-12">
-        <label class="form-label small">Timeframe</label>
+        <label class="form-label small">Temporalidad</label>
         <select class="form-select" [formControl]="form.controls.timeframe">
           <option *ngFor="let tf of options.timeframes" [value]="tf">
             {{ tf }}
@@ -43,19 +43,19 @@
 
   <ng-container *ngIf="vm$ | async as vm; else loadingTpl">
     <ng-container *ngIf="vm; else errorTpl">
-      <div class="tm-executive card tm-card shadow-sm mb-4">
+      <div class="tm-executive card tm-card shadow-sm mb-3">
         <div class="card-body">
           <div class="tm-executive-grid">
             <div>
-              <span class="tm-label">Asset</span>
+              <span class="tm-label">Activo</span>
               <strong>{{ vm.asset }}</strong>
             </div>
             <div>
-              <span class="tm-label">Timeframe</span>
+              <span class="tm-label">Temporalidad</span>
               <strong>{{ vm.timeframe }}</strong>
             </div>
             <div>
-              <span class="tm-label">Horizon</span>
+              <span class="tm-label">Horizonte</span>
               <strong>{{ vm.horizon }}</strong>
             </div>
             <div>
@@ -63,24 +63,39 @@
               <strong>{{ vm.asof_ts_utc | cryptoTimestamp }}</strong>
             </div>
             <div>
-              <span class="tm-label">Estado de señal</span>
+              <span class="tm-label">Señal</span>
               <span class="badge rounded-pill tm-badge" [ngClass]="signalBadgeClass(vm.signal.signal)">
                 {{ vm.signal.signal }}
               </span>
+            </div>
+            <div>
+              <span class="tm-label">Exchange</span>
+              <a
+                *ngIf="vm.route; else noRouteTpl"
+                class="exchange-link"
+                [href]="vm.route.url"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Abrir en exchange
+              </a>
+              <ng-template #noRouteTpl>
+                <strong>-</strong>
+              </ng-template>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="row g-3 mb-4">
+      <div class="row g-3 mb-3">
         <div class="col-xl-3 col-md-6 col-12">
           <div class="card tm-card shadow-sm h-100">
             <div class="card-body">
-              <div class="small text-muted mb-2">Expected return</div>
+              <div class="small text-muted mb-2">Retorno esperado</div>
               <div class="tm-metric" [ngClass]="expectedReturnClass(vm.signal)">
                 {{ formatSignedPercent(vm.signal.expectedReturn) }}
               </div>
-              <div class="small text-muted mt-2">Strength {{ formatStrength(vm.signal.absoluteStrength) }}</div>
+              <div class="small text-muted mt-2">Fuerza {{ formatStrength(vm.signal.absoluteStrength) }}</div>
             </div>
           </div>
         </div>
@@ -108,7 +123,7 @@
         <div class="col-xl-3 col-md-6 col-12">
           <div class="card tm-card shadow-sm h-100">
             <div class="card-body">
-              <div class="small text-muted mb-2">Prediction y_hat</div>
+              <div class="small text-muted mb-2">Predicción</div>
               <div class="tm-metric">{{ formatPrice(vm.prediction) }}</div>
               <div class="small text-muted mt-2">{{ vm.horizon }}</div>
             </div>
@@ -116,7 +131,7 @@
         </div>
       </div>
 
-      <div class="card tm-card shadow-sm mb-4">
+      <div class="card tm-card shadow-sm mb-3">
         <div class="card-header d-flex justify-content-between align-items-center">
           <strong>Estado del mercado</strong>
           <small class="text-muted">Lectura técnica</small>
@@ -147,7 +162,7 @@
 
       <div class="tm-disclaimer card tm-card shadow-sm">
         <div class="card-body">
-          Modo de lectura avanzada. No ejecuta órdenes ni constituye recomendación financiera.
+          No ejecuta órdenes, no custodia activos y no conecta wallets. La ruta abre un exchange externo para revisión manual.
         </div>
       </div>
     </ng-container>

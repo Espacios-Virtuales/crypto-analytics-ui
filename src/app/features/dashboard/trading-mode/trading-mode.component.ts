@@ -5,9 +5,12 @@ import { combineLatest, of } from 'rxjs';
 import { catchError, filter, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 
 import { AssetsService } from '../../../core/services/assets.service';
+import { ExchangeRoutesService } from '../../../core/services/exchange-routes.service';
 import { LatestService } from '../../../core/services/latest.service';
+import { ExchangeRoute } from '../../../core/models/exchange-route.model';
 import { MarketSelectionService } from '../../../core/services/market-selection.service';
 import { AssetInfo } from '../../../core/models/assets.model';
+import { LatestSignalResponse } from '../../../core/models/latest.model';
 import { CryptoTimestampPipe } from '../../../shared/pipes/crypto-timestamp.pipe';
 import {
   buildSignalReading,
@@ -29,6 +32,7 @@ type TradingVm = {
   prediction: number;
   signal: SignalReading;
   technical: TechnicalReading;
+  route: ExchangeRoute | null;
   asof_ts_utc: string | null;
 };
 
@@ -42,6 +46,7 @@ type TradingVm = {
 export class TradingModeComponent {
   private readonly fb = inject(FormBuilder);
   private readonly assetsService = inject(AssetsService);
+  private readonly exchangeRoutesService = inject(ExchangeRoutesService);
   private readonly latestService = inject(LatestService);
   private readonly marketSelection = inject(MarketSelectionService);
   private readonly initialSelection = this.marketSelection.snapshot();
@@ -135,8 +140,18 @@ export class TradingModeComponent {
           asset: value.asset,
           timeframe: value.timeframe,
         }),
+        signal: this.latestService
+          .getSignal({
+            asset: value.asset,
+            timeframe: value.timeframe,
+            horizon: value.horizon,
+          })
+          .pipe(catchError(() => of(null))),
+        exchangeRoutes: this.exchangeRoutesService
+          .routes(value.asset, 'USD')
+          .pipe(catchError(() => of(null))),
       }).pipe(
-        map(({ price, prediction, feature }) => {
+        map(({ price, prediction, feature, signal, exchangeRoutes }) => {
           const currentPrice = price?.data?.close ?? 0;
           const predictedPrice = prediction?.data?.y_hat ?? 0;
           const confidence = prediction?.data?.confidence ?? null;
@@ -150,8 +165,12 @@ export class TradingModeComponent {
             horizon: value.horizon,
             price: currentPrice,
             prediction: predictedPrice,
-            signal: buildSignalReading(currentPrice, predictedPrice, confidence),
+            signal: this.signalReading(
+              buildSignalReading(currentPrice, predictedPrice, confidence),
+              signal
+            ),
             technical: buildTechnicalReading(rsi, macd, volatility),
+            route: exchangeRoutes?.routes?.[0] ?? null,
             asof_ts_utc:
               price?.meta?.asof_ts_utc ??
               prediction?.meta?.asof_ts_utc ??
@@ -201,5 +220,28 @@ export class TradingModeComponent {
 
   expectedReturnClass(reading: SignalReading): string {
     return expectedReturnClass(reading.tone);
+  }
+
+  private signalReading(
+    fallback: SignalReading,
+    latestSignal: LatestSignalResponse | null
+  ): SignalReading {
+    if (!latestSignal) return fallback;
+
+    const signal = this.normalizeSignal(latestSignal.signal);
+
+    return {
+      ...fallback,
+      signal,
+      absoluteStrength: latestSignal.strength ?? fallback.absoluteStrength,
+      confidence: latestSignal.confidence ?? fallback.confidence,
+      confidenceLevel: fallback.confidenceLevel,
+      text: latestSignal.reason || fallback.text,
+    };
+  }
+
+  private normalizeSignal(signal: string): SignalAction {
+    if (signal === 'BUY' || signal === 'SELL' || signal === 'HOLD') return signal;
+    return 'HOLD';
   }
 }

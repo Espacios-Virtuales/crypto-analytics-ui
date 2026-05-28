@@ -7,6 +7,8 @@ import {
   LatestPredictionResponse,
   LatestPriceResponse,
   LatestQuery,
+  LatestSignalQuery,
+  LatestSignalResponse,
 } from '../models/latest.model';
 
 @Injectable({ providedIn: 'root' })
@@ -23,5 +25,9 @@ export class LatestService {
 
   getPrediction(query: LatestPredictionQuery): Observable<LatestPredictionResponse> {
     return this.api.get<LatestPredictionResponse>('/latest/prediction', query);
+  }
+
+  getSignal(query: LatestSignalQuery): Observable<LatestSignalResponse> {
+    return this.api.get<LatestSignalResponse>('/latest/signal', query);
   }
 }

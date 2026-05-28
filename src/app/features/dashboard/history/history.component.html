@@ -1,4 +1,4 @@
-<div class="history-page container-fluid py-4">
+<div class="history-page container-fluid py-3">
   <div class="row mb-4">
     <div class="col-12">
       <div class="history-hero">
@@ -23,7 +23,7 @@
     </div>
 
     <div class="col-xl-3 col-md-6 col-12">
-      <label class="form-label small">Timeframe</label>
+      <label class="form-label small">Temporalidad</label>
       <select class="form-select history-select" [formControl]="form.controls.timeframe" (change)="resetOffset()">
         <ng-container *ngIf="selectedMarketOptions$ | async as options">
           <option *ngFor="let tf of options.timeframes" [value]="tf">

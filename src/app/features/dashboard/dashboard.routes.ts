@@ -31,7 +31,7 @@ export const DASHBOARD_ROUTES: Routes = [
       },
       {
         path: PATHS.assets,
-        title: 'Assets',
+        title: 'Activos',
         loadComponent: () =>
           lazy(import('./assets/assets.component'), 'AssetsComponent'),
       },
