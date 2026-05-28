@@ -1,5 +1,5 @@
-export const MARKET_TIMEFRAME_OPTIONS = ['5m', '1m'] as const;
-export const MARKET_HORIZON_OPTIONS = ['15m', '10m', '5m'] as const;
+export const MARKET_TIMEFRAME_OPTIONS = ['1m', '5m'] as const;
+export const MARKET_HORIZON_OPTIONS = ['5m', '10m', '15m'] as const;
 export const HISTORY_LIMIT_OPTIONS = [25, 50, 100, 250, 500, 1000] as const;
 
 export type MarketTimeframeOption = (typeof MARKET_TIMEFRAME_OPTIONS)[number];
@@ -15,7 +15,7 @@ export function mergeMarketOptions(
     backendOptions?.filter((option) => option && allowedOptions.has(option)) ?? [];
   const options = backendAllowedOptions.length ? backendAllowedOptions : uiOptions;
 
-  return [...new Set(options)].sort((left, right) => durationToSeconds(right) - durationToSeconds(left));
+  return [...new Set(options)].sort((left, right) => durationToSeconds(left) - durationToSeconds(right));
 }
 
 export function normalizeMarketTimeframes(
