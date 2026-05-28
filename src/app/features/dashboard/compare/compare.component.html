@@ -1,4 +1,4 @@
-<div class="compare-page container-fluid py-4">
+<div class="compare-page container-fluid py-3">
   <div class="row mb-4">
     <div class="col-12">
       <div class="compare-hero">
@@ -33,7 +33,7 @@
       </div>
 
       <div class="col-lg-6 col-md-6 col-12">
-        <label class="form-label small">Timeframe</label>
+        <label class="form-label small">Temporalidad</label>
         <select class="form-select" [formControl]="form.controls.timeframe">
           <option *ngFor="let tf of summary.timeframes" [value]="tf">
             {{ tf }}
@@ -56,7 +56,7 @@
     <div class="compare-context mb-4">
       <small class="text-muted">
         Activos seleccionados: <strong>{{ vm.meta.count }}</strong>
-        · Timeframe: <strong>{{ vm.meta.timeframe }}</strong>
+        · Temporalidad: <strong>{{ vm.meta.timeframe }}</strong>
         · Horizonte: <strong>{{ vm.meta.horizon }}</strong>
         <ng-container *ngIf="vm.leaderAsset">
           · Referencia correlación: <strong>{{ vm.leaderAsset }}</strong>
