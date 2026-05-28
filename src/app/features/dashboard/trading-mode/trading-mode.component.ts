@@ -32,6 +32,11 @@ type TradingVm = {
   prediction: number;
   signal: SignalReading;
   technical: TechnicalReading;
+  technicalValues: {
+    rsi: number | null;
+    macd: number | null;
+    volatility: number | null;
+  };
   route: ExchangeRoute | null;
   asof_ts_utc: string | null;
 };
@@ -170,6 +175,11 @@ export class TradingModeComponent {
               signal
             ),
             technical: buildTechnicalReading(rsi, macd, volatility),
+            technicalValues: {
+              rsi,
+              macd,
+              volatility,
+            },
             route: exchangeRoutes?.routes?.[0] ?? null,
             asof_ts_utc:
               price?.meta?.asof_ts_utc ??
@@ -189,6 +199,12 @@ export class TradingModeComponent {
 
   signalBadgeClass(signal: SignalAction): string {
     return signalBadgeClass(signal).replace('signal-', 'tm-badge-');
+  }
+
+  signalIcon(signal: SignalAction): string {
+    if (signal === 'BUY') return '🟢';
+    if (signal === 'SELL') return '🔴';
+    return '⚪';
   }
 
   formatPrice(value: number): string {
@@ -211,6 +227,25 @@ export class TradingModeComponent {
   }
 
   formatStrength(value: number): string {
+    return value.toLocaleString('es-CL', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+      style: 'percent',
+    });
+  }
+
+  formatTechnicalValue(value: number | null, maximumFractionDigits = 3): string {
+    if (value == null) return 'Sin dato';
+
+    return value.toLocaleString('es-CL', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits,
+    });
+  }
+
+  formatVolatility(value: number | null): string {
+    if (value == null) return 'Sin dato';
+
     return value.toLocaleString('es-CL', {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,

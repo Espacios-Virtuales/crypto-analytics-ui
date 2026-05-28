@@ -10,34 +10,39 @@
     border: 1px solid #e5e7eb;
     border-radius: 0.5rem;
     background: #ffffff;
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04);
   }
 
   .trading-mode-hero {
-    padding: 1rem 1.25rem;
+    padding: 0.85rem 1rem;
   }
 
   .trading-mode-title {
-    margin: 0 0 0.35rem;
+    margin: 0 0 0.2rem;
     color: #111827;
-    font-size: 1.45rem;
+    font-size: 1.35rem;
     font-weight: 700;
   }
 
   .trading-mode-subtitle {
     max-width: 860px;
-    color: #6b7280;
+    color: #374151;
     font-size: 0.95rem;
   }
 
+  .trading-mode-disclaimer {
+    color: #6b7280;
+    font-size: 0.78rem;
+  }
+
   .form-label {
-    margin-bottom: 0.45rem;
+    margin-bottom: 0.35rem;
     color: #374151;
     font-weight: 600;
   }
 
   .form-select {
-    min-height: 46px;
+    min-height: 40px;
     border: 1px solid #d1d5db;
     border-radius: 0.5rem;
     color: #111827;
@@ -56,42 +61,73 @@
       border-bottom: 1px solid #e5e7eb;
       background: #f8fafc;
       color: #111827;
-      padding: 0.9rem 1rem;
+      padding: 0.72rem 0.9rem;
     }
 
     .card-body {
-      padding: 1rem;
+      padding: 0.9rem;
       color: #111827;
     }
   }
 
-  .tm-executive-grid,
+  .tm-primary-grid,
+  .tm-secondary-grid,
   .market-state-grid {
     display: grid;
-    gap: 0.8rem;
+    gap: 0.7rem;
   }
 
-  .tm-executive-grid {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  .tm-primary-grid {
+    grid-template-columns: minmax(110px, 1fr) minmax(120px, 1fr) minmax(150px, 1fr) minmax(140px, 1fr) auto;
+    align-items: stretch;
+  }
+
+  .tm-secondary-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #e5e7eb;
   }
 
   .market-state-grid {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  .tm-metric,
+  .tm-summary-item,
   .market-state-block {
-    min-height: 92px;
-    padding: 0.85rem 0.95rem;
+    min-height: 76px;
+    padding: 0.72rem 0.8rem;
     border: 1px solid #e5e7eb;
     border-radius: 0.5rem;
     background: #f8fafc;
   }
 
+  .tm-summary-item,
+  .market-state-block,
+  .tm-secondary-grid > div {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .tm-secondary-grid > div {
+    min-height: 54px;
+    padding: 0.2rem 0.35rem;
+  }
+
+  .tm-route-action {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 150px;
+  }
+
   .tm-label {
-    margin-bottom: 0.32rem;
+    display: block;
+    margin-bottom: 0.26rem;
     color: #6b7280;
-    font-size: 0.76rem;
+    font-size: 0.72rem;
     font-weight: 700;
     text-transform: uppercase;
   }
@@ -103,6 +139,7 @@
     overflow-wrap: anywhere;
   }
 
+  small,
   .tm-note {
     color: #6b7280;
     font-size: 0.84rem;
@@ -110,7 +147,7 @@
 
   .tm-badge {
     font-weight: 700;
-    padding: 0.45rem 0.75rem;
+    padding: 0.4rem 0.65rem;
   }
 
   .tm-badge-buy {
@@ -143,20 +180,27 @@
     color: #374151;
   }
 
-  .tm-disclaimer {
-    padding: 0.95rem 1rem;
-    color: #4b5563;
-    font-size: 0.92rem;
-  }
-
-  .exchange-link {
-    color: #003e6b;
+  .tm-route-button {
+    width: 100%;
+    min-height: 40px;
+    border-color: #003e6b;
+    background: #003e6b;
     font-weight: 700;
-    text-decoration: none;
+    white-space: nowrap;
   }
 
-  .exchange-link:hover {
-    text-decoration: underline;
+  .tm-route-button:hover,
+  .tm-route-button:focus {
+    border-color: #002f52;
+    background: #002f52;
+  }
+
+  .tm-route-badge {
+    width: 100%;
+    border: 1px solid #d1d5db;
+    background: #f3f4f6;
+    color: #4b5563;
+    padding: 0.48rem 0.7rem;
   }
 
   .text-muted {
@@ -172,23 +216,30 @@
 @media (max-width: 767.98px) {
   .trading-mode-page {
     .trading-mode-hero {
-      padding: 1rem;
-      border-radius: 0.85rem;
+      padding: 0.85rem;
     }
 
     .trading-mode-title {
-      font-size: 1.35rem;
+      font-size: 1.2rem;
     }
 
     .form-select {
-      min-height: 44px;
-      border-radius: 0.8rem;
+      min-height: 40px;
     }
 
-    .tm-card,
-    .tm-metric,
-    .market-state-block {
-      border-radius: 0.85rem;
+    .tm-primary-grid,
+    .tm-secondary-grid,
+    .market-state-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .tm-route-action {
+      min-width: 0;
+      justify-content: stretch;
+    }
+
+    .tm-secondary-grid {
+      gap: 0.35rem;
     }
 
     .tm-value {
