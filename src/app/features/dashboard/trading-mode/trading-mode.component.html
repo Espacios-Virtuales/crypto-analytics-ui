@@ -73,20 +73,6 @@
               <small>{{ vm.signal.confidence == null ? 'Sin score' : formatStrength(vm.signal.confidence) }}</small>
             </div>
 
-            <div class="tm-route-action">
-              <a
-                *ngIf="vm.route; else noRouteTpl"
-                class="btn btn-primary tm-route-button"
-                [href]="vm.route.url"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                🔗 Abrir mercado
-              </a>
-              <ng-template #noRouteTpl>
-                <span class="badge rounded-pill tm-route-badge">Ruta no disponible</span>
-              </ng-template>
-            </div>
           </div>
 
           <div class="tm-secondary-grid">
@@ -102,6 +88,29 @@
               <span class="tm-label">Actualizado</span>
               <strong>{{ vm.asof_ts_utc | cryptoTimestamp }}</strong>
             </div>
+          </div>
+
+          <div class="tm-market-router">
+            <div class="d-flex flex-column mb-2">
+              <strong>Router de mercado</strong>
+              <small>Elige dónde continuar. Las rutas disponibles son definidas por el backend.</small>
+            </div>
+
+            <div *ngIf="vm.routes.length; else noRoutesTpl" class="tm-route-actions">
+              <a
+                *ngFor="let route of vm.routes"
+                class="btn btn-primary tm-route-button"
+                [href]="route.url"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {{ route.exchange }}
+              </a>
+            </div>
+
+            <ng-template #noRoutesTpl>
+              <span class="tm-route-empty">Rutas no disponibles para este activo.</span>
+            </ng-template>
           </div>
         </div>
       </div>

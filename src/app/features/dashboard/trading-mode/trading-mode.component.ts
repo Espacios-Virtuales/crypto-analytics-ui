@@ -37,7 +37,7 @@ type TradingVm = {
     macd: number | null;
     volatility: number | null;
   };
-  route: ExchangeRoute | null;
+  routes: ExchangeRoute[];
   asof_ts_utc: string | null;
 };
 
@@ -180,7 +180,7 @@ export class TradingModeComponent {
               macd,
               volatility,
             },
-            route: exchangeRoutes?.routes?.[0] ?? null,
+            routes: exchangeRoutes?.routes ?? [],
             asof_ts_utc:
               price?.meta?.asof_ts_utc ??
               prediction?.meta?.asof_ts_utc ??
