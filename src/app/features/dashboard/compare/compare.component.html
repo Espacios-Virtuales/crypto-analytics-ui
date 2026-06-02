@@ -83,7 +83,7 @@
               <th>Confidence</th>
               <th>Técnico</th>
               <th>Horizon</th>
-              <th>Updated</th>
+              <th title="Hora local Chile">Hora local Chile</th>
             </tr>
           </thead>
           <tbody>
@@ -116,7 +116,7 @@
                 </div>
               </td>
               <td>{{ row.horizon }}</td>
-              <td>{{ row.asof_ts_utc | cryptoTimestamp }}</td>
+              <td title="Hora local Chile">{{ row.asof_ts_utc | cryptoTimestamp }}</td>
             </tr>
           </tbody>
         </table>

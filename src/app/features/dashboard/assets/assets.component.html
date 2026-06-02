@@ -30,7 +30,7 @@
               <td>{{ item.horizons.join(', ') || '-' }}</td>
               <td>
                 <strong>{{ lastStatus(item) }}</strong>
-                <span class="asset-meta d-block">{{ lastTimestamp(item) | cryptoTimestamp:'-' }}</span>
+                <span class="asset-meta d-block" title="Hora local Chile">{{ lastTimestamp(item) | cryptoTimestamp:'-' }}</span>
               </td>
               <td class="text-muted">{{ summary(item) }}</td>
             </tr>

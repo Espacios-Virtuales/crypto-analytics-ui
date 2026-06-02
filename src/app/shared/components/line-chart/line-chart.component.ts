@@ -1,6 +1,8 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
+import { formatChileTime } from '../../utils/timestamp-format.utils';
+
 export interface LineChartPoint {
   xLabel: string;
   value: number;
@@ -160,15 +162,6 @@ export class LineChartComponent implements OnChanges {
   }
 
   private formatLabel(ts: string): string {
-    const date = new Date(ts);
-
-    if (Number.isNaN(date.getTime())) {
-      return ts;
-    }
-
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-
-    return `${hours}:${minutes}`;
+    return formatChileTime(ts, ts);
   }
 }

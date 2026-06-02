@@ -199,14 +199,14 @@
           <table class="table table-sm table-hover align-middle mb-0 history-table">
             <thead>
               <tr>
-                <th>ts_utc</th>
+                <th title="Hora local Chile">Hora local Chile</th>
                 <th>close</th>
                 <th>volume</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let row of vm.prices.data">
-                <td>{{ row.ts_utc | cryptoTimestamp }}</td>
+                <td title="Hora local Chile">{{ row.ts_utc | cryptoTimestamp }}</td>
                 <td>{{ formatTableMoney(row.close) }}</td>
                 <td>{{ row.volume | number:'1.2-2' }}</td>
               </tr>
@@ -233,7 +233,7 @@
           <table class="table table-sm table-hover align-middle mb-0 history-table">
             <thead>
               <tr>
-                <th>ts_utc</th>
+                <th title="Hora local Chile">Hora local Chile</th>
                 <th>rsi</th>
                 <th>macd</th>
                 <th>volatility</th>
@@ -241,7 +241,7 @@
             </thead>
             <tbody>
               <tr *ngFor="let row of vm.features.data">
-                <td>{{ row.ts_utc | cryptoTimestamp }}</td>
+                <td title="Hora local Chile">{{ row.ts_utc | cryptoTimestamp }}</td>
                 <td>{{ row.rsi | number:'1.2-2' }}</td>
                 <td>{{ row.macd | number:'1.2-4' }}</td>
                 <td>{{ row.volatility | number:'1.2-4' }}</td>
@@ -269,14 +269,14 @@
           <table class="table table-sm table-hover align-middle mb-0 history-table">
             <thead>
               <tr>
-                <th>ts_utc</th>
+                <th title="Hora local Chile">Hora local Chile</th>
                 <th>y_hat</th>
                 <th>confidence</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let row of vm.predictions.data">
-                <td>{{ row.ts_utc | cryptoTimestamp }}</td>
+                <td title="Hora local Chile">{{ row.ts_utc | cryptoTimestamp }}</td>
                 <td>{{ formatTableMoney(row.y_hat) }}</td>
                 <td>{{ row.confidence | number:'1.2-4' }}</td>
               </tr>
