@@ -5,7 +5,11 @@ import {
 
 describe('market-options constants', () => {
   it('sorts timeframes by ascending duration', () => {
-    expect(normalizeMarketTimeframes(['5m', '1m'])).toEqual(['1m', '5m']);
+    expect(normalizeMarketTimeframes(['15m', '5m', '1m'])).toEqual([
+      '1m',
+      '5m',
+      '15m',
+    ]);
   });
 
   it('sorts horizons by ascending duration', () => {
@@ -17,7 +21,7 @@ describe('market-options constants', () => {
   });
 
   it('uses allowed defaults when backend options are empty', () => {
-    expect(normalizeMarketTimeframes([])).toEqual(['1m', '5m']);
+    expect(normalizeMarketTimeframes([])).toEqual(['1m', '5m', '15m']);
     expect(normalizeMarketHorizons([])).toEqual(['5m', '10m', '15m']);
   });
 });
