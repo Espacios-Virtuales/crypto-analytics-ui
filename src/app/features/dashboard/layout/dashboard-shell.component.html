@@ -1,79 +1,42 @@
-<div
-  class="ev-shell d-flex"
-  [class.mobile]="isMobile()"
-  [class.sidebar-open]="isSidebarOpen()"
->
+<div class="ev-shell d-flex" [class.mobile]="isMobile()" [class.sidebar-open]="isSidebarOpen()">
   <!-- Backdrop mobile -->
-  <div
-    class="ev-backdrop"
-    *ngIf="isMobile() && isSidebarOpen()"
-    (click)="closeSidebar()"
-  ></div>
+  <div class="ev-backdrop" *ngIf="isMobile() && isSidebarOpen()" (click)="closeSidebar()"></div>
 
   <!-- Sidebar / drawer -->
-  <aside
-    class="ev-sidebar"
-    [class.open]="isSidebarOpen()"
-    [class.collapsed]="!isMobile() && !isSidebarOpen()"
-  >
+  <aside class="ev-sidebar" [class.open]="isSidebarOpen()" [class.collapsed]="!isMobile() && !isSidebarOpen()">
     <div class="brand px-3 py-3">
-      <a
-        routerLink="/dashboard"
-        class="brand-link"
-        (click)="isMobile() ? closeSidebar() : null"
-      >
+      <a routerLink="/dashboard" class="brand-link" (click)="isMobile() ? closeSidebar() : null">
         <i class="bi bi-house-fill"></i>
       </a>
     </div>
 
     <nav class="menu">
-      <a
-        routerLink="/dashboard"
-        class="menu-item"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        (click)="isMobile() ? closeSidebar() : null"
-      >
+      <a routerLink="/dashboard" class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+        (click)="isMobile() ? closeSidebar() : null">
         <i class="bi bi-speedometer2"></i>
         <span>Resumen</span>
       </a>
-      <a
-        routerLink="/dashboard/history"
-        class="menu-item"
-        routerLinkActive="active"
-        (click)="isMobile() ? closeSidebar() : null"
-      >
+      <a routerLink="/dashboard/trading" class="menu-item" routerLinkActive="active"
+        (click)="isMobile() ? closeSidebar() : null">
+        <i class="bi bi-lightning-charge"></i>
+        <span>Trading</span>
+      </a>
+      <a routerLink="/dashboard/history" class="menu-item" routerLinkActive="active"
+        (click)="isMobile() ? closeSidebar() : null">
         <i class="bi bi-graph-up"></i>
         <span>Históricos</span>
       </a>
-      <a
-        routerLink="/dashboard/compare"
-        class="menu-item"
-        routerLinkActive="active"
-        (click)="isMobile() ? closeSidebar() : null"
-      >
+      <a routerLink="/dashboard/compare" class="menu-item" routerLinkActive="active"
+        (click)="isMobile() ? closeSidebar() : null">
         <i class="bi bi-bar-chart-line"></i>
         <span>Comparador</span>
-      </a>
-      <a
-        routerLink="/dashboard/trading"
-        class="menu-item"
-        routerLinkActive="active"
-        (click)="isMobile() ? closeSidebar() : null"
-      >
-        <i class="bi bi-lightning-charge"></i>
-        <span>Trading</span>
       </a>
     </nav>
 
     <!-- 🌑 Footer / Ajustes -->
     <div class="sidebar-footer">
-      <a
-        routerLink="/dashboard/assets"
-        class="menu-item"
-        routerLinkActive="active"
-        (click)="isMobile() ? closeSidebar() : null"
-      >
+      <a routerLink="/dashboard/assets" class="menu-item" routerLinkActive="active"
+        (click)="isMobile() ? closeSidebar() : null">
         <i class="bi bi-gear"></i>
         <span>Activos</span>
       </a>
@@ -84,25 +47,14 @@
   <div class="ev-main flex-grow-1 d-flex flex-column">
     <header class="ev-topbar d-flex align-items-center justify-content-between">
       <div class="d-flex align-items-center gap-2">
-        <button
-          class="btn btn-outline-secondary btn-sm hamburger d-lg-none"
-          type="button"
-          (click)="toggleSidebar()"
-          aria-label="Abrir menú"
-        >
+        <button class="btn btn-outline-secondary btn-sm hamburger d-lg-none" type="button" (click)="toggleSidebar()"
+          aria-label="Abrir menú">
           <i class="bi bi-list fs-4"></i>
         </button>
 
-        <button
-          class="btn btn-link toggle d-none d-lg-inline-flex text-dark"
-          type="button"
-          (click)="toggleSidebar()"
-          aria-label="Alternar sidebar"
-        >
-          <i
-            class="bi"
-            [ngClass]="isSidebarOpen() ? 'bi-layout-sidebar-inset' : 'bi-layout-sidebar'"
-          ></i>
+        <button class="btn btn-link toggle d-none d-lg-inline-flex text-dark" type="button" (click)="toggleSidebar()"
+          aria-label="Alternar sidebar">
+          <i class="bi" [ngClass]="isSidebarOpen() ? 'bi-layout-sidebar-inset' : 'bi-layout-sidebar'"></i>
         </button>
       </div>
 
