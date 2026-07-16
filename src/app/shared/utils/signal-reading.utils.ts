@@ -12,7 +12,8 @@ export interface SignalReading {
   tone: ExpectedReturnTone;
 }
 
-const HOLD_THRESHOLD = 0.001;
+export const SIGNAL_HOLD_THRESHOLD = 0.001;
+export const SIGNAL_HOLD_THRESHOLD_LABEL = '0,10%';
 
 export function expectedReturn(close: number | null | undefined, yHat: number | null | undefined): number {
   if (!close || !yHat) return 0;
@@ -29,7 +30,7 @@ export function confidenceLevel(confidence: number | null | undefined): Confiden
 }
 
 export function signalFromExpectedReturn(value: number): SignalAction {
-  if (Math.abs(value) < HOLD_THRESHOLD) return 'HOLD';
+  if (Math.abs(value) < SIGNAL_HOLD_THRESHOLD) return 'HOLD';
   return value > 0 ? 'BUY' : 'SELL';
 }
 

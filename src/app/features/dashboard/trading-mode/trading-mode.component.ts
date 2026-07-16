@@ -1,7 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { combineLatest, of } from 'rxjs';
+import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import { catchError, filter, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 
 import { AssetsService } from '../../../core/services/assets.service';
@@ -15,6 +15,7 @@ import { CryptoTimestampPipe } from '../../../shared/pipes/crypto-timestamp.pipe
 import {
   buildSignalReading,
   expectedReturnClass,
+  SIGNAL_HOLD_THRESHOLD_LABEL,
   SignalAction,
   SignalReading,
   signalBadgeClass,
@@ -55,6 +56,9 @@ export class TradingModeComponent {
   private readonly latestService = inject(LatestService);
   private readonly marketSelection = inject(MarketSelectionService);
   private readonly initialSelection = this.marketSelection.snapshot();
+  private readonly refreshRequests$ = new BehaviorSubject<number>(0);
+  readonly refreshRequestedAt = signal<string | null>(null);
+  readonly signalThresholdLabel = SIGNAL_HOLD_THRESHOLD_LABEL;
 
   readonly form = this.fb.nonNullable.group({
     asset: this.fb.nonNullable.control<string>(this.initialSelection.asset),
@@ -62,22 +66,19 @@ export class TradingModeComponent {
     horizon: this.fb.nonNullable.control<string>(this.initialSelection.horizon),
   });
 
-  readonly assets$ = this.assetsService.list().pipe(
-    tap((assets: AssetInfo[]) => {
-      if (!assets.length) return;
+  readonly assets$ = this.refreshRequests$.pipe(
+    switchMap(() =>
+      this.assetsService.list().pipe(
+        tap((assets: AssetInfo[]) => {
+          if (!assets.length) return;
 
-      const selected = this.marketSelection.resolve(assets, this.form.getRawValue());
+          const selected = this.marketSelection.resolve(assets, this.form.getRawValue());
 
-      this.form.patchValue(
-        {
-          asset: selected.asset,
-          timeframe: selected.timeframe,
-          horizon: selected.horizon,
-        },
-        { emitEvent: false }
-      );
-      this.marketSelection.update(selected);
-    }),
+          this.patchSelection(selected);
+          this.marketSelection.update(selected);
+        })
+      )
+    ),
     shareReplay(1)
   );
 
@@ -112,7 +113,7 @@ export class TradingModeComponent {
             timeframe: nextTimeframe,
             horizon: nextHorizon,
           },
-          { emitEvent: false }
+          { emitEvent: true }
         );
       }
 
@@ -121,8 +122,11 @@ export class TradingModeComponent {
     shareReplay(1)
   );
 
-  readonly vm$ = this.form.valueChanges.pipe(
-    startWith(this.form.getRawValue()),
+  readonly vm$ = combineLatest([
+    this.form.valueChanges.pipe(startWith(this.form.getRawValue())),
+    this.refreshRequests$,
+  ]).pipe(
+    map(([value]) => value),
     tap((value) => this.marketSelection.update(value)),
     map((value) => ({
       asset: value.asset ?? '',
@@ -196,6 +200,11 @@ export class TradingModeComponent {
     ),
     shareReplay(1)
   );
+
+  refreshData(): void {
+    this.refreshRequestedAt.set(new Date().toISOString());
+    this.refreshRequests$.next(this.refreshRequests$.value + 1);
+  }
 
   signalBadgeClass(signal: SignalAction): string {
     return signalBadgeClass(signal).replace('signal-', 'tm-badge-');
@@ -278,5 +287,24 @@ export class TradingModeComponent {
   private normalizeSignal(signal: string): SignalAction {
     if (signal === 'BUY' || signal === 'SELL' || signal === 'HOLD') return signal;
     return 'HOLD';
+  }
+
+  private patchSelection(selection: { asset: string; timeframe: string; horizon: string }): void {
+    const current = this.form.getRawValue();
+    const changed =
+      current.asset !== selection.asset ||
+      current.timeframe !== selection.timeframe ||
+      current.horizon !== selection.horizon;
+
+    if (!changed) return;
+
+    this.form.patchValue(
+      {
+        asset: selection.asset,
+        timeframe: selection.timeframe,
+        horizon: selection.horizon,
+      },
+      { emitEvent: true }
+    );
   }
 }

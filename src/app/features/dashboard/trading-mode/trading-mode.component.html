@@ -13,7 +13,7 @@
 
   <ng-container *ngIf="options$ | async as options">
     <div class="row g-3 mb-3">
-      <div class="col-lg-4 col-md-4 col-12">
+      <div class="col-lg-3 col-md-6 col-12">
         <label class="form-label small">Asset</label>
         <select class="form-select" [formControl]="form.controls.asset">
           <option *ngFor="let item of options.assets" [value]="item.asset">
@@ -22,7 +22,7 @@
         </select>
       </div>
 
-      <div class="col-lg-4 col-md-4 col-12">
+      <div class="col-lg-3 col-md-6 col-12">
         <label class="form-label small">TF</label>
         <select class="form-select" [formControl]="form.controls.timeframe">
           <option *ngFor="let tf of options.timeframes" [value]="tf">
@@ -31,13 +31,21 @@
         </select>
       </div>
 
-      <div class="col-lg-4 col-md-4 col-12">
+      <div class="col-lg-3 col-md-6 col-12">
         <label class="form-label small">Horizonte</label>
         <select class="form-select" [formControl]="form.controls.horizon">
           <option *ngFor="let hz of options.horizons" [value]="hz">
             {{ hz }}
           </option>
         </select>
+      </div>
+
+      <div class="col-lg-3 col-md-6 col-12">
+        <label class="form-label small">Datos</label>
+        <button type="button" class="btn btn-outline-primary w-100 fw-bold" (click)="refreshData()">
+          <i class="bi bi-arrow-clockwise"></i>
+          Actualizar
+        </button>
       </div>
     </div>
   </ng-container>
@@ -87,6 +95,14 @@
             <div>
               <span class="tm-label">Actualizado</span>
               <strong title="Hora local Chile">{{ vm.asof_ts_utc | cryptoTimestamp }}</strong>
+            </div>
+            <div>
+              <span class="tm-label">Refresh manual</span>
+              <strong title="Hora local Chile">{{ refreshRequestedAt() | cryptoTimestamp:'Sin refresh' }}</strong>
+            </div>
+            <div>
+              <span class="tm-label">Umbral aplicado</span>
+              <strong>HOLD ±{{ signalThresholdLabel }}</strong>
             </div>
           </div>
 

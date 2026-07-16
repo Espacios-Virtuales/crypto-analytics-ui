@@ -2,6 +2,8 @@ import {
   buildSignalReading,
   confidenceLevel,
   expectedReturn,
+  signalFromExpectedReturn,
+  SIGNAL_HOLD_THRESHOLD_LABEL,
 } from './signal-reading.utils';
 
 describe('signal-reading utils', () => {
@@ -23,5 +25,11 @@ describe('signal-reading utils', () => {
     expect(reading.signal).toBe('BUY');
     expect(reading.confidenceLevel).toBe('Moderada');
     expect(reading.text).toBe('BUY con confianza moderada');
+  });
+
+  it('keeps the current hold threshold visible and stable', () => {
+    expect(SIGNAL_HOLD_THRESHOLD_LABEL).toBe('0,10%');
+    expect(signalFromExpectedReturn(0.0009)).toBe('HOLD');
+    expect(signalFromExpectedReturn(0.001)).toBe('BUY');
   });
 });

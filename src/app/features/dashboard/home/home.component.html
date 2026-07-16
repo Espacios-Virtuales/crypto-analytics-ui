@@ -11,11 +11,17 @@
   
       <div class="col-lg-4 col-12">
         <label class="form-label small">Moneda de visualización</label>
-        <select class="form-select" [formControl]="form.controls.displayQuote">
-          <option value="MARKET">Moneda mercado</option>
-          <option value="USD">USD</option>
-          <option value="CLP">CLP</option>
-        </select>
+        <div class="d-grid gap-2">
+          <select class="form-select" [formControl]="form.controls.displayQuote">
+            <option value="MARKET">Moneda mercado</option>
+            <option value="USD">USD</option>
+            <option value="CLP">CLP</option>
+          </select>
+          <button type="button" class="btn btn-outline-primary fw-bold" (click)="refreshData()">
+            <i class="bi bi-arrow-clockwise"></i>
+            Actualizar
+          </button>
+        </div>
       </div>
     </div>
   
@@ -76,6 +82,11 @@
                     : form.controls.displayQuote.value
                 }}
               </strong>
+            </div>
+
+            <div class="context-item">
+              <span class="context-label">Refresh manual</span>
+              <strong title="Hora local Chile">{{ refreshRequestedAt() | cryptoTimestamp:'Sin refresh' }}</strong>
             </div>
           </div>
         </div>
@@ -230,6 +241,10 @@
 
                   <div class="metric-sub mt-1">
                     Confianza {{ reading.confidenceLevel }}
+                  </div>
+
+                  <div class="metric-sub mt-1">
+                    Umbral HOLD aplicado: ±{{ signalThresholdLabel }}
                   </div>
                 </div>
               </div>
