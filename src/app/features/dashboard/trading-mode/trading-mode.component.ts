@@ -1,8 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { BehaviorSubject, combineLatest, of } from 'rxjs';
-import { catchError, filter, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, EMPTY, of } from 'rxjs';
+import { catchError, filter, finalize, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 
 import { AssetsService } from '../../../core/services/assets.service';
 import { ExchangeRoutesService } from '../../../core/services/exchange-routes.service';
@@ -59,6 +59,10 @@ export class TradingModeComponent {
   private readonly latestRefreshRequests$ = new BehaviorSubject<number>(0);
   readonly refreshRequestedAt = signal<string | null>(null);
   readonly signalThresholdLabel = SIGNAL_HOLD_THRESHOLD_LABEL;
+  readonly vmLoading = signal(true);
+  readonly vmRefreshing = signal(false);
+  readonly vmError = signal<string | null>(null);
+  private manualRefreshPending = false;
 
   readonly form = this.fb.nonNullable.group({
     asset: this.fb.nonNullable.control<string>(this.initialSelection.asset),
@@ -130,8 +134,14 @@ export class TradingModeComponent {
       horizon: value.horizon ?? '',
     })),
     filter((value) => !!value.asset && !!value.timeframe && !!value.horizon),
-    switchMap((value) =>
-      combineLatest({
+    switchMap((value) => {
+      const isManualRefresh = this.manualRefreshPending;
+
+      this.vmError.set(null);
+      this.vmLoading.set(!isManualRefresh);
+      this.vmRefreshing.set(isManualRefresh);
+
+      return combineLatest({
         price: this.latestService.getPrice({
           asset: value.asset,
           timeframe: value.timeframe,
@@ -190,14 +200,25 @@ export class TradingModeComponent {
         }),
         catchError((error) => {
           console.error('[TradingModeComponent] vm error', error);
-          return of(null);
+          this.vmError.set('No se pudieron cargar los datos. Intenta actualizar nuevamente.');
+          return EMPTY;
+        }),
+        finalize(() => {
+          this.vmLoading.set(false);
+          this.vmRefreshing.set(false);
+          if (isManualRefresh) {
+            this.manualRefreshPending = false;
+          }
         })
-      )
-    ),
+      );
+    }),
     shareReplay(1)
   );
 
   refreshData(): void {
+    if (this.vmRefreshing()) return;
+
+    this.manualRefreshPending = true;
     this.refreshRequestedAt.set(new Date().toISOString());
     this.latestRefreshRequests$.next(this.latestRefreshRequests$.value + 1);
   }

@@ -1,8 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { combineLatest, of } from 'rxjs';
-import { catchError, filter, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
+import { combineLatest, EMPTY, of } from 'rxjs';
+import { catchError, filter, finalize, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 
 import { AssetsService } from '../../../core/services/assets.service';
 import { CompareService } from '../../../core/services/compare.service';
@@ -48,6 +48,10 @@ export class CompareComponent {
   private readonly assetsService = inject(AssetsService);
   private readonly compareService = inject(CompareService);
   private readonly historyService = inject(HistoryService);
+  readonly assetsLoading = signal(true);
+  readonly assetsError = signal<string | null>(null);
+  readonly compareLoading = signal(false);
+  readonly compareError = signal<string | null>(null);
 
   readonly form = this.fb.nonNullable.group({
     assets: this.fb.nonNullable.control<string[]>([]),
@@ -70,6 +74,12 @@ export class CompareComponent {
 
       this.patchSelection(nextAssets, selected.timeframe, selected.horizon);
     }),
+    catchError((error) => {
+      console.error('[CompareComponent] assets error', error);
+      this.assetsError.set('No se pudieron cargar los datos. Intenta actualizar nuevamente.');
+      return of([] as AssetInfo[]);
+    }),
+    finalize(() => this.assetsLoading.set(false)),
     shareReplay(1)
   );
 
@@ -125,7 +135,11 @@ export class CompareComponent {
     filter((value) => !!value.timeframe && !!value.horizon),
     switchMap((value) =>
       value.assets.length
-        ? combineLatest({
+        ? (() => {
+            this.compareError.set(null);
+            this.compareLoading.set(true);
+
+            return combineLatest({
             compare: this.compareService.getCompare(value.assets, value.timeframe, value.horizon),
             correlations: this.getCorrelations(value.assets, value.timeframe),
           }).pipe(
@@ -137,10 +151,18 @@ export class CompareComponent {
             })),
             catchError((error) => {
               console.error('[CompareComponent] vm error', error);
-              return of(this.emptyVm(value));
+              this.compareError.set('No se pudieron cargar los datos. Intenta actualizar nuevamente.');
+              return EMPTY;
+            }),
+            finalize(() => this.compareLoading.set(false))
+          );
+          })()
+        : of(this.emptyVm(value)).pipe(
+            tap(() => {
+              this.compareError.set(null);
+              this.compareLoading.set(false);
             })
           )
-        : of(this.emptyVm(value))
     ),
     shareReplay(1)
   );

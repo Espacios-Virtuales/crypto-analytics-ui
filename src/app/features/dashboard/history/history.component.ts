@@ -1,8 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { combineLatest, of } from 'rxjs';
-import { catchError, filter, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
+import { combineLatest, EMPTY } from 'rxjs';
+import { catchError, filter, finalize, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 
 import { AssetsService } from '../../../core/services/assets.service';
 import { AssetInfo } from '../../../core/models/assets.model';
@@ -105,6 +105,8 @@ export class HistoryComponent {
   // Stub temporal para piloto. Luego reemplazar por contrato FX real.
   readonly fxRateUsdClp = 950;
   readonly historyLimitOptions = HISTORY_LIMIT_OPTIONS;
+  readonly historyLoading = signal(true);
+  readonly historyError = signal<string | null>(null);
 
   activeTable: 'prices' | 'features' | 'predictions' = 'prices';
 
@@ -168,6 +170,9 @@ export class HistoryComponent {
     map((value) => this.normalizeFormValue(value as HistoryFormValue)),
     filter((value) => !!value.asset && !!value.timeframe && !!value.horizon),
     switchMap((value) => {
+      this.historyError.set(null);
+      this.historyLoading.set(true);
+
       const pricesQuery: HistoryQuery = {
         asset: value.asset,
         timeframe: value.timeframe,
@@ -200,8 +205,10 @@ export class HistoryComponent {
       }).pipe(
         catchError((error) => {
           console.error('[HistoryComponent] vm error', error);
-          return of(null);
-        })
+          this.historyError.set('No se pudieron cargar los datos. Intenta actualizar nuevamente.');
+          return EMPTY;
+        }),
+        finalize(() => this.historyLoading.set(false))
       );
     }),
     shareReplay(1)

@@ -1,8 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { BehaviorSubject, combineLatest, of } from 'rxjs';
-import { catchError, filter, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, EMPTY, of } from 'rxjs';
+import { catchError, filter, finalize, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 
 import { AssetsService } from '../../../core/services/assets.service';
 import { LatestService } from '../../../core/services/latest.service';
@@ -47,6 +47,10 @@ export class HomeComponent {
   private readonly latestRefreshRequests$ = new BehaviorSubject<number>(0);
   readonly refreshRequestedAt = signal<string | null>(null);
   readonly signalThresholdLabel = SIGNAL_HOLD_THRESHOLD_LABEL;
+  readonly latestLoading = signal(true);
+  readonly latestRefreshing = signal(false);
+  readonly latestError = signal<string | null>(null);
+  private manualRefreshPending = false;
 
   readonly assets$ = this.assetsService.list().pipe(
     tap((assets) => {
@@ -122,6 +126,11 @@ export class HomeComponent {
     filter((value) => !!value.asset && !!value.timeframe && !!value.horizon),
     switchMap((value) => {
       const displayQuote = this.toDisplayQuoteParam(value.displayQuote);
+      const isManualRefresh = this.manualRefreshPending;
+
+      this.latestError.set(null);
+      this.latestLoading.set(!isManualRefresh);
+      this.latestRefreshing.set(isManualRefresh);
   
       return combineLatest({
         price: this.latestService.getPrice({
@@ -149,7 +158,15 @@ export class HomeComponent {
       }).pipe(
         catchError((error) => {
           console.error('[HomeComponent] pulse error', error);
-          return of(null);
+          this.latestError.set('No se pudieron cargar los datos. Intenta actualizar nuevamente.');
+          return EMPTY;
+        }),
+        finalize(() => {
+          this.latestLoading.set(false);
+          this.latestRefreshing.set(false);
+          if (isManualRefresh) {
+            this.manualRefreshPending = false;
+          }
         })
       );
     }),
@@ -157,6 +174,9 @@ export class HomeComponent {
   );
 
   refreshData(): void {
+    if (this.latestRefreshing()) return;
+
+    this.manualRefreshPending = true;
     this.refreshRequestedAt.set(new Date().toISOString());
     this.latestRefreshRequests$.next(this.latestRefreshRequests$.value + 1);
   }
