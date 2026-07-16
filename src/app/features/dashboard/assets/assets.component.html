@@ -4,6 +4,14 @@
     <p class="assets-subtitle mb-0">Disponibilidad operacional por activo y combinación de mercado.</p>
   </div>
 
+  <div class="alert alert-info mb-3" *ngIf="loading()">
+    Cargando datos...
+  </div>
+
+  <div class="alert alert-danger mb-3" *ngIf="error() as errorMessage">
+    {{ errorMessage }}
+  </div>
+
   <ng-container *ngIf="assets$ | async as assets; else loadingTpl">
     <div class="card asset-table-card shadow-sm" *ngIf="assets.length; else emptyAssetsTpl">
       <div class="table-responsive">
@@ -47,7 +55,7 @@
   </ng-template>
 
   <ng-template #loadingTpl>
-    <div class="card shadow-sm">
+    <div class="card shadow-sm" *ngIf="loading()">
       <div class="card-body text-muted">Cargando activos...</div>
     </div>
   </ng-template>

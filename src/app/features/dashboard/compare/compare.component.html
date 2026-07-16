@@ -11,6 +11,14 @@
     </div>
   </div>
 
+  <div class="alert alert-info mb-3" *ngIf="assetsLoading()">
+    Cargando datos...
+  </div>
+
+  <div class="alert alert-danger mb-3" *ngIf="assetsError() as error">
+    {{ error }}
+  </div>
+
   <ng-container *ngIf="selectionSummary$ | async as summary">
     <div class="row g-3 mb-4">
       <div class="col-12">
@@ -51,6 +59,14 @@
       </div>
     </div>
   </ng-container>
+
+  <div class="alert alert-info mb-3" *ngIf="compareLoading()">
+    Cargando datos...
+  </div>
+
+  <div class="alert alert-danger mb-3" *ngIf="compareError() as error">
+    {{ error }}
+  </div>
 
   <ng-container *ngIf="vm$ | async as vm; else loadingTpl">
     <div class="compare-context mb-4">
@@ -189,9 +205,9 @@
   </ng-container>
 
   <ng-template #loadingTpl>
-    <div class="card compare-card shadow-sm">
+    <div class="card compare-card shadow-sm" *ngIf="assetsLoading() || compareLoading()">
       <div class="card-body text-muted">
-        Cargando comparador...
+        Cargando datos...
       </div>
     </div>
   </ng-template>

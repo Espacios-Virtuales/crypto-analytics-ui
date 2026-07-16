@@ -70,6 +70,14 @@
     </small>
   </div>
 
+  <div class="alert alert-info mb-3" *ngIf="historyLoading()">
+    Cargando datos...
+  </div>
+
+  <div class="alert alert-danger mb-3" *ngIf="historyError() as error">
+    {{ error }}
+  </div>
+
   <ng-container *ngIf="vm$ | async as vm; else loadingTpl">
     <ng-container *ngIf="vm; else errorTpl">
       <div class="row g-3 mb-4">
@@ -294,9 +302,9 @@
   </ng-container>
 
   <ng-template #loadingTpl>
-    <div class="card history-card shadow-sm">
+    <div class="card history-card shadow-sm" *ngIf="historyLoading()">
       <div class="card-body text-muted">
-        Cargando histórico...
+        Cargando datos...
       </div>
     </div>
   </ng-template>

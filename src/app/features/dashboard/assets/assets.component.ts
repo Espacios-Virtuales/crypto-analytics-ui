@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { shareReplay } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { catchError, finalize, shareReplay } from 'rxjs/operators';
 
 import { AssetInfo, AssetMatrixEntry } from '../../../core/models/assets.model';
 import { AssetsService } from '../../../core/services/assets.service';
@@ -15,8 +16,18 @@ import { CryptoTimestampPipe } from '../../../shared/pipes/crypto-timestamp.pipe
 })
 export class AssetsComponent {
   private readonly assetsService = inject(AssetsService);
+  readonly loading = signal(true);
+  readonly error = signal<string | null>(null);
 
-  readonly assets$ = this.assetsService.list().pipe(shareReplay(1));
+  readonly assets$ = this.assetsService.list().pipe(
+    catchError((error) => {
+      console.error('[AssetsComponent] assets error', error);
+      this.error.set('No se pudieron cargar los datos. Intenta actualizar nuevamente.');
+      return of([] as AssetInfo[]);
+    }),
+    finalize(() => this.loading.set(false)),
+    shareReplay(1)
+  );
 
   trackByAsset(_: number, item: AssetInfo): string {
     return item.asset;
