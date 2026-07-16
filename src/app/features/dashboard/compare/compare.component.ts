@@ -7,7 +7,6 @@ import { catchError, filter, map, shareReplay, startWith, switchMap, tap } from 
 import { AssetsService } from '../../../core/services/assets.service';
 import { CompareService } from '../../../core/services/compare.service';
 import { HistoryService } from '../../../core/services/history.service';
-import { MarketSelectionService } from '../../../core/services/market-selection.service';
 import { AssetInfo } from '../../../core/models/assets.model';
 import { CompareRow, CompareSignal } from '../../../core/models/compare.model';
 import { CryptoTimestampPipe } from '../../../shared/pipes/crypto-timestamp.pipe';
@@ -49,51 +48,27 @@ export class CompareComponent {
   private readonly assetsService = inject(AssetsService);
   private readonly compareService = inject(CompareService);
   private readonly historyService = inject(HistoryService);
-  private readonly marketSelection = inject(MarketSelectionService);
-  private readonly initialSelection = this.marketSelection.snapshot();
 
   readonly form = this.fb.nonNullable.group({
-    assets: this.fb.nonNullable.control<string[]>(
-      this.initialSelection.asset ? [this.initialSelection.asset] : []
-    ),
-    timeframe: this.fb.nonNullable.control<string>(this.initialSelection.timeframe),
-    horizon: this.fb.nonNullable.control<string>(this.initialSelection.horizon),
+    assets: this.fb.nonNullable.control<string[]>([]),
+    timeframe: this.fb.nonNullable.control<string>(''),
+    horizon: this.fb.nonNullable.control<string>(''),
   });
 
   readonly assets$ = this.assetsService.list().pipe(
     tap((assets: AssetInfo[]) => {
       if (!assets.length) return;
 
-      const currentAssets = this.form.controls.assets.value.filter((asset) =>
+      const nextAssets = this.form.controls.assets.value.filter((asset) =>
         assets.some((item) => item.asset === asset)
       );
-
-      const currentTimeframe = this.form.controls.timeframe.value;
-      const currentHorizon = this.form.controls.horizon.value;
-
-      const nextAssets = currentAssets.length
-        ? currentAssets
-        : assets.slice(0, 3).map((item) => item.asset);
-
-      const selected = this.marketSelection.resolve(assets, {
-        asset: nextAssets[0],
-        timeframe: currentTimeframe,
-        horizon: currentHorizon,
+      const selected = this.resolveSelection(assets, {
+        asset: nextAssets[0] ?? assets[0].asset,
+        timeframe: this.form.controls.timeframe.value,
+        horizon: this.form.controls.horizon.value,
       });
 
-      this.form.patchValue(
-        {
-          assets: nextAssets,
-          timeframe: selected.timeframe,
-          horizon: selected.horizon,
-        },
-        { emitEvent: false }
-      );
-      this.marketSelection.update({
-        asset: nextAssets[0] ?? '',
-        timeframe: selected.timeframe,
-        horizon: selected.horizon,
-      });
+      this.patchSelection(nextAssets, selected.timeframe, selected.horizon);
     }),
     shareReplay(1)
   );
@@ -106,7 +81,7 @@ export class CompareComponent {
       const selectedAssets = formValue.assets ?? [];
       const firstSelectedAsset =
         assets.find((item) => item.asset === selectedAssets[0]) ?? assets[0] ?? null;
-      const selected = this.marketSelection.resolve(assets, {
+      const selected = this.resolveSelection(assets, {
         asset: firstSelectedAsset?.asset ?? '',
         timeframe: formValue.timeframe,
         horizon: formValue.horizon,
@@ -120,6 +95,8 @@ export class CompareComponent {
       };
     }),
     tap((summary) => {
+      const availableAssetNames = new Set(summary.availableAssets.map((item) => item.asset));
+      const nextAssets = summary.selectedAssets.filter((asset) => availableAssetNames.has(asset));
       const currentTimeframe = this.form.controls.timeframe.value;
       const currentHorizon = this.form.controls.horizon.value;
 
@@ -131,61 +108,39 @@ export class CompareComponent {
         ? currentHorizon
         : (summary.horizons[0] ?? '');
 
-      if (nextTimeframe !== currentTimeframe || nextHorizon !== currentHorizon) {
-        this.form.patchValue(
-          {
-            timeframe: nextTimeframe,
-            horizon: nextHorizon,
-          },
-          { emitEvent: false }
-        );
+      if (
+        nextAssets.length !== summary.selectedAssets.length ||
+        nextTimeframe !== currentTimeframe ||
+        nextHorizon !== currentHorizon
+      ) {
+        this.patchSelection(nextAssets, nextTimeframe, nextHorizon);
       }
-
-      this.marketSelection.update({
-        asset: summary.selectedAssets[0] ?? '',
-        timeframe: this.form.controls.timeframe.value,
-        horizon: this.form.controls.horizon.value,
-      });
     }),
     shareReplay(1)
   );
 
   readonly vm$ = this.form.valueChanges.pipe(
     startWith(this.form.getRawValue()),
-    tap((value) =>
-      this.marketSelection.update({
-        asset: value.assets?.[0] ?? '',
-        timeframe: value.timeframe ?? '',
-        horizon: value.horizon ?? '',
-      })
-    ),
     map((value) => this.normalizeFormValue(value as CompareFormValue)),
     filter((value) => !!value.timeframe && !!value.horizon),
     switchMap((value) =>
-      combineLatest({
-        compare: this.compareService.getCompare(value.assets, value.timeframe, value.horizon),
-        correlations: this.getCorrelations(value.assets, value.timeframe),
-      }).pipe(
-        map(({ compare, correlations }) => ({
-          rows: compare.rows,
-          meta: compare.meta,
-          correlations,
-          leaderAsset: value.assets[0] ?? null,
-        })),
-        catchError((error) => {
-          console.error('[CompareComponent] vm error', error);
-          return of({
-            rows: [],
-            meta: {
-              timeframe: value.timeframe,
-              horizon: value.horizon,
-              count: 0,
-            },
-            correlations: [],
-            leaderAsset: value.assets[0] ?? null,
-          } satisfies CompareViewModel);
-        })
-      )
+      value.assets.length
+        ? combineLatest({
+            compare: this.compareService.getCompare(value.assets, value.timeframe, value.horizon),
+            correlations: this.getCorrelations(value.assets, value.timeframe),
+          }).pipe(
+            map(({ compare, correlations }) => ({
+              rows: compare.rows,
+              meta: compare.meta,
+              correlations,
+              leaderAsset: value.assets[0] ?? null,
+            })),
+            catchError((error) => {
+              console.error('[CompareComponent] vm error', error);
+              return of(this.emptyVm(value));
+            })
+          )
+        : of(this.emptyVm(value))
     ),
     shareReplay(1)
   );
@@ -389,6 +344,60 @@ export class CompareComponent {
       assets: [...new Set((value.assets ?? []).filter(Boolean))].slice(0, 6),
       timeframe: value.timeframe ?? '',
       horizon: value.horizon ?? '',
+    };
+  }
+
+  private resolveSelection(
+    assets: AssetInfo[],
+    current: { asset?: string; timeframe?: string; horizon?: string }
+  ) {
+    const selectedAsset = assets.find((item) => item.asset === current.asset) ?? assets[0];
+    const timeframes = selectedAsset?.timeframes ?? [];
+    const horizons = selectedAsset?.horizons ?? [];
+
+    return {
+      asset: selectedAsset?.asset ?? '',
+      timeframe: timeframes.includes(current.timeframe ?? '')
+        ? current.timeframe ?? ''
+        : timeframes[0] ?? '',
+      horizon: horizons.includes(current.horizon ?? '')
+        ? current.horizon ?? ''
+        : horizons[0] ?? '',
+      timeframes,
+      horizons,
+    };
+  }
+
+  private patchSelection(assets: string[], timeframe: string, horizon: string): void {
+    const current = this.form.getRawValue();
+    const changed =
+      current.timeframe !== timeframe ||
+      current.horizon !== horizon ||
+      current.assets.length !== assets.length ||
+      current.assets.some((asset, index) => asset !== assets[index]);
+
+    if (!changed) return;
+
+    this.form.patchValue(
+      {
+        assets,
+        timeframe,
+        horizon,
+      },
+      { emitEvent: true }
+    );
+  }
+
+  private emptyVm(value: CompareFormValue): CompareViewModel {
+    return {
+      rows: [],
+      meta: {
+        timeframe: value.timeframe,
+        horizon: value.horizon,
+        count: 0,
+      },
+      correlations: [],
+      leaderAsset: value.assets[0] ?? null,
     };
   }
 }

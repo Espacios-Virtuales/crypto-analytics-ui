@@ -5,7 +5,6 @@ import { combineLatest, of } from 'rxjs';
 import { catchError, filter, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 
 import { AssetsService } from '../../../core/services/assets.service';
-import { MarketSelectionService } from '../../../core/services/market-selection.service';
 import { AssetInfo } from '../../../core/models/assets.model';
 import { HistoryService } from '../../../core/services/history.service';
 import {
@@ -102,8 +101,6 @@ export class HistoryComponent {
   private readonly fb = inject(FormBuilder);
   private readonly assetsService = inject(AssetsService);
   private readonly historyService = inject(HistoryService);
-  private readonly marketSelection = inject(MarketSelectionService);
-  private readonly initialSelection = this.marketSelection.snapshot();
 
   // Stub temporal para piloto. Luego reemplazar por contrato FX real.
   readonly fxRateUsdClp = 950;
@@ -112,9 +109,9 @@ export class HistoryComponent {
   activeTable: 'prices' | 'features' | 'predictions' = 'prices';
 
   readonly form = this.fb.nonNullable.group({
-    asset: this.fb.nonNullable.control<string>(this.initialSelection.asset),
-    timeframe: this.fb.nonNullable.control<string>(this.initialSelection.timeframe),
-    horizon: this.fb.nonNullable.control<string>(this.initialSelection.horizon),
+    asset: this.fb.nonNullable.control<string>(''),
+    timeframe: this.fb.nonNullable.control<string>(''),
+    horizon: this.fb.nonNullable.control<string>(''),
     limit: this.fb.nonNullable.control<number>(25),
     offset: this.fb.nonNullable.control<number>(0),
     displayQuote: this.fb.nonNullable.control<DisplayQuoteOption>('USD'),
@@ -124,17 +121,9 @@ export class HistoryComponent {
     tap((assets: AssetInfo[]) => {
       if (!assets.length) return;
 
-      const selected = this.marketSelection.resolve(assets, this.form.getRawValue());
+      const selected = this.resolveSelection(assets, this.form.getRawValue());
 
-      this.form.patchValue(
-        {
-          asset: selected.asset,
-          timeframe: selected.timeframe,
-          horizon: selected.horizon,
-        },
-        { emitEvent: false }
-      );
-      this.marketSelection.update(selected);
+      this.patchSelection(selected);
     }),
     shareReplay(1)
   );
@@ -146,7 +135,7 @@ export class HistoryComponent {
     ),
   ]).pipe(
     map(([assets, asset]) => {
-      const selected = this.marketSelection.resolve(assets, {
+      const selected = this.resolveSelection(assets, {
         ...this.form.getRawValue(),
         asset,
       });
@@ -165,21 +154,17 @@ export class HistoryComponent {
         ? currentHorizon
         : (selected.horizons[0] ?? '');
 
-      this.form.patchValue(
-        {
-          timeframe: nextTimeframe,
-          horizon: nextHorizon,
-        },
-        { emitEvent: false }
-      );
-      this.marketSelection.update(this.form.getRawValue());
+      this.patchSelection({
+        asset: this.form.controls.asset.value,
+        timeframe: nextTimeframe,
+        horizon: nextHorizon,
+      });
     }),
     shareReplay(1)
   );
 
   readonly vm$ = this.form.valueChanges.pipe(
     startWith(this.form.getRawValue()),
-    tap((value) => this.marketSelection.update(value)),
     map((value) => this.normalizeFormValue(value as HistoryFormValue)),
     filter((value) => !!value.asset && !!value.timeframe && !!value.horizon),
     switchMap((value) => {
@@ -357,6 +342,43 @@ export class HistoryComponent {
       offset: this.normalizeOffset(value.offset),
       displayQuote: value.displayQuote ?? 'USD',
     };
+  }
+
+  private resolveSelection(assets: AssetInfo[], current: Partial<HistoryFormValue>) {
+    const selectedAsset = assets.find((item) => item.asset === current.asset) ?? assets[0];
+    const timeframes = selectedAsset?.timeframes ?? [];
+    const horizons = selectedAsset?.horizons ?? [];
+
+    return {
+      asset: selectedAsset?.asset ?? '',
+      timeframe: timeframes.includes(current.timeframe ?? '')
+        ? current.timeframe ?? ''
+        : timeframes[0] ?? '',
+      horizon: horizons.includes(current.horizon ?? '')
+        ? current.horizon ?? ''
+        : horizons[0] ?? '',
+      timeframes,
+      horizons,
+    };
+  }
+
+  private patchSelection(selection: { asset: string; timeframe: string; horizon: string }): void {
+    const current = this.form.getRawValue();
+    const changed =
+      current.asset !== selection.asset ||
+      current.timeframe !== selection.timeframe ||
+      current.horizon !== selection.horizon;
+
+    if (!changed) return;
+
+    this.form.patchValue(
+      {
+        asset: selection.asset,
+        timeframe: selection.timeframe,
+        horizon: selection.horizon,
+      },
+      { emitEvent: true }
+    );
   }
 
   private normalizeLimit(limit: number): number {

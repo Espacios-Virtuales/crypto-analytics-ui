@@ -44,23 +44,19 @@ export class HomeComponent {
   private readonly marketSelection = inject(MarketSelectionService);
   explanationOpen = false;
   private readonly initialSelection = this.marketSelection.snapshot();
-  private readonly refreshRequests$ = new BehaviorSubject<number>(0);
+  private readonly latestRefreshRequests$ = new BehaviorSubject<number>(0);
   readonly refreshRequestedAt = signal<string | null>(null);
   readonly signalThresholdLabel = SIGNAL_HOLD_THRESHOLD_LABEL;
 
-  readonly assets$ = this.refreshRequests$.pipe(
-    switchMap(() =>
-      this.assetsService.list().pipe(
-        tap((assets) => {
-          if (!assets.length) return;
+  readonly assets$ = this.assetsService.list().pipe(
+    tap((assets) => {
+      if (!assets.length) return;
 
-          const selected = this.marketSelection.resolve(assets, this.form.getRawValue());
+      const selected = this.marketSelection.resolve(assets, this.form.getRawValue());
 
-          this.patchSelection(selected);
-          this.marketSelection.update(selected);
-        })
-      )
-    ),
+      this.patchSelection(selected);
+      this.marketSelection.update(selected);
+    }),
     shareReplay(1)
   );
 
@@ -113,7 +109,7 @@ export class HomeComponent {
 
   readonly pulse$ = combineLatest([
     this.form.valueChanges.pipe(startWith(this.form.getRawValue())),
-    this.refreshRequests$,
+    this.latestRefreshRequests$,
   ]).pipe(
     map(([value]) => value),
     tap((value) => this.marketSelection.update(value)),
@@ -162,7 +158,7 @@ export class HomeComponent {
 
   refreshData(): void {
     this.refreshRequestedAt.set(new Date().toISOString());
-    this.refreshRequests$.next(this.refreshRequests$.value + 1);
+    this.latestRefreshRequests$.next(this.latestRefreshRequests$.value + 1);
   }
 
   onAssetChange(asset: AssetInfo): void {
