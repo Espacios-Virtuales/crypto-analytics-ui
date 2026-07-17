@@ -23,11 +23,7 @@
             [disabled]="latestRefreshing()"
             (click)="refreshData()"
           >
-            <span
-              *ngIf="latestRefreshing()"
-              class="spinner-border spinner-border-sm me-1"
-              aria-hidden="true"
-            ></span>
+            <span *ngIf="latestRefreshing()" class="loading-spinner" aria-hidden="true"></span>
             <i *ngIf="!latestRefreshing()" class="bi bi-arrow-clockwise"></i>
             {{ latestRefreshing() ? 'Actualizando...' : 'Actualizar' }}
           </button>
@@ -103,11 +99,17 @@
       </div>
   
       <div class="alert alert-info mb-3" *ngIf="latestLoading()">
-        Cargando datos...
+        <span class="loading-inline">
+          <span class="loading-spinner" aria-hidden="true"></span>
+          <span>Cargando datos...</span>
+        </span>
       </div>
 
       <div class="alert alert-info mb-3" *ngIf="latestRefreshing()">
-        Actualizando datos...
+        <span class="loading-inline">
+          <span class="loading-spinner" aria-hidden="true"></span>
+          <span>Actualizando datos...</span>
+        </span>
       </div>
 
       <div class="alert alert-warning mb-3" *ngIf="latestError() as error">

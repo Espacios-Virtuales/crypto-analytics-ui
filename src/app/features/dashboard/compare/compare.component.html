@@ -12,7 +12,10 @@
   </div>
 
   <div class="alert alert-info mb-3" *ngIf="assetsLoading()">
-    Cargando datos...
+    <span class="loading-inline">
+      <span class="loading-spinner" aria-hidden="true"></span>
+      <span>Cargando datos...</span>
+    </span>
   </div>
 
   <div class="alert alert-danger mb-3" *ngIf="assetsError() as error">
@@ -61,7 +64,10 @@
   </ng-container>
 
   <div class="alert alert-info mb-3" *ngIf="compareLoading()">
-    Cargando datos...
+    <span class="loading-inline">
+      <span class="loading-spinner" aria-hidden="true"></span>
+      <span>Cargando datos...</span>
+    </span>
   </div>
 
   <div class="alert alert-danger mb-3" *ngIf="compareError() as error">
@@ -207,7 +213,10 @@
   <ng-template #loadingTpl>
     <div class="card compare-card shadow-sm" *ngIf="assetsLoading() || compareLoading()">
       <div class="card-body text-muted">
-        Cargando datos...
+        <span class="loading-inline">
+          <span class="loading-spinner" aria-hidden="true"></span>
+          <span>Cargando datos...</span>
+        </span>
       </div>
     </div>
   </ng-template>

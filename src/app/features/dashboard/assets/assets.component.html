@@ -5,7 +5,10 @@
   </div>
 
   <div class="alert alert-info mb-3" *ngIf="loading()">
-    Cargando datos...
+    <span class="loading-inline">
+      <span class="loading-spinner" aria-hidden="true"></span>
+      <span>Cargando datos...</span>
+    </span>
   </div>
 
   <div class="alert alert-danger mb-3" *ngIf="error() as errorMessage">
@@ -56,7 +59,12 @@
 
   <ng-template #loadingTpl>
     <div class="card shadow-sm" *ngIf="loading()">
-      <div class="card-body text-muted">Cargando activos...</div>
+      <div class="card-body text-muted">
+        <span class="loading-inline">
+          <span class="loading-spinner" aria-hidden="true"></span>
+          <span>Cargando activos...</span>
+        </span>
+      </div>
     </div>
   </ng-template>
 </div>

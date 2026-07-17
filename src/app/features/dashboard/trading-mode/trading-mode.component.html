@@ -48,11 +48,7 @@
           [disabled]="vmRefreshing()"
           (click)="refreshData()"
         >
-          <span
-            *ngIf="vmRefreshing()"
-            class="spinner-border spinner-border-sm me-1"
-            aria-hidden="true"
-          ></span>
+          <span *ngIf="vmRefreshing()" class="loading-spinner" aria-hidden="true"></span>
           <i *ngIf="!vmRefreshing()" class="bi bi-arrow-clockwise"></i>
           {{ vmRefreshing() ? 'Actualizando...' : 'Actualizar' }}
         </button>
@@ -61,11 +57,17 @@
   </ng-container>
 
   <div class="alert alert-info mb-3" *ngIf="vmLoading()">
-    Cargando datos...
+    <span class="loading-inline">
+      <span class="loading-spinner" aria-hidden="true"></span>
+      <span>Cargando datos...</span>
+    </span>
   </div>
 
   <div class="alert alert-info mb-3" *ngIf="vmRefreshing()">
-    Actualizando datos...
+    <span class="loading-inline">
+      <span class="loading-spinner" aria-hidden="true"></span>
+      <span>Actualizando datos...</span>
+    </span>
   </div>
 
   <div class="alert alert-danger mb-3" *ngIf="vmError() as error">
@@ -186,7 +188,10 @@
   <ng-template #loadingTpl>
     <div class="card tm-card shadow-sm" *ngIf="vmLoading()">
       <div class="card-body text-muted">
-        Cargando datos...
+        <span class="loading-inline">
+          <span class="loading-spinner" aria-hidden="true"></span>
+          <span>Cargando datos...</span>
+        </span>
       </div>
     </div>
   </ng-template>
