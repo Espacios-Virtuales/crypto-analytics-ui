@@ -79,6 +79,16 @@
       <div class="tm-executive card tm-card shadow-sm mb-3">
         <div class="card-body">
           <div class="tm-primary-grid">
+            <div class="tm-summary-item" *ngIf="priceLoading() || priceError() as error">
+              <span class="tm-label">Precio</span>
+              <small *ngIf="priceLoading()" class="text-muted">Cargando...</small>
+              <small *ngIf="priceError()" class="text-warning">{{ error }}</small>
+            </div>
+            <div class="tm-summary-item" *ngIf="predictionLoading() || predictionError() as error">
+              <span class="tm-label">Predicción</span>
+              <small *ngIf="predictionLoading()" class="text-muted">Cargando...</small>
+              <small *ngIf="predictionError()" class="text-warning">{{ error }}</small>
+            </div>
             <div class="tm-summary-item">
               <span class="tm-label">Asset</span>
               <strong class="tm-value">{{ vm.asset }}</strong>
@@ -86,6 +96,8 @@
 
             <div class="tm-summary-item">
               <span class="tm-label">Signal</span>
+              <small class="text-muted" *ngIf="signalLoading()">Cargando señal...</small>
+              <small class="text-warning" *ngIf="signalError() as error">{{ error }}</small>
               <span class="badge rounded-pill tm-badge" [ngClass]="signalBadgeClass(vm.signal.signal)">
                 {{ signalIcon(vm.signal.signal) }} {{ vm.signal.signal }}
               </span>
@@ -135,6 +147,8 @@
               <strong>Router de mercado</strong>
               <small>Elige dónde continuar. Las rutas disponibles son definidas por el backend.</small>
             </div>
+            <small class="text-muted" *ngIf="routesLoading()">Cargando rutas...</small>
+            <small class="text-warning" *ngIf="routesError() as error">{{ error }}</small>
 
             <div *ngIf="vm.routes.length; else noRoutesTpl" class="tm-route-actions">
               <a
@@ -162,6 +176,8 @@
 
         <div class="card-body">
           <div class="market-state-grid">
+            <small class="text-muted" *ngIf="featureLoading()">Cargando indicadores...</small>
+            <small class="text-warning" *ngIf="featureError() as error">{{ error }}</small>
             <div class="market-state-block">
               <span class="tm-label">RSI</span>
               <strong>{{ vm.technical.rsiContext }}</strong>

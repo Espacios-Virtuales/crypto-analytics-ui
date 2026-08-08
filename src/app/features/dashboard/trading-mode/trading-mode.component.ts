@@ -1,8 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { BehaviorSubject, combineLatest, EMPTY, of } from 'rxjs';
-import { catchError, filter, finalize, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
+import { catchError, filter, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 
 import { AssetsService } from '../../../core/services/assets.service';
 import { ExchangeRoutesService } from '../../../core/services/exchange-routes.service';
@@ -41,6 +41,7 @@ type TradingVm = {
   routes: ExchangeRoute[];
   asof_ts_utc: string | null;
 };
+type TradingBlockResult<T> = { data: T | null; error: string | null };
 
 @Component({
   selector: 'app-trading-mode',
@@ -62,6 +63,19 @@ export class TradingModeComponent {
   readonly vmLoading = signal(true);
   readonly vmRefreshing = signal(false);
   readonly vmError = signal<string | null>(null);
+  readonly priceLoading = signal(true);
+  readonly predictionLoading = signal(true);
+  readonly featureLoading = signal(true);
+  readonly signalLoading = signal(true);
+  readonly routesLoading = signal(true);
+  readonly priceError = signal<string | null>(null);
+  readonly predictionError = signal<string | null>(null);
+  readonly featureError = signal<string | null>(null);
+  readonly signalError = signal<string | null>(null);
+  readonly routesError = signal<string | null>(null);
+  private readonly blockCache = new Map<string, unknown>();
+  private requestGeneration = 0;
+  private pendingBlocks = 0;
   private manualRefreshPending = false;
 
   readonly form = this.fb.nonNullable.group({
@@ -136,43 +150,47 @@ export class TradingModeComponent {
     filter((value) => !!value.asset && !!value.timeframe && !!value.horizon),
     switchMap((value) => {
       const isManualRefresh = this.manualRefreshPending;
+      const generation = ++this.requestGeneration;
+      const key = `${value.asset}|${value.timeframe}|${value.horizon}`;
 
+      this.manualRefreshPending = false;
       this.vmError.set(null);
       this.vmLoading.set(!isManualRefresh);
       this.vmRefreshing.set(isManualRefresh);
+      this.pendingBlocks = 5;
+      this.priceLoading.set(true); this.predictionLoading.set(true); this.featureLoading.set(true);
+      this.signalLoading.set(true); this.routesLoading.set(true);
+      this.priceError.set(null); this.predictionError.set(null); this.featureError.set(null);
+      this.signalError.set(null); this.routesError.set(null);
 
       return combineLatest({
-        price: this.latestService.getPrice({
+        price: this.loadBlock('price', key, this.latestService.getPrice({
           asset: value.asset,
           timeframe: value.timeframe,
-        }),
-        prediction: this.latestService.getPrediction({
+        }), generation),
+        prediction: this.loadBlock('prediction', key, this.latestService.getPrediction({
           asset: value.asset,
           timeframe: value.timeframe,
           horizon: value.horizon,
-        }),
-        feature: this.latestService.getFeature({
+        }), generation),
+        feature: this.loadBlock('feature', key, this.latestService.getFeature({
           asset: value.asset,
           timeframe: value.timeframe,
-        }),
-        signal: this.latestService
-          .getSignal({
+        }), generation),
+        signal: this.loadBlock('signal', key, this.latestService.getSignal({
             asset: value.asset,
             timeframe: value.timeframe,
             horizon: value.horizon,
-          })
-          .pipe(catchError(() => of(null))),
-        exchangeRoutes: this.exchangeRoutesService
-          .routes(value.asset, 'USD')
-          .pipe(catchError(() => of(null))),
+          }), generation),
+        exchangeRoutes: this.loadBlock('routes', key, this.exchangeRoutesService.routes(value.asset, 'USD'), generation),
       }).pipe(
         map(({ price, prediction, feature, signal, exchangeRoutes }) => {
-          const currentPrice = price?.data?.close ?? 0;
-          const predictedPrice = prediction?.data?.y_hat ?? 0;
-          const confidence = prediction?.data?.confidence ?? null;
-          const rsi = feature?.data?.rsi ?? null;
-          const macd = feature?.data?.macd ?? null;
-          const volatility = feature?.data?.volatility ?? null;
+          const currentPrice = price.data?.data?.close ?? 0;
+          const predictedPrice = prediction.data?.data?.y_hat ?? 0;
+          const confidence = prediction.data?.data?.confidence ?? null;
+          const rsi = feature.data?.data?.rsi ?? null;
+          const macd = feature.data?.data?.macd ?? null;
+          const volatility = feature.data?.data?.volatility ?? null;
 
           return {
             asset: value.asset,
@@ -182,7 +200,7 @@ export class TradingModeComponent {
             prediction: predictedPrice,
             signal: this.signalReading(
               buildSignalReading(currentPrice, predictedPrice, confidence),
-              signal
+              signal.data
             ),
             technical: buildTechnicalReading(rsi, macd, volatility),
             technicalValues: {
@@ -190,30 +208,42 @@ export class TradingModeComponent {
               macd,
               volatility,
             },
-            routes: exchangeRoutes?.routes ?? [],
+            routes: exchangeRoutes.data?.routes ?? [],
             asof_ts_utc:
-              price?.meta?.asof_ts_utc ??
-              prediction?.meta?.asof_ts_utc ??
-              feature?.meta?.asof_ts_utc ??
+              price.data?.meta?.asof_ts_utc ??
+              prediction.data?.meta?.asof_ts_utc ??
+              feature.data?.meta?.asof_ts_utc ??
               null,
           } satisfies TradingVm;
-        }),
-        catchError((error) => {
-          console.error('[TradingModeComponent] vm error', error);
-          this.vmError.set('No se pudieron cargar los datos. Intenta actualizar nuevamente.');
-          return EMPTY;
-        }),
-        finalize(() => {
-          this.vmLoading.set(false);
-          this.vmRefreshing.set(false);
-          if (isManualRefresh) {
-            this.manualRefreshPending = false;
-          }
         })
       );
     }),
     shareReplay(1)
   );
+
+  private loadBlock<T>(block: 'price' | 'prediction' | 'feature' | 'signal' | 'routes', key: string, request$: Observable<T>, generation: number): Observable<TradingBlockResult<T>> {
+    const cached = this.blockCache.get(`${block}|${key}`) as T | undefined;
+    return request$.pipe(
+      map((data) => ({ data, error: null })),
+      catchError(() => of({ data: cached ?? null, error: 'No disponible por ahora.' })),
+      tap((result) => {
+        if (generation !== this.requestGeneration) return;
+        if (result.data !== null) this.blockCache.set(`${block}|${key}`, result.data);
+        this.setBlockState(block, result.error);
+        this.pendingBlocks -= 1;
+        if (this.pendingBlocks <= 0) { this.vmLoading.set(false); this.vmRefreshing.set(false); }
+      }),
+      startWith({ data: cached ?? null, error: null })
+    );
+  }
+
+  private setBlockState(block: string, error: string | null): void {
+    if (block === 'price') { this.priceLoading.set(false); this.priceError.set(error); }
+    if (block === 'prediction') { this.predictionLoading.set(false); this.predictionError.set(error); }
+    if (block === 'feature') { this.featureLoading.set(false); this.featureError.set(error); }
+    if (block === 'signal') { this.signalLoading.set(false); this.signalError.set(error); }
+    if (block === 'routes') { this.routesLoading.set(false); this.routesError.set(error); }
+  }
 
   refreshData(): void {
     if (this.vmRefreshing()) return;

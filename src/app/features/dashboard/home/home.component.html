@@ -126,13 +126,15 @@
                     <i class="bi bi-currency-bitcoin metric-icon"></i>
                     <span class="metric-label">Precio actual</span>
                   </div>
+                  <div class="metric-sub text-muted" *ngIf="priceLoading()">Cargando precio...</div>
+                  <div class="metric-sub text-warning" *ngIf="priceError() as error">{{ error }}</div>
   
                   <div class="metric-value">
                     {{ formatMetric(shownPriceValue(pulse.price), shownPriceCurrency(pulse.price)) }}
                   </div>
   
                   <div class="metric-meta mt-2">
-                    {{ pulse.price.meta.asset }} · {{ pulse.price.meta.timeframe }}
+                    {{ pulse.price?.meta?.asset }} · {{ pulse.price?.meta?.timeframe }}
                   </div>
   
                   <div class="metric-sub mt-2" *ngIf="hasConvertedPrice(pulse.price); else marketPriceTpl">
@@ -151,22 +153,24 @@
   
             <div class="col-xl-3 col-lg-6 col-md-12">
               <div class="card dashboard-card shadow-sm h-100">
-                <div class="card-body" *ngIf="technicalReading(pulse) as technical">
+                  <div class="card-body" *ngIf="technicalReading(pulse) as technical">
                   <div class="metric-head d-flex align-items-center mb-3">
                     <i class="bi bi-activity metric-icon"></i>
                     <span class="metric-label">Indicadores técnicos</span>
                   </div>
+                  <div class="metric-sub text-muted" *ngIf="featureLoading()">Cargando indicadores...</div>
+                  <div class="metric-sub text-warning" *ngIf="featureError() as error">{{ error }}</div>
   
                   <div class="metric-value">
-                    RSI {{ pulse.feature.data.rsi | number:'1.0-2' }}
+                    RSI {{ pulse.feature?.data?.rsi | number:'1.0-2' }}
                   </div>
   
                   <div class="metric-meta mt-2">
-                    MACD {{ pulse.feature.data.macd | number:'1.0-2' }}
+                    MACD {{ pulse.feature?.data?.macd | number:'1.0-2' }}
                   </div>
   
                   <div class="metric-sub mt-2">
-                    Volatilidad {{ pulse.feature.data.volatility | number:'1.4-6' }}
+                    Volatilidad {{ pulse.feature?.data?.volatility | number:'1.4-6' }}
                   </div>
 
                   <div class="technical-reading mt-3">
@@ -185,6 +189,8 @@
                     <i class="bi bi-cpu metric-icon"></i>
                     <span class="metric-label">Predicción ML</span>
                   </div>
+                  <div class="metric-sub text-muted" *ngIf="predictionLoading()">Cargando predicción...</div>
+                  <div class="metric-sub text-warning" *ngIf="predictionError() as error">{{ error }}</div>
   
                   <div class="metric-value">
                     {{
@@ -196,11 +202,11 @@
                   </div>
   
                   <div class="metric-meta mt-2">
-                    Confianza {{ pulse.prediction.data.confidence | percent:'1.0-0' }}
+                    Confianza {{ pulse.prediction?.data?.confidence | percent:'1.0-0' }}
                   </div>
   
                   <div class="metric-sub mt-1">
-                    Horizonte {{ pulse.prediction.meta.horizon }}
+                    Horizonte {{ pulse.prediction?.meta?.horizon }}
                   </div>
   
                   <div class="metric-sub mt-2" *ngIf="hasConvertedPrediction(pulse.prediction); else marketPredictionTpl">
@@ -245,6 +251,8 @@
                     <i class="bi bi-signpost-split metric-icon"></i>
                     <span class="metric-label">Señal derivada</span>
                   </div>
+                  <div class="metric-sub text-muted" *ngIf="signalLoading()">Cargando señal...</div>
+                  <div class="metric-sub text-warning" *ngIf="signalError() as error">{{ error }}</div>
 
                   <div class="metric-value">
                     <span
@@ -279,7 +287,7 @@
             <div class="card-body py-3">
               <div class="footer-line d-flex align-items-center mb-2">
                 <i class="bi bi-clock me-2"></i>
-                <span title="Hora local Chile">Datos actualizados: {{ pulse.price.meta.asof_ts_utc | cryptoTimestamp }}</span>
+                <span title="Hora local Chile">Datos actualizados: {{ pulse.price?.meta?.asof_ts_utc | cryptoTimestamp }}</span>
               </div>
   
               <div class="footer-line" *ngIf="hasFxContext(pulse); else fxFallbackTpl">

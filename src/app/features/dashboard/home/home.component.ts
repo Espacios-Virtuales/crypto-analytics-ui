@@ -1,8 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { BehaviorSubject, combineLatest, EMPTY, of } from 'rxjs';
-import { catchError, filter, finalize, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable, of } from 'rxjs';
+import { catchError, filter, map, shareReplay, startWith, switchMap, tap } from 'rxjs/operators';
 
 import { AssetsService } from '../../../core/services/assets.service';
 import { LatestService } from '../../../core/services/latest.service';
@@ -10,6 +10,7 @@ import { MarketSelectionService } from '../../../core/services/market-selection.
 import { AssetInfo } from '../../../core/models/assets.model';
 import {
   FxContext,
+  LatestFeatureResponse,
   LatestPredictionResponse,
   LatestPriceResponse,
   LatestSignalResponse,
@@ -28,6 +29,13 @@ import {
 import { CryptoTimestampPipe } from '../../../shared/pipes/crypto-timestamp.pipe';
 
 type DisplayQuoteOption = 'MARKET' | 'USD' | 'CLP';
+type BlockResult<T> = { data: T | null; error: string | null };
+type HomePulse = {
+  price: LatestPriceResponse | null;
+  feature: LatestFeatureResponse | null;
+  prediction: LatestPredictionResponse | null;
+  signal: LatestSignalResponse | null;
+};
 
 @Component({
   selector: 'app-home',
@@ -50,6 +58,17 @@ export class HomeComponent {
   readonly latestLoading = signal(true);
   readonly latestRefreshing = signal(false);
   readonly latestError = signal<string | null>(null);
+  readonly priceLoading = signal(true);
+  readonly featureLoading = signal(true);
+  readonly predictionLoading = signal(true);
+  readonly signalLoading = signal(true);
+  readonly priceError = signal<string | null>(null);
+  readonly featureError = signal<string | null>(null);
+  readonly predictionError = signal<string | null>(null);
+  readonly signalError = signal<string | null>(null);
+  private readonly blockCache = new Map<string, unknown>();
+  private requestGeneration = 0;
+  private pendingBlocks = 0;
   private manualRefreshPending = false;
 
   readonly assets$ = this.assetsService.list().pipe(
@@ -111,6 +130,7 @@ export class HomeComponent {
     shareReplay(1)
   );
 
+  /* Each block is isolated so one failed endpoint cannot terminate the pulse. */
   readonly pulse$ = combineLatest([
     this.form.valueChanges.pipe(startWith(this.form.getRawValue())),
     this.latestRefreshRequests$,
@@ -127,51 +147,73 @@ export class HomeComponent {
     switchMap((value) => {
       const displayQuote = this.toDisplayQuoteParam(value.displayQuote);
       const isManualRefresh = this.manualRefreshPending;
+      const generation = ++this.requestGeneration;
+      const key = `${value.asset}|${value.timeframe}|${value.horizon}|${displayQuote ?? 'MARKET'}`;
 
+      this.manualRefreshPending = false;
       this.latestError.set(null);
       this.latestLoading.set(!isManualRefresh);
       this.latestRefreshing.set(isManualRefresh);
   
+      this.pendingBlocks = 4;
+      this.priceLoading.set(true); this.featureLoading.set(true);
+      this.predictionLoading.set(true); this.signalLoading.set(true);
+      this.priceError.set(null); this.featureError.set(null);
+      this.predictionError.set(null); this.signalError.set(null);
+
       return combineLatest({
-        price: this.latestService.getPrice({
+        price: this.loadBlock('price', key, this.latestService.getPrice({
           asset: value.asset,
           timeframe: value.timeframe,
           ...(displayQuote ? { display_quote: displayQuote } : {}),
-        }),
-        feature: this.latestService.getFeature({
+        }), generation),
+        feature: this.loadBlock('feature', key, this.latestService.getFeature({
           asset: value.asset,
           timeframe: value.timeframe,
-        }),
-        prediction: this.latestService.getPrediction({
+        }), generation),
+        prediction: this.loadBlock('prediction', key, this.latestService.getPrediction({
           asset: value.asset,
           timeframe: value.timeframe,
           horizon: value.horizon,
           ...(displayQuote ? { display_quote: displayQuote } : {}),
-        }),
-        signal: this.latestService
-          .getSignal({
+        }), generation),
+        signal: this.loadBlock('signal', key, this.latestService.getSignal({
             asset: value.asset,
             timeframe: value.timeframe,
             horizon: value.horizon,
-          })
-          .pipe(catchError(() => of(null))),
-      }).pipe(
-        catchError((error) => {
-          console.error('[HomeComponent] pulse error', error);
-          this.latestError.set('No se pudieron cargar los datos. Intenta actualizar nuevamente.');
-          return EMPTY;
-        }),
-        finalize(() => {
-          this.latestLoading.set(false);
-          this.latestRefreshing.set(false);
-          if (isManualRefresh) {
-            this.manualRefreshPending = false;
-          }
-        })
-      );
+          }), generation),
+      }).pipe(map((blocks): HomePulse => ({
+        price: blocks.price.data,
+        feature: blocks.feature.data,
+        prediction: blocks.prediction.data,
+        signal: blocks.signal.data,
+      })))
     }),
     shareReplay(1)
   );
+
+  private loadBlock<T>(block: 'price' | 'feature' | 'prediction' | 'signal', key: string, request$: Observable<T>, generation: number): Observable<BlockResult<T>> {
+    const cached = this.blockCache.get(`${block}|${key}`) as T | undefined;
+    return request$.pipe(
+      map((data) => ({ data, error: null })),
+      catchError(() => of({ data: cached ?? null, error: 'No disponible por ahora.' })),
+      tap((result) => {
+        if (generation !== this.requestGeneration) return;
+        if (result.data !== null) this.blockCache.set(`${block}|${key}`, result.data);
+        this.setBlockState(block, result.error);
+        this.pendingBlocks -= 1;
+        if (this.pendingBlocks <= 0) { this.latestLoading.set(false); this.latestRefreshing.set(false); }
+      }),
+      startWith({ data: cached ?? null, error: null })
+    );
+  }
+
+  private setBlockState(block: string, error: string | null): void {
+    if (block === 'price') { this.priceLoading.set(false); this.priceError.set(error); }
+    if (block === 'feature') { this.featureLoading.set(false); this.featureError.set(error); }
+    if (block === 'prediction') { this.predictionLoading.set(false); this.predictionError.set(error); }
+    if (block === 'signal') { this.signalLoading.set(false); this.signalError.set(error); }
+  }
 
   refreshData(): void {
     if (this.latestRefreshing()) return;
