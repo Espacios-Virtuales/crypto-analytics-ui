@@ -8,7 +8,8 @@
 
 .ev-shell {
   min-height: 100vh;
-  background: #f7f9fb;
+  background: var(--crypto-bg);
+  color: var(--crypto-text);
   position: relative;
 }
 
@@ -25,8 +26,9 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #0d1b2a;
-  color: #fff;
+  background: var(--crypto-bg-elevated);
+  color: var(--crypto-text);
+  border-right: 1px solid var(--crypto-border);
   transition:
     transform 0.25s ease,
     width 0.25s ease,
@@ -41,14 +43,14 @@
   }
 
   .brand-link {
-    color: #fff;
+    color: var(--crypto-text);
     text-decoration: none;
     font-size: 1.5rem;
 
     i {
       display: block;
       font-size: 1.6rem;
-      color: var(--ev-accent);
+      color: var(--crypto-accent-tech);
     }
   }
 
@@ -60,7 +62,7 @@
   }
 
   .menu-item {
-    color: #cbd5e1;
+    color: var(--crypto-text-muted);
     padding: 0.7rem 0.9rem;
     border-radius: 0.5rem;
     text-decoration: none;
@@ -69,19 +71,19 @@
     gap: 0.6rem;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.06);
-      color: #fff;
+      background: var(--crypto-surface-soft);
+      color: var(--crypto-text);
     }
 
     &.active {
-      background: rgba(43, 212, 224, 0.15);
-      color: #fff;
+      background: var(--crypto-glow-tech);
+      color: var(--crypto-accent-tech-strong);
     }
   }
 
   .sidebar-footer {
     padding: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-top: 1px solid var(--crypto-border);
     margin-top: auto; // ✴️ este lo ancla abajo
   }
 
@@ -106,8 +108,9 @@
 .ev-topbar {
   height: var(--ev-topbar-height);
   padding: 0 1rem;
-  background: #fff;
-  border-bottom: 1px solid #e5ebf0;
+  background: var(--crypto-bg-elevated);
+  border-bottom: 1px solid var(--crypto-border);
+  color: var(--crypto-text);
   position: sticky;
   top: 0;
   z-index: 1020;
@@ -121,7 +124,7 @@
 }
 
 .toggle {
-  color: var(--ev-primary);
+  color: var(--crypto-accent-tech-strong);
   text-decoration: none;
 }
 
@@ -134,7 +137,10 @@
   border-radius: 0.75rem;
   width: min(92vw, 420px);
   padding: 1.25rem;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+  color: var(--crypto-text);
+  background: var(--crypto-surface);
+  border: 1px solid var(--crypto-border);
+  box-shadow: var(--crypto-shadow);
 }
 
 .ev-dialog::backdrop {

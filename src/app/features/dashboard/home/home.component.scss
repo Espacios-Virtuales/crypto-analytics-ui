@@ -1,6 +1,15 @@
 :host {
     display: block;
   }
+
+.dashboard-page { color: var(--crypto-text); }
+.dashboard-title, .metric-value, .dashboard-page .card-body { color: var(--crypto-text); }
+.dashboard-subtitle, .dashboard-page .text-muted, .metric-label, .metric-meta, .metric-sub, .context-label, .footer-line { color: var(--crypto-text-muted) !important; }
+.dashboard-page .form-label, .technical-reading, .technical-accordion-toggle { color: var(--crypto-text); }
+.dashboard-page .form-select { background: var(--crypto-surface-soft); border-color: var(--crypto-border); color: var(--crypto-text); }
+.dashboard-page .form-select:focus { border-color: var(--crypto-accent-tech); box-shadow: 0 0 0 .2rem var(--crypto-focus); }
+.dashboard-page .card { background: var(--crypto-surface); border-color: var(--crypto-border); box-shadow: var(--crypto-shadow); }
+.technical-reading { border-top-color: var(--crypto-border); }.bi-currency-bitcoin.metric-icon { color: var(--crypto-accent-value) !important; }.bi-activity.metric-icon, .bi-cpu.metric-icon, .bi-signpost-split.metric-icon { color: var(--crypto-accent-tech) !important; }
   
   .dashboard-page {
     color: #1f2937;
@@ -344,3 +353,13 @@
       --bs-gutter-y: 0.9rem;
     }
   }
+
+/* H06 visual reconciliation: the operational state colors above stay semantic. */
+.dashboard-page { color: var(--crypto-text); }
+.dashboard-title, .metric-value, .dashboard-page .card-body { color: var(--crypto-text); }
+.dashboard-subtitle, .dashboard-page .text-muted, .metric-label, .metric-meta, .metric-sub, .context-label, .footer-line { color: var(--crypto-text-muted) !important; }
+.dashboard-page .form-label, .technical-reading, .technical-accordion-toggle { color: var(--crypto-text); }
+.dashboard-page .form-select { background: var(--crypto-surface-soft); border-color: var(--crypto-border); color: var(--crypto-text); }
+.dashboard-page .form-select:focus { border-color: var(--crypto-accent-tech); box-shadow: 0 0 0 .2rem var(--crypto-focus); }
+.dashboard-page .card { background: var(--crypto-surface); border-color: var(--crypto-border); box-shadow: var(--crypto-shadow); }
+.technical-reading { border-top-color: var(--crypto-border); }.bi-currency-bitcoin.metric-icon { color: var(--crypto-accent-value) !important; }.bi-activity.metric-icon, .bi-cpu.metric-icon, .bi-signpost-split.metric-icon { color: var(--crypto-accent-tech) !important; }

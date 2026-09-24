@@ -189,3 +189,11 @@
     }
   }
 }
+
+.history-page { color: var(--crypto-text); }
+.history-page .history-hero, .history-page .history-card { background: var(--crypto-surface); border-color: var(--crypto-border); box-shadow: var(--crypto-shadow); }
+.history-page .history-title, .history-page .history-card .card-header, .history-page .history-card .card-body, .history-page .history-table tbody td { color: var(--crypto-text); }
+.history-page .history-subtitle, .history-page .text-muted, .history-page .history-table thead th { color: var(--crypto-text-muted) !important; }
+.history-page .history-card .card-header, .history-page .history-table thead th { background: var(--crypto-surface-soft); border-color: var(--crypto-border); }
+.history-page .history-table tbody td { background: var(--crypto-surface); border-color: var(--crypto-border); }.history-page .history-table tbody tr:hover td { background: var(--crypto-surface-soft); }
+.history-page .history-select, .history-page .history-input { background: var(--crypto-surface-soft); border-color: var(--crypto-border); color: var(--crypto-text); }.history-page .history-select:focus, .history-page .history-input:focus { border-color: var(--crypto-accent-tech); box-shadow: 0 0 0 .2rem var(--crypto-focus); }

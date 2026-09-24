@@ -190,3 +190,19 @@ $goldGlow: rgba(212, 175, 55, 0.22);
     }
   }
 }
+
+/* H06 product layer: cyan is interaction; gold remains a value/detail accent. */
+.login-wrapper {
+  background: radial-gradient(900px 500px at 18% 12%, var(--crypto-glow-tech), transparent 55%), var(--crypto-bg);
+
+  .login-image { background: linear-gradient(135deg, var(--crypto-bg), var(--crypto-surface-soft)); border-right-color: var(--crypto-border); }
+  .login-image .overlay { background: rgba(16, 28, 41, .78); border-color: var(--crypto-border); }
+  .login-form { background: var(--crypto-bg-elevated); }
+  .login-form .form-container { background: var(--crypto-surface); border-color: var(--crypto-border); box-shadow: var(--crypto-shadow); }
+  .login-form .form-container h1, .login-form .form-container h2, .login-form .form-container h3, .login-form .form-container label { color: var(--crypto-text); }
+  .login-form .form-container p, .login-form .form-container small { color: var(--crypto-text-muted); }
+  .login-form .form-container .form-control { background: var(--crypto-surface-soft); color: var(--crypto-text); border-color: var(--crypto-border); }
+  .login-form .form-container .form-control:focus { border-color: var(--crypto-accent-tech); box-shadow: 0 0 0 .18rem var(--crypto-focus); }
+  .login-form .form-container .btn-ev { background: var(--crypto-accent-tech); color: var(--crypto-on-accent); border-color: var(--crypto-accent-tech); }
+  .login-form .form-container .btn-ev:hover { background: var(--crypto-accent-tech-strong); border-color: var(--crypto-accent-tech-strong); }
+}

@@ -1,0 +1,5 @@
+.crypto-container { width: min(1120px, calc(100% - 3rem)); margin-inline: auto; }
+
+@media (max-width: 767.98px) {
+  .crypto-container { width: min(100% - 2rem, 35rem); }
+}

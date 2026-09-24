@@ -1,3 +1,10 @@
+@use 'styles/crypto-tokens';
+@use 'styles/crypto-typography';
+@use 'styles/crypto-surfaces';
+@use 'styles/crypto-motion';
+@use 'styles/crypto-layout';
+@use 'styles/crypto-utilities';
+
 /* src/styles.scss */
 @font-face {
   font-display: block;
@@ -47,61 +54,24 @@
 .bi-trash::before { content: '\f5de'; }
 .bi-x-circle::before { content: '\f623'; }
 
-/* Google Fonts: */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
-
-/* Fuente global */
-html, body {
-  font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI',
-               Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-
-  /* Base UI */
-  background: var(--ev-bg);
-  color: var(--ev-text);
-}
-
-/* 🌑 Paleta EVAAS Noir + Gold */
-:root {
-  /* Fondos */
-  --ev-bg: #0b0d10;          /* negro profundo */
-  --ev-surface: #11141a;     /* tarjetas / paneles */
-  --ev-surface-2: #171b22;   /* hover / elevación */
-
-  /* Texto */
-  --ev-text: #f5f7fa;        /* blanco suave */
-  --ev-muted: #a9b0bb;       /* gris “silencioso” */
-
-  /* Bordes / sombras */
-  --ev-border: rgba(255,255,255,.10);
-  --ev-shadow: 0 12px 40px rgba(0,0,0,.45);
-
-  /* Dorado (acento) */
-  --ev-gold: #d4af37;        /* gold soft */
-  --ev-gold-2: #f1d27a;      /* highlight */
-  --ev-gold-glow: rgba(212,175,55,.25);
-
-  /* Estados */
-  --ev-danger: #ef4444;
-  --ev-success: #22c55e;
-}
+/* Shared Crypto foundation. Legacy --ev aliases resolve in _crypto-tokens. */
+:root { --ev-shadow: var(--crypto-shadow); }
 
 /* Links / acentos */
-.text-accent { color: var(--ev-gold) !important; }
-a { color: var(--ev-gold); }
-a:hover { color: var(--ev-gold-2); }
+.text-accent { color: var(--crypto-accent-value-strong) !important; }
+a { color: var(--crypto-accent-tech-strong); }
+a:hover { color: var(--crypto-accent-tech); }
 
 /* Botón principal (Noir + Gold) */
 .btn-ev {
-  background: linear-gradient(180deg, #1b1f27, #12151b);
-  color: var(--ev-text);
-  border: 1px solid rgba(212,175,55,.35);
-  box-shadow: 0 10px 26px rgba(0,0,0,.35);
+  background: var(--crypto-surface-soft);
+  color: var(--crypto-text);
+  border: 1px solid var(--crypto-accent-tech);
+  box-shadow: var(--crypto-shadow);
 
   &:hover {
-    border-color: rgba(212,175,55,.55);
-    box-shadow: 0 0 0 4px var(--ev-gold-glow), 0 14px 36px rgba(0,0,0,.45);
+    border-color: var(--crypto-accent-tech-strong);
+    box-shadow: 0 0 0 4px var(--crypto-glow-tech), var(--crypto-shadow);
     filter: brightness(1.05);
   }
 
@@ -112,14 +82,14 @@ a:hover { color: var(--ev-gold-2); }
 
   &:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 4px var(--ev-gold-glow), 0 14px 36px rgba(0,0,0,.45);
+    box-shadow: 0 0 0 4px var(--crypto-focus), var(--crypto-shadow);
   }
 }
 
 /* Variante dorada (para CTA premium) */
 .btn-ev-gold {
-  background: linear-gradient(180deg, var(--ev-gold-2), var(--ev-gold));
-  color: #0b0d10;
+  background: linear-gradient(180deg, var(--crypto-accent-value-strong), var(--crypto-accent-value));
+  color: var(--crypto-on-accent);
   border: 1px solid rgba(255,255,255,.15);
 
   &:hover { filter: brightness(1.03); }
