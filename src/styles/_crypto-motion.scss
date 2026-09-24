@@ -1,0 +1,19 @@
+[data-crypto-reveal] {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 420ms ease-out, transform 420ms ease-out;
+}
+
+[data-crypto-reveal].crypto-revealed { opacity: 1; transform: translateY(0); }
+[data-crypto-reveal="fade-in"] { transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  [data-crypto-reveal] { opacity: 1; transform: none; }
+}

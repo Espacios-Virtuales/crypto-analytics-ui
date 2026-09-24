@@ -1,0 +1,50 @@
+:root {
+  --crypto-bg: #09121d;
+  --crypto-bg-elevated: #0d1824;
+  --crypto-surface: #101c29;
+  --crypto-surface-soft: #152535;
+
+  --crypto-text: #f2f7fb;
+  --crypto-text-muted: #a9bac8;
+  --crypto-text-inverse: #06232d;
+
+  --crypto-accent-tech: #52d5d3;
+  --crypto-accent-tech-strong: #96f2df;
+  --crypto-accent-value: #d6b35a;
+  --crypto-accent-value-strong: #f0d889;
+  --crypto-accent-value-deep: #8f7130;
+
+  --crypto-on-accent: #06232d;
+  --crypto-border: rgba(174, 204, 223, 0.16);
+  --crypto-glow-tech: rgba(82, 213, 211, 0.13);
+  --crypto-ring-tech: rgba(82, 213, 211, 0.11);
+  --crypto-focus: rgba(150, 242, 223, 0.62);
+  --crypto-shadow: 0 16px 42px rgba(0, 0, 0, 0.28);
+
+  --crypto-success: #4fc987;
+  --crypto-warning: #e2b85c;
+  --crypto-danger: #ef7373;
+  --crypto-neutral: #8194a5;
+
+  --crypto-radius-sm: 0.5rem;
+  --crypto-radius: 0.875rem;
+  --crypto-radius-lg: 1.25rem;
+  --crypto-space-1: 0.5rem;
+  --crypto-space-2: 0.75rem;
+  --crypto-space-3: 1rem;
+  --crypto-space-4: 1.5rem;
+  --crypto-space-5: 2.25rem;
+
+  /* Compatibility aliases for pre-H06 surfaces. */
+  --ev-bg: var(--crypto-bg);
+  --ev-surface: var(--crypto-surface);
+  --ev-surface-2: var(--crypto-surface-soft);
+  --ev-text: var(--crypto-text);
+  --ev-muted: var(--crypto-text-muted);
+  --ev-border: var(--crypto-border);
+  --ev-gold: var(--crypto-accent-value);
+  --ev-gold-2: var(--crypto-accent-value-strong);
+  --ev-gold-glow: rgba(214, 179, 90, 0.22);
+  --ev-success: var(--crypto-success);
+  --ev-danger: var(--crypto-danger);
+}

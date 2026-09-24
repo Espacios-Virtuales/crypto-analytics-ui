@@ -1,0 +1,49 @@
+.crypto-card,
+.card {
+  border-color: var(--crypto-border);
+}
+
+.form-control,
+.form-select {
+  color: var(--crypto-text);
+  background-color: var(--crypto-surface-soft);
+  border-color: var(--crypto-border);
+}
+
+.form-control::placeholder { color: var(--crypto-text-muted); opacity: 0.72; }
+
+.form-control:focus,
+.form-select:focus,
+.btn:focus-visible,
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  border-color: var(--crypto-accent-tech);
+  box-shadow: 0 0 0 0.22rem var(--crypto-focus);
+  outline: 0;
+}
+
+.btn-outline-primary {
+  color: var(--crypto-accent-tech-strong);
+  border-color: var(--crypto-accent-tech);
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+  color: var(--crypto-on-accent);
+  background: var(--crypto-accent-tech);
+  border-color: var(--crypto-accent-tech);
+}
+
+.btn-primary {
+  color: var(--crypto-on-accent);
+  background: var(--crypto-accent-tech);
+  border-color: var(--crypto-accent-tech);
+}
+
+.btn-primary:hover,
+.btn-primary:focus { background: var(--crypto-accent-tech-strong); border-color: var(--crypto-accent-tech-strong); }
+
+.alert-info { color: var(--crypto-text); background: var(--crypto-surface-soft); border-color: var(--crypto-border); }
+.alert-warning { color: var(--crypto-text); background: rgba(226, 184, 92, 0.14); border-color: rgba(226, 184, 92, 0.45); }
+.alert-danger { color: var(--crypto-text); background: rgba(239, 115, 115, 0.12); border-color: rgba(239, 115, 115, 0.45); }

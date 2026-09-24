@@ -1,50 +1,31 @@
 <main class="landing">
-  <header class="landing__header">
-    <a class="landing__brand" routerLink="/" aria-label="Crypto Analytics, inicio">
-      <span class="landing__brand-mark" aria-hidden="true">CA</span>
-      <span>Crypto Analytics</span>
-    </a>
-
+  <header class="landing__header crypto-container">
+    <a class="landing__brand" routerLink="/" aria-label="Crypto Analytics, inicio"><span class="landing__brand-mark" aria-hidden="true">CA</span><span>Crypto Analytics</span></a>
+    <nav class="landing__nav" aria-label="Navegación de la portada"><a href="#analiza">Analiza</a><a href="#compara">Compara</a><a href="#sigue">Sigue</a><a href="#flujo">Flujo</a></nav>
     <a class="landing__login landing__login--quiet" routerLink="/login">Ingresar</a>
   </header>
 
-  <section class="landing__hero" aria-labelledby="landing-title">
-    <div class="landing__glow" aria-hidden="true"></div>
-    <div class="landing__hero-content">
-      <p class="landing__eyebrow">CRYPTO ANALYTICS</p>
-      <h1 id="landing-title">Lectura analítica del mercado, <span>en un solo entorno.</span></h1>
-      <p class="landing__description">
-        Crypto Analytics reúne datos de mercado, señales interpretativas, predicciones e histórico
-        para facilitar el seguimiento y comparación de activos desde una interfaz unificada.
-      </p>
-      <p class="landing__topics" aria-label="Capacidades principales">
-        Datos <span aria-hidden="true">·</span> Señales <span aria-hidden="true">·</span>
-        Predicciones <span aria-hidden="true">·</span> Histórico
-      </p>
-      <a class="landing__login landing__login--primary" routerLink="/login">Ingresar</a>
-    </div>
-  </section>
+  <section class="landing__hero" aria-labelledby="landing-title"><div class="landing__orb" aria-hidden="true"></div><div class="landing__hero-content crypto-container" cryptoReveal>
+    <p class="crypto-eyebrow">CRYPTO ANALYTICS · ENTORNO ANALÍTICO</p><h1 id="landing-title">Lectura analítica del mercado, <span>con contexto para decidir.</span></h1>
+    <p class="landing__description">Datos, indicadores, señales interpretativas e histórico para observar activos desde una interfaz clara. La decisión sigue siendo humana.</p>
+    <div class="landing__actions"><a class="landing__login landing__login--primary" routerLink="/login">Ingresar</a><a class="landing__text-link" href="#analiza">Explorar el producto <span aria-hidden="true">↓</span></a></div>
+    <p class="landing__topics" aria-label="Capacidades principales">Datos · Indicadores · Señales · Histórico</p>
+  </div></section>
 
-  <section class="landing__capabilities" aria-label="Capacidades de Crypto Analytics">
-    <article class="landing__capability">
-      <span class="landing__capability-index" aria-hidden="true">01</span>
-      <h2>Analiza</h2>
-      <p>Observa precio, indicadores, señales y predicciones desde una lectura integrada.</p>
-    </article>
-    <article class="landing__capability">
-      <span class="landing__capability-index" aria-hidden="true">02</span>
-      <h2>Compara</h2>
-      <p>Contrasta distintos activos y sus condiciones actuales dentro de un mismo entorno.</p>
-    </article>
-    <article class="landing__capability">
-      <span class="landing__capability-index" aria-hidden="true">03</span>
-      <h2>Sigue</h2>
-      <p>Consulta el comportamiento reciente e histórico y mantén contexto sobre la evolución del mercado.</p>
-    </article>
-  </section>
+  <section class="landing__section landing__pulse" aria-labelledby="pulse-title"><div class="crypto-container"><div class="landing__section-heading" cryptoReveal><p class="crypto-eyebrow">PRODUCT PULSE</p><h2 id="pulse-title">Una lectura, no una promesa.</h2><p>Una representación del producto que mantiene datos, contexto y señal en el mismo campo de lectura.</p></div>
+    <div class="pulse-panel" cryptoReveal><div class="pulse-panel__bar"><span>BTC / USD</span><span class="crypto-value">Activo observado</span><span>Marco: 4h</span></div><div class="pulse-panel__body"><div><span>Precio</span><strong>$—</strong><small>Disponible tras ingresar</small></div><div class="pulse-panel__chart" aria-label="Gráfico esquemático de tendencia"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div><span>Lectura</span><strong class="crypto-value">Contextual</strong><small>Sin ejecución automática</small></div></div></div>
+  </div></section>
 
-  <footer class="landing__footer">
-    <span>Crypto Analytics <span aria-hidden="true">·</span> Espacios Virtuales</span>
-    <span>Plataforma analítica en evolución.</span>
-  </footer>
+  <section id="analiza" class="landing__section" aria-labelledby="analiza-title"><div class="crypto-container landing__split"><div cryptoReveal><p class="crypto-eyebrow">01 · ANALIZA</p><h2 id="analiza-title">Datos que se leen juntos.</h2><p>Precio, indicadores, señales y predicción se presentan como partes de una misma lectura analítica.</p></div><ul class="landing__feature-list" cryptoReveal><li><span>Datos</span><small>Mercado y temporalidad seleccionada.</small></li><li><span>Indicadores</span><small>Contexto técnico para interpretar la variación.</small></li><li><span>Señales</span><small>Información asistiva, no órdenes.</small></li></ul></div></section>
+
+  <section id="compara" class="landing__section landing__section--soft" aria-labelledby="compara-title"><div class="crypto-container landing__split"><div cryptoReveal><p class="crypto-eyebrow">02 · COMPARA</p><h2 id="compara-title">Activos en relación.</h2><p>Contrasta condiciones, correlaciones y métricas en una vista común sin perder el contexto de cada activo.</p></div><div class="compare-preview" cryptoReveal aria-label="Vista esquemática de comparador"><div><span>Activo</span><span>Contexto</span><span>Lectura</span></div><div><strong>BTC</strong><span>Mercado</span><em>Observar</em></div><div><strong>ETH</strong><span>Mercado</span><em>Comparar</em></div><div><strong>SOL</strong><span>Mercado</span><em>Contexto</em></div></div></div></section>
+
+  <section id="sigue" class="landing__section" aria-labelledby="sigue-title"><div class="crypto-container landing__split"><div cryptoReveal><p class="crypto-eyebrow">03 · SIGUE</p><h2 id="sigue-title">La evolución importa.</h2><p>El histórico y los metadatos ayudan a situar una observación presente dentro de una secuencia.</p></div><div class="history-preview" cryptoReveal><span>Histórico disponible por activo, horizonte y temporalidad.</span><div><i></i><i></i><i></i><i></i><i></i><i></i></div></div></div></section>
+
+  <section id="flujo" class="landing__section landing__section--soft" aria-labelledby="flujo-title"><div class="crypto-container"><div class="landing__section-heading" cryptoReveal><p class="crypto-eyebrow">FLUJO ANALÍTICO</p><h2 id="flujo-title">Del dato a la decisión humana.</h2></div><ol class="landing__flow" cryptoReveal><li>Datos</li><li>Features</li><li>Predicción</li><li>Señal</li><li class="landing__flow-human">Humano</li></ol></div></section>
+
+  <section class="landing__section" aria-labelledby="principios-title"><div class="crypto-container"><div class="landing__section-heading" cryptoReveal><p class="crypto-eyebrow">PRINCIPIOS</p><h2 id="principios-title">Tecnología al servicio de una lectura responsable.</h2></div><div class="landing__principles" cryptoReveal><article><h3>Análisis asistivo</h3><p>El producto aporta información; no reemplaza el criterio de quien observa.</p></article><article><h3>Explicabilidad</h3><p>Las señales se acompañan de contexto para que puedan ser interpretadas.</p></article><article><h3>Decisión humana</h3><p>Crypto Analytics no ejecuta órdenes ni convierte una lectura en una promesa financiera.</p></article></div></div></section>
+
+  <section class="landing__cta" aria-labelledby="cta-title"><div class="crypto-container" cryptoReveal><p class="crypto-eyebrow">CRYPTO ANALYTICS</p><h2 id="cta-title">Encuentra contexto antes de actuar.</h2><a class="landing__login landing__login--primary" routerLink="/login">Ingresar</a></div></section>
+  <footer class="landing__footer crypto-container"><span>Crypto Analytics <span aria-hidden="true">·</span> Espacios Virtuales</span><span>Plataforma analítica en evolución.</span></footer>
 </main>
