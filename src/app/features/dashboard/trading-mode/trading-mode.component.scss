@@ -245,3 +245,8 @@
     }
   }
 }
+
+.trading-mode-page { color: var(--crypto-text); }
+.trading-mode-page .trading-mode-hero, .trading-mode-page .tm-card, .trading-mode-page .tm-summary-item, .trading-mode-page .market-state-block { background: var(--crypto-surface); border-color: var(--crypto-border); box-shadow: var(--crypto-shadow); }
+.trading-mode-page .trading-mode-title, .trading-mode-page .tm-card .card-header, .trading-mode-page .tm-card .card-body, .trading-mode-page .tm-value { color: var(--crypto-text); }.trading-mode-page .trading-mode-subtitle, .trading-mode-page .trading-mode-disclaimer, .trading-mode-page .text-muted, .trading-mode-page .tm-label, .trading-mode-page small { color: var(--crypto-text-muted) !important; }
+.trading-mode-page .tm-card .card-header { background: var(--crypto-surface-soft); border-color: var(--crypto-border); }.trading-mode-page .tm-secondary-grid, .trading-mode-page .tm-market-router { border-color: var(--crypto-border); }.trading-mode-page .form-select { background: var(--crypto-surface-soft); border-color: var(--crypto-border); color: var(--crypto-text); }.trading-mode-page .form-select:focus { border-color: var(--crypto-accent-tech); box-shadow: 0 0 0 .2rem var(--crypto-focus); }.trading-mode-page .tm-route-button { background: var(--crypto-accent-tech); border-color: var(--crypto-accent-tech); color: var(--crypto-on-accent); }

@@ -2,6 +2,11 @@
   display: block;
 }
 
+.assets-page { color: var(--crypto-text); }
+.assets-hero, .assets-page .card { background: var(--crypto-surface); border-color: var(--crypto-border); box-shadow: var(--crypto-shadow); }
+.assets-title, .asset-name, .asset-table tbody td { color: var(--crypto-text); }
+.assets-subtitle, .assets-page .text-muted, .asset-meta, .asset-table thead th { color: var(--crypto-text-muted) !important; }
+
 .assets-page {
   color: #1f2937;
 }
@@ -73,3 +78,8 @@
     font-size: 1.25rem;
   }
 }
+
+.assets-page { color: var(--crypto-text); }
+.assets-hero, .assets-page .card { background: var(--crypto-surface); border-color: var(--crypto-border); box-shadow: var(--crypto-shadow); }
+.assets-title, .asset-name, .asset-table tbody td { color: var(--crypto-text); }
+.assets-subtitle, .assets-page .text-muted, .asset-meta, .asset-table thead th { color: var(--crypto-text-muted) !important; }
