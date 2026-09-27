@@ -133,14 +133,22 @@
 }
 
 .ev-dialog {
-  border: 0;
+  border: 1px solid #e5e7eb;
   border-radius: 0.75rem;
   width: min(92vw, 420px);
   padding: 1.25rem;
-  color: var(--crypto-text);
-  background: var(--crypto-surface);
-  border: 1px solid var(--crypto-border);
+  color: #111827;
+  background: #ffffff;
   box-shadow: var(--crypto-shadow);
+}
+
+.ev-dialog h3,
+.ev-dialog strong {
+  color: #111827;
+}
+
+.ev-dialog .text-muted {
+  color: #6b7280 !important;
 }
 
 .ev-dialog::backdrop {
