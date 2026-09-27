@@ -2,45 +2,53 @@
   display: block;
 }
 
-.assets-page { color: var(--crypto-text); }
-.assets-hero, .assets-page .card { background: var(--crypto-surface); border-color: var(--crypto-border); box-shadow: var(--crypto-shadow); }
-.assets-title, .asset-name, .asset-table tbody td { color: var(--crypto-text); }
-.assets-subtitle, .assets-page .text-muted, .asset-meta, .asset-table thead th { color: var(--crypto-text-muted) !important; }
-
 .assets-page {
-  color: #1f2937;
+  color: var(--crypto-text);
+}
+
+.assets-hero,
+.assets-page .card {
+  background: var(--crypto-surface);
+  border: 1px solid var(--crypto-border);
+  box-shadow: var(--crypto-shadow);
 }
 
 .assets-hero {
   padding: 1rem 1.25rem;
-  border: 1px solid #e5e7eb;
   border-radius: 0.5rem;
-  background: #ffffff;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
 }
 
 .assets-title {
   margin: 0 0 0.25rem;
-  color: #111827;
+  color: var(--crypto-text);
   font-size: 1.45rem;
   font-weight: 700;
 }
 
 .assets-subtitle,
-.text-muted {
-  color: #6b7280 !important;
+.assets-page .text-muted {
+  color: var(--crypto-text-muted) !important;
 }
 
-.card {
-  border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
-  background: #ffffff;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
-  overflow: hidden;
+.assets-page .asset-table-card,
+.asset-table-card .table-responsive {
+  background: var(--crypto-bg);
+}
+
+.asset-table {
+  --bs-table-bg: var(--crypto-bg);
+  --bs-table-color: var(--crypto-text);
+  --bs-table-border-color: var(--crypto-border);
+  --bs-table-hover-bg: var(--crypto-surface-soft);
+  --bs-table-hover-color: var(--crypto-text);
+
+  background: var(--crypto-bg);
+  color: var(--crypto-text);
 }
 
 .asset-table thead th {
-  color: #6b7280;
+  background: var(--crypto-bg);
+  color: var(--crypto-text-muted) !important;
   font-size: 0.76rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -48,18 +56,23 @@
 }
 
 .asset-table tbody td {
-  color: #1f2937;
+  background: var(--crypto-bg);
+  color: var(--crypto-text);
   font-size: 0.9rem;
   white-space: nowrap;
 }
 
-.asset-name {
-  color: #111827;
+.asset-table .asset-name {
+  color: var(--crypto-text);
   font-weight: 700;
 }
 
+.asset-table .asset-meta,
+.asset-table .text-muted {
+  color: var(--crypto-text-muted) !important;
+}
+
 .asset-meta {
-  color: #6b7280;
   font-size: 0.82rem;
   line-height: 1.35;
 }
@@ -78,8 +91,3 @@
     font-size: 1.25rem;
   }
 }
-
-.assets-page { color: var(--crypto-text); }
-.assets-hero, .assets-page .card { background: var(--crypto-surface); border-color: var(--crypto-border); box-shadow: var(--crypto-shadow); }
-.assets-title, .asset-name, .asset-table tbody td { color: var(--crypto-text); }
-.assets-subtitle, .assets-page .text-muted, .asset-meta, .asset-table thead th { color: var(--crypto-text-muted) !important; }
