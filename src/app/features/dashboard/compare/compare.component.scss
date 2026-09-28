@@ -280,4 +280,8 @@
 .compare-page .compare-title, .compare-page .compare-card .card-header, .compare-page .compare-card .card-body, .compare-page .compare-table tbody td, .compare-page .trading-panel strong { color: var(--crypto-text); }
 .compare-page .compare-subtitle, .compare-page .text-muted, .compare-page .compare-table thead th, .compare-page .trading-label { color: var(--crypto-text-muted) !important; }
 .compare-page .compare-card .card-header, .compare-page .compare-table thead th { background: var(--crypto-surface-soft); border-color: var(--crypto-border); }.compare-page .compare-table tbody td { background: var(--crypto-surface); border-color: var(--crypto-border); }.compare-page .compare-table tbody tr:hover td { background: var(--crypto-surface-soft); }
-.compare-page .form-select, .compare-page .asset-chip { background: var(--crypto-surface-soft); color: var(--crypto-text); border-color: var(--crypto-border); }.compare-page .form-select:focus { border-color: var(--crypto-accent-tech); box-shadow: 0 0 0 .2rem var(--crypto-focus); }.compare-page .asset-chip-active { border-color: var(--crypto-accent-tech); background: var(--crypto-glow-tech); }
+.compare-page .form-select, .compare-page .asset-chip { background: var(--crypto-surface-soft); color: var(--crypto-text); border-color: var(--crypto-border); }
+.compare-page .form-select { color-scheme: dark; }
+.compare-page .form-select option { background: var(--crypto-surface-soft); color: var(--crypto-text); }
+.compare-page .form-select:focus { border-color: var(--crypto-accent-tech); box-shadow: 0 0 0 .2rem var(--crypto-focus); }
+.compare-page .asset-chip-active { border-color: var(--crypto-accent-tech); background: var(--crypto-glow-tech); }
