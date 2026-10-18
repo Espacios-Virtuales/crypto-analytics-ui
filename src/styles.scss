@@ -54,9 +54,6 @@
 .bi-trash::before { content: '\f5de'; }
 .bi-x-circle::before { content: '\f623'; }
 
-/* Shared Crypto foundation. Legacy --ev aliases resolve in _crypto-tokens. */
-:root { --ev-shadow: var(--crypto-shadow); }
-
 /* Links / acentos */
 .text-accent { color: var(--crypto-accent-value-strong) !important; }
 a { color: var(--crypto-accent-tech-strong); }
@@ -98,11 +95,11 @@ a:hover { color: var(--crypto-accent-tech); }
 /* Snackbar / toast */
 .snack-error {
   --bg: #12151b;
-  --fg: var(--ev-text);
+  --fg: var(--crypto-text);
   background: var(--bg) !important;
   color: var(--fg) !important;
   border: 1px solid rgba(239,68,68,.35);
-  box-shadow: var(--ev-shadow);
+  box-shadow: var(--crypto-shadow);
 }
 
 /* Inputs / superficies (si usas forms custom) */
@@ -122,74 +119,38 @@ a:hover { color: var(--crypto-accent-tech); }
   padding: 2rem;
 }
 
-/* Micro-transiciones */
-.fade-in   { animation: ev-fade-in .22s ease-out; }
-.fade-out  { animation: ev-fade-out .18s ease-in forwards; }
-.slide-up  { animation: ev-slide-up .22s ease-out; }
-
-@keyframes ev-fade-in { from {opacity:0} to {opacity:1} }
-@keyframes ev-fade-out { from {opacity:1} to {opacity:0} }
-@keyframes ev-slide-up { from {opacity:0; transform: translateY(8px)} to {opacity:1; transform: translateY(0)} }
-
-.loading-inline {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.loading-spinner {
-  display: inline-block;
-  width: 18px;
-  height: 18px;
-  flex: 0 0 auto;
-  border: 3px solid color-mix(in srgb, currentColor 25%, transparent);
-  border-top-color: currentColor;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .fade-in, .fade-out, .slide-up, .loading-spinner { animation: none !important; }
-}
-
 /* Dialog (panelClass: evaas-dialog) — Noir + Gold */
 .evaas-dialog .mat-mdc-dialog-container {
   padding: 0;
 
   /* Material tokens / fallback */
-  --mdc-dialog-container-color: var(--ev-surface);
+  --mdc-dialog-container-color: var(--crypto-surface);
   --mdc-dialog-shape: 16px;
 
   border: 1px solid rgba(212,175,55,.18);
-  box-shadow: var(--ev-shadow);
+  box-shadow: var(--crypto-shadow);
 }
 
 .evaas-dialog .mat-mdc-dialog-surface {
   border-radius: 16px;
   overflow: hidden;
-  background: var(--ev-surface);
+  background: var(--crypto-surface);
 }
 
 .evaas-dialog .mat-mdc-dialog-title {
   padding: 20px 24px 0 24px;
-  color: var(--ev-text);
+  color: var(--crypto-text);
 }
 
 .evaas-dialog .mat-mdc-dialog-content {
   max-height: 70vh;
   padding: 24px 24px 8px;
-  color: var(--ev-muted);
+  color: var(--crypto-text-muted);
 }
 
 .evaas-dialog .mat-mdc-dialog-actions {
   padding: 8px 16px 16px;
-  border-top: 1px solid var(--ev-border);
+  border-top: 1px solid var(--crypto-border);
 }
 
 /* Optional: separadores / líneas */
