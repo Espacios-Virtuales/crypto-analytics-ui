@@ -7,6 +7,35 @@
 [data-crypto-reveal].crypto-revealed { opacity: 1; transform: translateY(0); }
 [data-crypto-reveal="fade-in"] { transform: none; }
 
+.fade-in { animation: ev-fade-in .22s ease-out; }
+.fade-out { animation: ev-fade-out .18s ease-in forwards; }
+.slide-up { animation: ev-slide-up .22s ease-out; }
+
+@keyframes ev-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ev-fade-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes ev-slide-up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.loading-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  border: 3px solid color-mix(in srgb, currentColor 25%, transparent);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     scroll-behavior: auto !important;
@@ -16,4 +45,5 @@
   }
 
   [data-crypto-reveal] { opacity: 1; transform: none; }
+  .fade-in, .fade-out, .slide-up, .loading-spinner { animation: none !important; }
 }
