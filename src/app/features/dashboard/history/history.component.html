@@ -85,7 +85,7 @@
     <ng-container *ngIf="vm; else errorTpl">
       <div class="row g-3 mb-4">
         <div class="col-lg-4 col-md-6 col-12">
-          <div class="card history-card shadow-sm h-100">
+          <div class="card crypto-card history-card shadow-sm h-100">
             <div class="card-body">
               <div class="small text-muted mb-2">Último cierre</div>
               <div class="fs-4 fw-bold">
@@ -99,7 +99,7 @@
         </div>
 
         <div class="col-lg-4 col-md-6 col-12">
-          <div class="card history-card shadow-sm h-100">
+          <div class="card crypto-card history-card shadow-sm h-100">
             <div class="card-body">
               <div class="small text-muted mb-2">Última predicción</div>
               <div class="fs-4 fw-bold">
@@ -113,7 +113,7 @@
         </div>
 
         <div class="col-lg-4 col-md-12 col-12">
-          <div class="card history-card shadow-sm h-100">
+          <div class="card crypto-card history-card shadow-sm h-100">
             <div class="card-body">
               <div class="small text-muted mb-2">Último RSI</div>
               <div class="fs-4 fw-bold">
@@ -198,7 +198,7 @@
         </div>
       </div>
 
-      <div class="card history-card shadow-sm" *ngIf="activeTable === 'prices'">
+      <div class="card crypto-card history-card shadow-sm" *ngIf="activeTable === 'prices'">
         <div class="card-header d-flex justify-content-between align-items-center">
           <strong>Prices</strong>
           <small class="text-muted">
@@ -232,7 +232,7 @@
         </div>
       </div>
 
-      <div class="card history-card shadow-sm" *ngIf="activeTable === 'features'">
+      <div class="card crypto-card history-card shadow-sm" *ngIf="activeTable === 'features'">
         <div class="card-header d-flex justify-content-between align-items-center">
           <strong>Features</strong>
           <small class="text-muted">
@@ -268,7 +268,7 @@
         </div>
       </div>
 
-      <div class="card history-card shadow-sm" *ngIf="activeTable === 'predictions'">
+      <div class="card crypto-card history-card shadow-sm" *ngIf="activeTable === 'predictions'">
         <div class="card-header d-flex justify-content-between align-items-center">
           <strong>Predictions</strong>
           <small class="text-muted">
@@ -305,7 +305,7 @@
   </ng-container>
 
   <ng-template #loadingTpl>
-    <div class="card history-card shadow-sm" *ngIf="historyLoading()">
+    <div class="card crypto-card history-card shadow-sm" *ngIf="historyLoading()">
       <div class="card-body text-muted">
         <span class="loading-inline">
           <span class="loading-spinner" aria-hidden="true"></span>

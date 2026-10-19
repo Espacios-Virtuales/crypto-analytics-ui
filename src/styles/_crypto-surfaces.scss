@@ -3,6 +3,26 @@
   border-color: var(--crypto-border);
 }
 
+.crypto-card {
+  overflow: hidden;
+  border: 1px solid var(--crypto-border);
+  border-radius: 1rem;
+  background: var(--crypto-surface);
+  box-shadow: var(--crypto-shadow);
+}
+
+.crypto-card .card-header {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid var(--crypto-border);
+  background: var(--crypto-surface-soft);
+  color: var(--crypto-text);
+}
+
+.crypto-card .card-body {
+  padding: 1rem;
+  color: var(--crypto-text);
+}
+
 .form-control,
 .form-select {
   color: var(--crypto-text);
@@ -47,3 +67,7 @@ input:focus-visible {
 .alert-info { color: var(--crypto-text); background: var(--crypto-surface-soft); border-color: var(--crypto-border); }
 .alert-warning { color: var(--crypto-text); background: rgba(226, 184, 92, 0.14); border-color: rgba(226, 184, 92, 0.45); }
 .alert-danger { color: var(--crypto-text); background: rgba(239, 115, 115, 0.12); border-color: rgba(239, 115, 115, 0.45); }
+
+@media (max-width: 767.98px) {
+  .crypto-card { border-radius: 0.85rem; }
+}
