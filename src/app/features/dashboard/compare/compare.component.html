@@ -86,7 +86,7 @@
       </small>
     </div>
 
-    <div class="card compare-card shadow-sm mb-4" *ngIf="vm.rows.length; else emptyTpl">
+    <div class="card crypto-card compare-card shadow-sm mb-4" *ngIf="vm.rows.length; else emptyTpl">
       <div class="card-header d-flex justify-content-between align-items-center">
         <strong>Resumen comparativo</strong>
         <small class="text-muted">Ordenado por confianza y fuerza de señal</small>
@@ -145,7 +145,7 @@
       </div>
     </div>
 
-    <div class="card compare-card shadow-sm mb-4" *ngIf="vm.correlations.length">
+    <div class="card crypto-card compare-card shadow-sm mb-4" *ngIf="vm.correlations.length">
       <div class="card-header d-flex justify-content-between align-items-center">
         <strong>Correlación básica</strong>
         <small class="text-muted">Comparación frente al activo líder</small>
@@ -180,7 +180,7 @@
       </div>
     </div>
 
-    <div class="card compare-card trading-placeholder shadow-sm mb-4" *ngIf="vm.rows.length">
+    <div class="card crypto-card compare-card trading-placeholder shadow-sm mb-4" *ngIf="vm.rows.length">
       <div class="card-header d-flex justify-content-between align-items-center">
         <strong>Trading Mode visual</strong>
         <small class="text-muted">Sin ejecución automática</small>
@@ -211,7 +211,7 @@
   </ng-container>
 
   <ng-template #loadingTpl>
-    <div class="card compare-card shadow-sm" *ngIf="assetsLoading() || compareLoading()">
+    <div class="card crypto-card compare-card shadow-sm" *ngIf="assetsLoading() || compareLoading()">
       <div class="card-body text-muted">
         <span class="loading-inline">
           <span class="loading-spinner" aria-hidden="true"></span>
@@ -222,7 +222,7 @@
   </ng-template>
 
   <ng-template #emptyTpl>
-    <div class="card compare-card shadow-sm">
+    <div class="card crypto-card compare-card shadow-sm">
       <div class="card-body text-muted">
         Selecciona al menos un activo para comparar.
       </div>
