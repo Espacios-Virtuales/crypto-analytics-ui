@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1672 941" role="img" aria-labelledby="title desc">
+  <title id="title">Crypto Analytics · monograma CA con red analítica · v1.0</title>
+  <desc id="desc">Símbolo canónico de Crypto Analytics: C blanca abierta, A turquesa geométrica, red de cuatro nodos y acento azul.</desc>
+
+  <!-- Fondo transparente. Colores maestros: blanco #FDFCFB, turquesa #00F9FA, azul #008CFD. -->
+  <g id="monograma-ca">
+    <path id="letra-c" fill="#FDFCFB" fill-rule="evenodd" d="
+      M 827 168
+      L 720 299
+      L 500 299
+      C 394 299 308 384 308 487
+      C 308 591 394 674 500 674
+      L 650 674
+      L 552 815
+      L 488 815
+      C 309 815 165 672 165 494
+      C 165 314 309 168 489 168
+      Z"/>
+
+    <g id="letra-a-y-grafico" fill="#00F9FA">
+      <!-- Cuerpo principal de la A: dos diagonales de masa sólida y contraforma central. -->
+      <path id="cuerpo-a" d="
+        M 600 815
+        L 1025 170
+        L 1190 170
+        L 1314 386
+        L 1201 506
+        L 1099 326
+        L 857 779
+        L 807 779
+        L 986 579
+        L 1063 643
+        L 1168 506
+        L 1201 541
+        L 1069 719
+        L 1007 661
+        L 910 815
+        Z"/>
+
+      <!-- Tramo ascendente derecho; el acento azul actúa como unión de datos. -->
+      <path id="diagonal-derecha-a" d="
+        M 1358 477
+        L 1549 815
+        L 1323 815
+        L 1176 576
+        L 1235 603
+        Z"/>
+    </g>
+
+    <path id="acento-azul" fill="#008CFD" d="
+      M 1322 408
+      L 1355 467
+      L 1235 603
+      L 1201 541
+      Z"/>
+  </g>
+
+  <g id="red-analitica" fill="none" stroke="#00F9FA" stroke-width="10" stroke-linecap="round" stroke-linejoin="round">
+    <path id="conexion-superior" d="M 793 207 L 973 140"/>
+    <path id="conexion-c-a" d="M 348 369 L 405 431 L 786 431 L 973 140"/>
+    <path id="conexion-inferior" d="M 405 431 L 629 675 L 786 431"/>
+  </g>
+
+  <g id="nodos-analiticos" fill="#00F9FA">
+    <circle id="nodo-apice" cx="973" cy="140" r="41"/>
+    <circle id="nodo-central" cx="786" cy="431" r="41"/>
+    <circle id="nodo-inferior" cx="629" cy="675" r="41"/>
+    <circle id="nodo-izquierdo" cx="405" cy="431" r="41"/>
+  </g>
+</svg>
