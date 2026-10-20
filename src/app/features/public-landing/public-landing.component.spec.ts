@@ -40,6 +40,35 @@ describe('PublicLandingComponent', () => {
     ]);
   });
 
+  it('labels every product preview as illustrative rather than live analysis', () => {
+    const host = fixture.nativeElement as HTMLElement;
+    const pulse = host.querySelector('.pulse-panel') as HTMLElement;
+    const compare = host.querySelector('.compare-preview') as HTMLElement;
+    const history = host.querySelector('.history-preview') as HTMLElement;
+
+    expect(pulse.textContent).toContain('sin cotizaciones ni señales');
+    expect(compare.textContent).toContain('no corresponden a un análisis ejecutado');
+    expect(history.textContent).toContain(
+      'no representa precio, rendimiento, tendencia o predicción',
+    );
+    expect(pulse.textContent).not.toContain('BTC / USD');
+    expect(pulse.textContent).not.toContain('Marco: 4h');
+    expect(pulse.textContent).not.toContain('$—');
+  });
+
+  it('uses semantic examples for comparison and an ordered conceptual history', () => {
+    const host = fixture.nativeElement as HTMLElement;
+    const assets = Array.from(
+      host.querySelectorAll<HTMLTableCellElement>('.compare-preview tbody th strong'),
+      cell => cell.textContent,
+    );
+    const historyMoments = host.querySelectorAll('.history-preview__timeline li');
+
+    expect(assets).toEqual(['BTC', 'ETH', 'SOL']);
+    expect(historyMoments.length).toBe(4);
+    expect(host.querySelector('.compare-preview table')).not.toBeNull();
+  });
+
   it('announces and toggles the mobile menu', () => {
     const toggle = fixture.nativeElement.querySelector(
       '.landing__menu-toggle',
