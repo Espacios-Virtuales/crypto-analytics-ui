@@ -69,6 +69,16 @@ describe('PublicLandingComponent', () => {
     expect(host.querySelector('.compare-preview table')).not.toBeNull();
   });
 
+  it('separates technical interaction from value hierarchy', () => {
+    const host = fixture.nativeElement as HTMLElement;
+    const waypoints = host.querySelectorAll('.landing__waypoint > .crypto-value');
+    const humanOutcome = host.querySelector('.landing__principle--human');
+
+    expect(waypoints.length).toBe(3);
+    expect(humanOutcome?.textContent).toContain('Decisión humana');
+    expect(host.querySelector('.landing__login--primary.crypto-value')).toBeNull();
+  });
+
   it('announces and toggles the mobile menu', () => {
     const toggle = fixture.nativeElement.querySelector(
       '.landing__menu-toggle',
@@ -76,6 +86,7 @@ describe('PublicLandingComponent', () => {
     const menu = fixture.nativeElement.querySelector('.landing__mobile-nav') as HTMLElement;
 
     expect(toggle.getAttribute('aria-expanded')).toBe('false');
+    expect(toggle.getAttribute('aria-label')).toContain('Menú');
     expect(menu.hidden).toBeTrue();
 
     toggle.click();
