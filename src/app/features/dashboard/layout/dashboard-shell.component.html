@@ -1,105 +1,200 @@
-<div class="ev-shell d-flex" [class.mobile]="isMobile()" [class.sidebar-open]="isSidebarOpen()">
-  <!-- Backdrop mobile -->
-  <div class="ev-backdrop" *ngIf="isMobile() && isSidebarOpen()" (click)="closeSidebar()"></div>
+<div class="ev-shell" [class.mobile]="isMobile()" [class.sidebar-open]="isSidebarOpen()">
+  <button
+    *ngIf="isMobile() && isSidebarOpen()"
+    class="ev-backdrop"
+    type="button"
+    aria-label="Cerrar menú de navegación"
+    (click)="closeSidebar(true)"
+  ></button>
 
-  <!-- Sidebar / drawer -->
-  <aside class="ev-sidebar" [class.open]="isSidebarOpen()" [class.collapsed]="!isMobile() && !isSidebarOpen()">
-    <div class="brand px-3 py-3">
-      <a routerLink="/dashboard" class="brand-link" (click)="isMobile() ? closeSidebar() : null">
-        <i class="bi bi-house-fill"></i>
+  <aside
+    #sidebar
+    id="dashboard-sidebar"
+    class="ev-sidebar"
+    [class.open]="isSidebarOpen()"
+    [class.collapsed]="!isMobile() && !isSidebarOpen()"
+    [attr.aria-hidden]="isMobile() && !isSidebarOpen() ? 'true' : null"
+    [attr.inert]="isMobile() && !isSidebarOpen() ? '' : null"
+  >
+    <div class="brand">
+      <a
+        routerLink="/dashboard"
+        class="brand-link"
+        aria-label="Crypto Analytics — Ir al resumen"
+        (click)="isMobile() ? closeSidebar() : null"
+      >
+        <span class="brand-mark" aria-hidden="true">
+          <img
+            src="/brand/CRYPTO_ANALYTICS_CA_MONOGRAM_ANALYTIC_NETWORK_v1.0.svg"
+            alt=""
+            width="42"
+            height="42"
+          />
+        </span>
+        <span class="brand-copy">
+          <strong>Crypto Analytics</strong>
+          <small>Market intelligence</small>
+        </span>
       </a>
     </div>
 
-    <nav class="menu">
-      <a routerLink="/dashboard" class="menu-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
-        (click)="isMobile() ? closeSidebar() : null">
-        <i class="bi bi-speedometer2"></i>
+    <nav class="menu" aria-label="Navegación principal">
+      <p class="menu-label">Mercado</p>
+      <a
+        routerLink="/dashboard"
+        class="menu-item"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        [attr.title]="!isMobile() && !isSidebarOpen() ? 'Resumen' : null"
+        (click)="isMobile() ? closeSidebar() : null"
+      >
+        <i class="bi bi-speedometer2" aria-hidden="true"></i>
         <span>Resumen</span>
       </a>
-      <a routerLink="/dashboard/trading" class="menu-item" routerLinkActive="active"
-        (click)="isMobile() ? closeSidebar() : null">
-        <i class="bi bi-lightning-charge"></i>
+      <a
+        routerLink="/dashboard/trading"
+        class="menu-item"
+        routerLinkActive="active"
+        [attr.title]="!isMobile() && !isSidebarOpen() ? 'Trading' : null"
+        (click)="isMobile() ? closeSidebar() : null"
+      >
+        <i class="bi bi-lightning-charge" aria-hidden="true"></i>
         <span>Trading</span>
       </a>
-      <a routerLink="/dashboard/history" class="menu-item" routerLinkActive="active"
-        (click)="isMobile() ? closeSidebar() : null">
-        <i class="bi bi-graph-up"></i>
+      <a
+        routerLink="/dashboard/history"
+        class="menu-item"
+        routerLinkActive="active"
+        [attr.title]="!isMobile() && !isSidebarOpen() ? 'Históricos' : null"
+        (click)="isMobile() ? closeSidebar() : null"
+      >
+        <i class="bi bi-graph-up" aria-hidden="true"></i>
         <span>Históricos</span>
       </a>
-      <a routerLink="/dashboard/compare" class="menu-item" routerLinkActive="active"
-        (click)="isMobile() ? closeSidebar() : null">
-        <i class="bi bi-bar-chart-line"></i>
+      <a
+        routerLink="/dashboard/compare"
+        class="menu-item"
+        routerLinkActive="active"
+        [attr.title]="!isMobile() && !isSidebarOpen() ? 'Comparador' : null"
+        (click)="isMobile() ? closeSidebar() : null"
+      >
+        <i class="bi bi-bar-chart-line" aria-hidden="true"></i>
         <span>Comparador</span>
       </a>
     </nav>
 
-    <!-- 🌑 Footer / Ajustes -->
     <div class="sidebar-footer">
-      <a routerLink="/dashboard/assets" class="menu-item" routerLinkActive="active"
-        (click)="isMobile() ? closeSidebar() : null">
-        <i class="bi bi-gear"></i>
+      <a
+        routerLink="/dashboard/assets"
+        class="menu-item"
+        routerLinkActive="active"
+        [attr.title]="!isMobile() && !isSidebarOpen() ? 'Activos' : null"
+        (click)="isMobile() ? closeSidebar() : null"
+      >
+        <i class="bi bi-gear" aria-hidden="true"></i>
         <span>Activos</span>
       </a>
     </div>
   </aside>
 
-  <!-- Main -->
-  <div class="ev-main flex-grow-1 d-flex flex-column">
-    <header class="ev-topbar d-flex align-items-center justify-content-between">
-      <div class="d-flex align-items-center gap-2">
-        <button class="btn btn-outline-secondary btn-sm hamburger d-lg-none" type="button" (click)="toggleSidebar()"
-          aria-label="Abrir menú">
-          <i class="bi bi-list fs-4"></i>
+  <div class="ev-main">
+    <header class="ev-topbar">
+      <div class="topbar-navigation">
+        <button
+          #sidebarToggle
+          class="shell-control hamburger d-lg-none"
+          type="button"
+          aria-label="Abrir menú de navegación"
+          aria-controls="dashboard-sidebar"
+          [attr.aria-expanded]="isSidebarOpen()"
+          (click)="toggleSidebar()"
+        >
+          <i class="bi bi-list" aria-hidden="true"></i>
         </button>
 
-        <button class="btn btn-link toggle d-none d-lg-inline-flex text-dark" type="button" (click)="toggleSidebar()"
-          aria-label="Alternar sidebar">
-          <i class="bi" [ngClass]="isSidebarOpen() ? 'bi-layout-sidebar-inset' : 'bi-layout-sidebar'"></i>
+        <button
+          class="shell-control toggle d-none d-lg-inline-flex"
+          type="button"
+          aria-label="Alternar tamaño del menú lateral"
+          aria-controls="dashboard-sidebar"
+          [attr.aria-expanded]="isSidebarOpen()"
+          (click)="toggleSidebar()"
+        >
+          <i
+            class="bi"
+            [ngClass]="isSidebarOpen() ? 'bi-layout-sidebar-inset' : 'bi-layout-sidebar'"
+            aria-hidden="true"
+          ></i>
         </button>
+
+        <span class="topbar-section">Área privada</span>
       </div>
 
-      <div class="ms-auto d-flex align-items-center gap-3">
-        <span class="small text-muted d-none d-sm-inline">
-          Hola,
+      <div class="topbar-account">
+        <span class="account-copy d-none d-sm-grid">
+          <small>Sesión activa</small>
           <strong>{{ email() || '—' }}</strong>
-          <ng-container *ngIf="primaryRole() as r">
-            <span class="ms-2 badge bg-light text-dark">{{ r }}</span>
-          </ng-container>
         </span>
 
-        <button class="btn btn-outline-secondary btn-sm" type="button" (click)="openUserModal()">
-          <i class="bi bi-person-circle"></i>
+        <span class="role-badge d-none d-md-inline-flex" *ngIf="primaryRole() as role">
+          {{ role }}
+        </span>
+
+        <button
+          #accountButton
+          class="account-button"
+          type="button"
+          aria-label="Abrir información de la cuenta"
+          aria-haspopup="dialog"
+          (click)="openUserModal()"
+        >
+          <i class="bi bi-person-circle" aria-hidden="true"></i>
         </button>
       </div>
     </header>
 
-    <main class="ev-content container-fluid">
+    <main class="ev-content">
       <router-outlet></router-outlet>
     </main>
   </div>
 </div>
 
-<dialog id="userDlg" class="ev-dialog">
-  <form method="dialog">
-    <h3 class="h6 mb-3">Cuenta</h3>
-
-    <div class="vstack gap-1 small">
-      <div><span class="text-muted">Email:</span> <strong>{{ email() || '—' }}</strong></div>
+<dialog #userDialog id="userDlg" class="ev-dialog" aria-labelledby="account-dialog-title">
+  <form method="dialog" (submit)="closeUserModal()">
+    <div class="dialog-heading">
+      <span class="dialog-mark" aria-hidden="true">
+        <i class="bi bi-person-circle"></i>
+      </span>
       <div>
-        <span class="text-muted">Roles:</span>
-        <strong>{{ (session()?.roles || []).join(', ') || '—' }}</strong>
-      </div>
-      <div>
-        <span class="text-muted">Conectado desde:</span>
-        <strong>{{ formatDate(connectedAt()) }}</strong>
+        <p class="dialog-eyebrow">Crypto Analytics</p>
+        <h2 id="account-dialog-title">Cuenta</h2>
       </div>
     </div>
 
-    <div class="d-flex justify-content-between mt-4">
-      <button class="btn btn-light" type="button" (click)="closeUserModal()" value="close">
+    <dl class="account-details">
+      <div>
+        <dt>Email</dt>
+        <dd>{{ email() || '—' }}</dd>
+      </div>
+      <div>
+        <dt>Roles</dt>
+        <dd>{{ (session()?.roles || []).join(', ') || '—' }}</dd>
+      </div>
+      <div>
+        <dt>Conectado desde</dt>
+        <dd>{{ formatDate(connectedAt()) }}</dd>
+      </div>
+    </dl>
+
+    <div class="dialog-actions">
+      <button class="dialog-button dialog-button--secondary" type="submit" value="close">
         Cerrar
       </button>
-      <button class="btn btn-danger" type="button" (click)="logout(); closeUserModal()">
+      <button
+        class="dialog-button dialog-button--danger"
+        type="button"
+        (click)="logout(); closeUserModal()"
+      >
         Cerrar sesión
       </button>
     </div>

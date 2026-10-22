@@ -1,0 +1,456 @@
+.ev-shell {
+  --shell-sidebar-width: 17rem;
+  --shell-sidebar-collapsed: 4.75rem;
+  --shell-topbar-height: 4.5rem;
+  display: flex;
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  overflow-x: clip;
+  color: var(--crypto-text);
+  background: var(--crypto-bg);
+}
+
+.ev-shell .ev-backdrop {
+  position: fixed;
+  z-index: 1030;
+  inset: 0;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: color-mix(in srgb, var(--crypto-bg) 76%, transparent);
+  cursor: default;
+}
+
+.ev-shell .ev-sidebar {
+  display: flex;
+  z-index: 1040;
+  width: var(--shell-sidebar-width);
+  min-width: var(--shell-sidebar-width);
+  height: 100vh;
+  height: 100svh;
+  flex-direction: column;
+  border-right: 1px solid var(--crypto-border);
+  color: var(--crypto-text);
+  background:
+    radial-gradient(circle at 12% 2%, var(--crypto-glow-tech), transparent 17rem),
+    var(--crypto-bg-elevated);
+  transition: transform 220ms ease, width 220ms ease, min-width 220ms ease;
+}
+
+.ev-shell .brand {
+  display: flex;
+  min-height: var(--shell-topbar-height);
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--crypto-border);
+}
+
+.ev-shell .brand-link {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--crypto-text);
+  text-decoration: none;
+}
+
+.ev-shell .brand-mark {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid var(--crypto-border);
+  border-radius: var(--crypto-radius-sm);
+  background: var(--crypto-surface);
+}
+
+.ev-shell .brand-mark img {
+  display: block;
+  width: 2.4rem;
+  height: auto;
+}
+
+.ev-shell .brand-copy {
+  display: grid;
+  min-width: 0;
+  line-height: 1.1;
+}
+
+.ev-shell .brand-copy strong {
+  overflow: hidden;
+  font-size: 0.9rem;
+  letter-spacing: -0.01em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ev-shell .brand-copy small {
+  margin-top: 0.3rem;
+  color: var(--crypto-accent-value-strong);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.ev-shell .menu {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 1.25rem 0.75rem;
+}
+
+.ev-shell .menu-label {
+  margin: 0 0 0.35rem;
+  padding: 0 0.75rem;
+  color: var(--crypto-text-muted);
+  font-size: 0.67rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.ev-shell .menu-item {
+  display: flex;
+  position: relative;
+  min-height: 2.9rem;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid transparent;
+  border-radius: var(--crypto-radius-sm);
+  color: var(--crypto-text-muted);
+  font-size: 0.9rem;
+  font-weight: 650;
+  text-decoration: none;
+  transition: color 160ms ease, background-color 160ms ease, border-color 160ms ease;
+}
+
+.ev-shell .menu-item i {
+  width: 1.25rem;
+  flex: 0 0 auto;
+  color: var(--crypto-accent-tech);
+  font-size: 1.12rem;
+  text-align: center;
+}
+
+.ev-shell .menu-item:hover {
+  border-color: var(--crypto-border);
+  color: var(--crypto-text);
+  background: var(--crypto-surface-soft);
+}
+
+.ev-shell .menu-item.active {
+  border-color: color-mix(in srgb, var(--crypto-accent-tech) 34%, transparent);
+  color: var(--crypto-text);
+  background: var(--crypto-glow-tech);
+}
+
+.ev-shell .menu-item.active::before {
+  position: absolute;
+  left: -0.8rem;
+  width: 0.2rem;
+  height: 1.6rem;
+  border-radius: 0 0.2rem 0.2rem 0;
+  background: var(--crypto-accent-tech);
+  content: '';
+}
+
+.ev-shell .sidebar-footer {
+  padding: 0.75rem;
+  border-top: 1px solid var(--crypto-border);
+}
+
+.ev-shell .ev-sidebar.collapsed {
+  width: var(--shell-sidebar-collapsed);
+  min-width: var(--shell-sidebar-collapsed);
+}
+
+.ev-shell .ev-sidebar.collapsed .brand {
+  justify-content: center;
+  padding-inline: 0.5rem;
+}
+
+.ev-shell .ev-sidebar.collapsed .brand-copy,
+.ev-shell .ev-sidebar.collapsed .menu-label,
+.ev-shell .ev-sidebar.collapsed .menu-item span {
+  display: none;
+}
+
+.ev-shell .ev-sidebar.collapsed .menu-item {
+  justify-content: center;
+  padding-inline: 0.5rem;
+}
+
+.ev-shell .ev-main {
+  width: 100%;
+  min-width: 0;
+}
+
+.ev-shell .ev-topbar {
+  display: flex;
+  position: sticky;
+  z-index: 1020;
+  top: 0;
+  height: var(--shell-topbar-height);
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0 1.25rem;
+  border-bottom: 1px solid var(--crypto-border);
+  color: var(--crypto-text);
+  background: color-mix(in srgb, var(--crypto-bg-elevated) 94%, transparent);
+  backdrop-filter: blur(14px);
+}
+
+.ev-shell .topbar-navigation,
+.ev-shell .topbar-account {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.ev-shell .shell-control,
+.ev-shell .account-button {
+  display: inline-grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex: 0 0 auto;
+  place-items: center;
+  padding: 0;
+  border: 1px solid var(--crypto-border);
+  border-radius: var(--crypto-radius-sm);
+  color: var(--crypto-accent-tech-strong);
+  background: var(--crypto-surface);
+}
+
+.ev-shell .shell-control:hover,
+.ev-shell .account-button:hover {
+  border-color: var(--crypto-accent-tech);
+  background: var(--crypto-surface-soft);
+}
+
+.ev-shell .shell-control i,
+.ev-shell .account-button i {
+  font-size: 1.2rem;
+}
+
+.ev-shell .topbar-section {
+  color: var(--crypto-text-muted);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.ev-shell .account-copy {
+  min-width: 0;
+  justify-items: end;
+  line-height: 1.15;
+}
+
+.ev-shell .account-copy small {
+  color: var(--crypto-text-muted);
+  font-size: 0.68rem;
+}
+
+.ev-shell .account-copy strong {
+  max-width: 19rem;
+  overflow: hidden;
+  font-size: 0.82rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ev-shell .role-badge {
+  align-items: center;
+  min-height: 1.75rem;
+  padding: 0.25rem 0.65rem;
+  border: 1px solid color-mix(in srgb, var(--crypto-accent-value) 38%, transparent);
+  border-radius: 999px;
+  color: var(--crypto-accent-value-strong);
+  background: color-mix(in srgb, var(--crypto-accent-value) 9%, transparent);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.ev-shell .ev-content {
+  width: 100%;
+  padding: 1rem;
+}
+
+.ev-dialog {
+  width: min(calc(100vw - 2rem), 28rem);
+  padding: 0;
+  border: 1px solid var(--crypto-border);
+  border-radius: var(--crypto-radius-lg);
+  color: var(--crypto-text);
+  background: var(--crypto-surface);
+  box-shadow: var(--crypto-shadow);
+}
+
+.ev-dialog::backdrop {
+  background: color-mix(in srgb, var(--crypto-bg) 78%, transparent);
+  backdrop-filter: blur(3px);
+}
+
+.ev-dialog form {
+  padding: 1.5rem;
+}
+
+.dialog-heading {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--crypto-border);
+}
+
+.dialog-mark {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--crypto-accent-tech) 34%, transparent);
+  border-radius: var(--crypto-radius-sm);
+  color: var(--crypto-accent-tech-strong);
+  background: var(--crypto-glow-tech);
+}
+
+.dialog-mark i {
+  font-size: 1.25rem;
+}
+
+.dialog-eyebrow {
+  margin: 0 0 0.15rem;
+  color: var(--crypto-accent-value-strong);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
+.dialog-heading h2 {
+  margin: 0;
+  font-size: 1.35rem;
+  letter-spacing: -0.025em;
+}
+
+.account-details {
+  display: grid;
+  gap: 0;
+  margin: 1rem 0 1.5rem;
+}
+
+.account-details > div {
+  display: grid;
+  grid-template-columns: minmax(7rem, 0.7fr) minmax(0, 1.3fr);
+  gap: 0.75rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--crypto-border);
+}
+
+.account-details dt {
+  color: var(--crypto-text-muted);
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+.account-details dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: var(--crypto-text);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.dialog-button {
+  min-height: 2.75rem;
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--crypto-border);
+  border-radius: var(--crypto-radius-sm);
+  color: var(--crypto-text);
+  background: var(--crypto-surface-soft);
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+
+.dialog-button:hover {
+  border-color: var(--crypto-text-muted);
+}
+
+.dialog-button--danger {
+  border-color: color-mix(in srgb, var(--crypto-danger) 46%, transparent);
+  color: var(--crypto-text);
+  background: color-mix(in srgb, var(--crypto-danger) 13%, var(--crypto-surface));
+}
+
+.ev-shell .brand-link:focus-visible,
+.ev-shell .menu-item:focus-visible,
+.ev-shell .shell-control:focus-visible,
+.ev-shell .account-button:focus-visible,
+.dialog-button:focus-visible,
+.ev-shell .ev-backdrop:focus-visible {
+  outline: 3px solid var(--crypto-focus);
+  outline-offset: 2px;
+}
+
+@media (min-width: 992px) {
+  .ev-shell .ev-sidebar {
+    position: sticky;
+    top: 0;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .ev-shell .ev-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    max-width: min(19rem, calc(100vw - 3rem));
+    transform: translateX(-100%);
+    box-shadow: var(--crypto-shadow);
+  }
+
+  .ev-shell .ev-sidebar.open {
+    transform: translateX(0);
+  }
+
+  .ev-shell .ev-content {
+    padding: 0.75rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .ev-shell .ev-topbar {
+    padding-inline: 0.75rem;
+  }
+
+  .ev-shell .topbar-section {
+    font-size: 0.65rem;
+  }
+
+  .dialog-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ev-shell .ev-sidebar,
+  .ev-shell .menu-item {
+    transition: none;
+  }
+}
