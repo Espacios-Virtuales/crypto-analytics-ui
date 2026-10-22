@@ -1,365 +1,514 @@
-:host {
-    display: block;
+.dashboard-page {
+  width: min(100%, 90rem);
+  margin: 0 auto;
+  padding: clamp(1.25rem, 2.4vw, 2.5rem);
+  color: var(--crypto-text);
+}
+.dashboard-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(18rem, 28rem);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: end;
+  padding: clamp(0.5rem, 1vw, 1rem) 0 clamp(1.75rem, 3vw, 2.75rem);
+}
+
+.dashboard-eyebrow,
+.section-kicker,
+.metric-overline {
+  margin: 0;
+  color: var(--crypto-accent-value-strong);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.dashboard-title {
+  margin: 0.45rem 0 0.65rem;
+  font-size: clamp(2.35rem, 5vw, 4.5rem);
+  font-weight: 760;
+  letter-spacing: -0.06em;
+  line-height: 0.95;
+}
+
+.dashboard-subtitle {
+  margin: 0;
+  color: var(--crypto-text-muted);
+  line-height: 1.65;
+}
+
+.quote-control {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.quote-control__actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.65rem;
+}
+
+.form-label {
+  margin: 0;
+  color: var(--crypto-text-muted);
+  font-size: 0.72rem;
+  font-weight: 750;
+}
+
+.form-select,
+.refresh-button {
+  min-height: 3rem;
+  border-radius: var(--crypto-radius-sm);
+}
+
+.form-select {
+  border: 1px solid var(--crypto-border);
+  color: var(--crypto-text);
+  background-color: var(--crypto-surface-soft);
+  box-shadow: none;
+  color-scheme: dark;
+}
+
+.form-select:focus {
+  outline: 3px solid var(--crypto-focus);
+  outline-offset: 2px;
+}
+
+.refresh-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-width: 8.5rem;
+  padding: 0.65rem 1rem;
+  border: 1px solid var(--crypto-accent-tech);
+  color: var(--crypto-accent-tech-strong);
+  background: transparent;
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.refresh-button:hover:not(:disabled) {
+  color: var(--crypto-on-accent);
+  background: var(--crypto-accent-tech);
+}
+
+.refresh-button:disabled {
+  opacity: 0.62;
+}
+
+.bi-arrow-clockwise::before {
+  content: '↻';
+}
+
+.selection-panel,
+.dashboard-context,
+.dashboard-card,
+.dashboard-footer,
+.dashboard-skeleton {
+  border: 1px solid var(--crypto-border);
+  background: var(--crypto-surface);
+  box-shadow: var(--crypto-shadow);
+}
+
+.selection-panel {
+  padding: clamp(1.1rem, 2vw, 1.5rem);
+  border-radius: var(--crypto-radius-lg);
+}
+
+.section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.section-heading h2 {
+  margin: 0.3rem 0 0;
+  font-size: 1.3rem;
+}
+
+.section-heading > p {
+  margin: 0;
+  color: var(--crypto-text-muted);
+  font-size: 0.78rem;
+  text-align: right;
+}
+
+.dashboard-filters {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.filter-field {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.dashboard-context {
+  margin-top: 1rem;
+  border-radius: var(--crypto-radius);
+  background:
+    linear-gradient(90deg, var(--crypto-glow-tech), transparent 38%), var(--crypto-bg-elevated);
+  box-shadow: none;
+}
+
+.context-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.context-item {
+  display: grid;
+  min-width: 0;
+  gap: 0.32rem;
+  padding: 1rem 1.15rem;
+}
+
+.context-label {
+  color: var(--crypto-text-muted);
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.context-item strong {
+  overflow: hidden;
+  color: var(--crypto-text);
+  font-size: 0.82rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.state-stack {
+  display: grid;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.state-banner,
+.dashboard-skeleton {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1rem 1.15rem;
+  border-radius: var(--crypto-radius);
+}
+
+.state-banner {
+  border: 1px solid color-mix(in srgb, var(--crypto-accent-tech) 38%, transparent);
+  color: var(--crypto-text);
+  background: color-mix(in srgb, var(--crypto-accent-tech) 8%, var(--crypto-surface));
+}
+
+.state-banner--error {
+  border-color: color-mix(in srgb, var(--crypto-danger) 42%, transparent);
+  background: color-mix(in srgb, var(--crypto-danger) 9%, var(--crypto-surface));
+}
+
+.state-banner > i {
+  color: var(--crypto-danger);
+}
+
+.state-banner span:not(.loading-spinner),
+.dashboard-skeleton span:not(.loading-spinner) {
+  color: var(--crypto-text-muted);
+}
+
+.metrics-section {
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+.section-heading--metrics {
+  margin-bottom: 1rem;
+}
+
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.dashboard-card {
+  min-width: 0;
+  min-height: 22rem;
+  padding: 1.25rem;
+  border-radius: var(--crypto-radius-lg);
+}
+
+.dashboard-card--technical > div,
+.dashboard-card--signal > div,
+.dashboard-card--price,
+.dashboard-card--prediction {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+
+.metric-head {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.65rem;
+}
+
+.metric-icon-wrap {
+  display: grid;
+  width: 2.7rem;
+  height: 2.7rem;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--crypto-accent-tech) 34%, transparent);
+  border-radius: var(--crypto-radius-sm);
+  color: var(--crypto-accent-tech-strong);
+  background: var(--crypto-glow-tech);
+}
+
+.metric-overline {
+  color: var(--crypto-text-muted);
+}
+
+.metric-label {
+  margin: 0.18rem 0 0;
+  font-size: 0.88rem;
+  font-weight: 750;
+}
+
+.metric-status {
+  margin: -0.75rem 0 0.8rem;
+  color: var(--crypto-text-muted);
+  font-size: 0.7rem;
+}
+
+.metric-status--error {
+  color: var(--crypto-danger);
+}
+
+.metric-value {
+  font-size: clamp(1.45rem, 2.2vw, 2rem);
+  font-weight: 780;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+}
+
+.metric-meta {
+  margin-top: 0.75rem;
+  color: var(--crypto-text);
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+.metric-sub {
+  margin-top: 0.45rem;
+  color: var(--crypto-text-muted);
+  font-size: 0.74rem;
+  line-height: 1.45;
+}
+
+.metric-detail {
+  display: grid;
+  gap: 0.25rem;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--crypto-border);
+}
+
+.metric-detail span {
+  color: var(--crypto-text-muted);
+  font-size: 0.62rem;
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.metric-detail strong {
+  color: var(--crypto-text);
+  font-size: 0.76rem;
+}
+
+.technical-reading {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--crypto-border);
+  color: var(--crypto-text-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.technical-accordion {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--crypto-border);
+}
+
+.technical-accordion-toggle {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0;
+  border: 0;
+  color: var(--crypto-accent-tech-strong);
+  background: transparent;
+  font-size: 0.74rem;
+  font-weight: 750;
+}
+
+.signal-pill {
+  display: inline-flex;
+  min-width: 5.5rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 0.75rem;
+  border: 1px solid;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 850;
+  letter-spacing: 0.05em;
+}
+
+.signal-buy {
+  border-color: color-mix(in srgb, var(--crypto-success) 56%, transparent);
+  color: #8be8b6;
+  background: color-mix(in srgb, var(--crypto-success) 13%, var(--crypto-surface));
+}
+
+.signal-sell {
+  border-color: color-mix(in srgb, var(--crypto-danger) 56%, transparent);
+  color: #ffaaaa;
+  background: color-mix(in srgb, var(--crypto-danger) 13%, var(--crypto-surface));
+}
+
+.signal-hold {
+  border-color: color-mix(in srgb, var(--crypto-neutral) 55%, transparent);
+  color: #c0ccd6;
+  background: color-mix(in srgb, var(--crypto-neutral) 14%, var(--crypto-surface));
+}
+
+.expected-return {
+  margin-top: 1rem;
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.expected-return-positive {
+  color: #8be8b6;
+}
+
+.expected-return-negative {
+  color: #ffaaaa;
+}
+
+.expected-return-neutral {
+  color: #c0ccd6;
+}
+
+.dashboard-footer {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding: 1.15rem 1.25rem;
+  border-radius: var(--crypto-radius-lg);
+}
+
+.footer-icon {
+  color: var(--crypto-accent-tech-strong);
+}
+
+.footer-line {
+  color: var(--crypto-text-muted);
+  font-size: 0.75rem;
+  line-height: 1.5;
+}
+
+.footer-line--primary {
+  color: var(--crypto-text);
+  font-weight: 700;
+}
+
+.footer-disclaimer {
+  margin-top: 0.25rem;
+  color: var(--crypto-accent-value-strong);
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.025em;
+}
+
+.refresh-button:focus-visible,
+.technical-accordion-toggle:focus-visible {
+  outline: 3px solid var(--crypto-focus);
+  outline-offset: 3px;
+}
+
+@media (max-width: 1199.98px) {
+  .dashboard-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 991.98px) {
+  .dashboard-hero {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 
-.dashboard-page { color: var(--crypto-text); }
-.dashboard-title, .metric-value, .dashboard-page .card-body { color: var(--crypto-text); }
-.dashboard-subtitle, .dashboard-page .text-muted, .metric-label, .metric-meta, .metric-sub, .context-label, .footer-line { color: var(--crypto-text-muted) !important; }
-.dashboard-page .form-label, .technical-reading, .technical-accordion-toggle { color: var(--crypto-text); }
-.dashboard-page .form-select { background: var(--crypto-surface-soft); border-color: var(--crypto-border); color: var(--crypto-text); }
-.dashboard-page .form-select:focus { border-color: var(--crypto-accent-tech); box-shadow: 0 0 0 .2rem var(--crypto-focus); }
-.dashboard-page .card { background: var(--crypto-surface); border-color: var(--crypto-border); box-shadow: var(--crypto-shadow); }
-.technical-reading { border-top-color: var(--crypto-border); }.bi-currency-bitcoin.metric-icon { color: var(--crypto-accent-value) !important; }.bi-activity.metric-icon, .bi-cpu.metric-icon, .bi-signpost-split.metric-icon { color: var(--crypto-accent-tech) !important; }
-  
-  .dashboard-page {
-    color: #1f2937;
+  .quote-control {
+    max-width: 38rem;
   }
-  
-  .dashboard-title {
-    color: #111827;
-    letter-spacing: -0.02em;
-  }
-  
-  .dashboard-subtitle,
-  .text-muted {
-    color: #6b7280 !important;
-  }
-  
-  .form-label {
-    margin-bottom: 0.45rem;
-    font-weight: 600;
-    color: #374151 !important;
-    letter-spacing: 0.01em;
-  }
-  
-  .form-select {
-    min-height: 46px;
-    border-radius: 0.85rem;
-    border: 1px solid #d1d5db;
-    background: #ffffff;
-    color: #111827;
-    box-shadow: none;
-    transition:
-      border-color 0.2s ease,
-      box-shadow 0.2s ease,
-      background 0.2s ease;
-  }
-  
-  .form-select:hover {
-    border-color: #cbd5e1;
-  }
-  
-  .form-select:focus {
-    border-color: #d4af37;
-    box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.14);
-    background: #ffffff;
-  }
-  
-  .card {
-    border: 1px solid #e5e7eb;
-    border-radius: 1rem;
-    background: #ffffff;
-    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
-    overflow: hidden;
-  }
-  
-  .card-body {
-    padding: 1.2rem;
-    color: #111827;
-  }
-  
-  .dashboard-context .card-body {
-    padding-top: 0.95rem;
-    padding-bottom: 0.95rem;
-  }
-  
+
   .context-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+}
+
+@media (max-width: 767.98px) {
+  .dashboard-page {
+    padding: 1.25rem 0.75rem 2rem;
+  }
+
+  .dashboard-filters,
+  .dashboard-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .section-heading {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 0.85rem 1rem;
-  }
-  
-  .context-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-  }
-  
-  .context-label {
-    font-size: 0.76rem;
-    font-weight: 600;
-    color: #6b7280;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-  
-  .dashboard-card .card-body {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-  
-  .metric-head {
-    gap: 0.65rem;
-  }
-  
-  .metric-icon {
-    flex-shrink: 0;
-    font-size: 1.8rem;
-  }
-  
-  .bi-currency-bitcoin.metric-icon {
-    color: #d4af37 !important;
-  }
-  
-  .bi-activity.metric-icon {
-    color: #2563eb !important;
-  }
-  
-  .bi-cpu.metric-icon {
-    color: #111827 !important;
   }
 
-  .bi-signpost-split.metric-icon {
-    color: #7c3aed !important;
-  }
-  
-  .metric-label {
-    color: #6b7280;
-    font-size: 0.85rem;
-    font-weight: 600;
-  }
-  
-  .metric-value {
-    color: #111827;
-    font-size: 1.75rem;
-    font-weight: 700;
-    line-height: 1.15;
-    word-break: break-word;
-  }
-  
-  .metric-meta {
-    color: #4b5563;
-    font-size: 0.9rem;
-  }
-  
-  .metric-sub {
-    color: #6b7280;
-    font-size: 0.86rem;
-    line-height: 1.45;
-  }
-
-  .technical-reading {
-    display: grid;
-    gap: 0.3rem;
-    padding-top: 0.75rem;
-    border-top: 1px solid #f1f5f9;
-    color: #374151;
-    font-size: 0.82rem;
-    font-weight: 600;
-    line-height: 1.35;
-  }
-
-  .technical-accordion-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    color: #374151;
-    font-size: 0.82rem;
-    font-weight: 700;
+  .section-heading > p {
     text-align: left;
   }
 
-  .signal-pill {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 86px;
-    padding: 0.35rem 0.7rem;
-    border-radius: 999px;
-    font-size: 1rem;
-    font-weight: 800;
-    line-height: 1.2;
+  .dashboard-card {
+    min-height: 20rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .quote-control__actions {
+    grid-template-columns: 1fr;
   }
 
-  .signal-buy {
-    border: 1px solid #bbf7d0;
-    background: #dcfce7;
-    color: #166534;
-  }
-
-  .signal-sell {
-    border: 1px solid #fecaca;
-    background: #fee2e2;
-    color: #991b1b;
-  }
-
-  .signal-hold {
-    border: 1px solid #d1d5db;
-    background: #e5e7eb;
-    color: #374151;
-  }
-
-  .expected-return {
-    font-size: 1.35rem;
-    font-weight: 800;
-    line-height: 1.15;
-  }
-
-  .expected-return-positive {
-    color: #166534;
-  }
-
-  .expected-return-negative {
-    color: #991b1b;
-  }
-
-  .expected-return-neutral {
-    color: #374151;
-  }
-  
-  .dashboard-footer .card-body {
-    padding-top: 0.95rem;
-    padding-bottom: 0.95rem;
-  }
-  
-  .footer-line {
-    color: #6b7280;
-    font-size: 0.88rem;
-    line-height: 1.5;
-  }
-
-  .footer-disclaimer {
-    color: #4b5563;
-    font-weight: 600;
-  }
-  
-  .bi-clock {
-    color: #6b7280;
-  }
-  
-  .alert {
-    border-radius: 1rem;
-    border: 1px solid #fcd34d;
-    background: #fffbea;
-    color: #92400e;
-  }
-  
-  .dashboard-cards > [class*='col-'] {
-    display: flex;
-  }
-  
-  .dashboard-cards > [class*='col-'] > .card {
+  .refresh-button {
     width: 100%;
   }
-  
-  @media (max-width: 991.98px) {
-    .dashboard-page {
-      padding-top: 1.25rem !important;
-      padding-bottom: 1.25rem !important;
-    }
-  
-    .dashboard-title {
-      font-size: 1.65rem;
-    }
-  
-    .context-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-  
-    .metric-value {
-      font-size: 1.55rem;
-    }
-  
-    .card-body {
-      padding: 1rem;
-    }
-  }
-  
-  @media (max-width: 767.98px) {
-    .dashboard-page {
-      padding-left: 0.85rem;
-      padding-right: 0.85rem;
-    }
-  
-    .dashboard-title {
-      font-size: 1.45rem;
-      margin-bottom: 0.25rem;
-    }
-  
-    .form-label {
-      font-size: 0.78rem;
-    }
-  
-    .form-select {
-      min-height: 44px;
-      border-radius: 0.8rem;
-      font-size: 0.95rem;
-    }
-  
-    .card {
-      border-radius: 0.9rem;
-    }
-  
-    .card-body {
-      padding: 0.95rem;
-    }
-  
-    .context-grid {
-      grid-template-columns: 1fr 1fr;
-      gap: 0.75rem;
-    }
 
-    .metric-value {
-      font-size: 1.35rem;
-    }
-  
-    .metric-meta,
-    .metric-sub,
-    .footer-line {
-      font-size: 0.8rem;
-    }
-  }
-  
-  @media (max-width: 575.98px) {
-    .dashboard-page {
-      padding-left: 0.75rem;
-      padding-right: 0.75rem;
-    }
-  
-    .dashboard-title {
-      font-size: 1.3rem;
-    }
-  
-    .context-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .metric-value {
-      font-size: 1.2rem;
-    }
-  
-    .card-body {
-      padding: 0.9rem;
-    }
-  
-    .dashboard-filters,
-    .dashboard-cards {
-      --bs-gutter-x: 0.9rem;
-      --bs-gutter-y: 0.9rem;
-    }
+  .context-grid {
+    grid-template-columns: 1fr 1fr;
   }
 
-/* H06 visual reconciliation: the operational state colors above stay semantic. */
-.dashboard-page { color: var(--crypto-text); }
-.dashboard-title, .metric-value, .dashboard-page .card-body { color: var(--crypto-text); }
-.dashboard-subtitle, .dashboard-page .text-muted, .metric-label, .metric-meta, .metric-sub, .context-label, .footer-line { color: var(--crypto-text-muted) !important; }
-.dashboard-page .form-label, .technical-reading, .technical-accordion-toggle { color: var(--crypto-text); }
-.dashboard-page .form-select { background: var(--crypto-surface-soft); border-color: var(--crypto-border); color: var(--crypto-text); }
-.dashboard-page .form-select:focus { border-color: var(--crypto-accent-tech); box-shadow: 0 0 0 .2rem var(--crypto-focus); }
-.dashboard-page .card { background: var(--crypto-surface); border-color: var(--crypto-border); box-shadow: var(--crypto-shadow); }
-.technical-reading { border-top-color: var(--crypto-border); }.bi-currency-bitcoin.metric-icon { color: var(--crypto-accent-value) !important; }.bi-activity.metric-icon, .bi-cpu.metric-icon, .bi-signpost-split.metric-icon { color: var(--crypto-accent-tech) !important; }
+  .context-item:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .dashboard-footer {
+    display: grid;
+  }
+}
