@@ -1,4 +1,12 @@
-import { Component, computed, inject, signal, HostListener } from '@angular/core';
+import {
+  Component,
+  computed,
+  ElementRef,
+  HostListener,
+  inject,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import {
   NavigationEnd,
   Router,
@@ -10,7 +18,6 @@ import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
 
 import { AuthService } from '../../../core/auth/auth.service';
-import { HasRoleDirective } from '../../../core/auth/directives/has-role';
 import { AuthFacade } from '../../../core/auth/auth.facade';
 import { UserSession } from '../../../core/models/auth.model';
 
@@ -19,10 +26,14 @@ import { UserSession } from '../../../core/models/auth.model';
   standalone: true,
   imports: [RouterLink, RouterLinkActive, RouterOutlet, CommonModule],
   templateUrl: './dashboard-shell.component.html',
-  styleUrls: ['./dashboard-shell.component.scss'],
 })
 export class DashboardShellComponent {
   private readonly MOBILE_BREAKPOINT = 992;
+
+  @ViewChild('sidebarToggle') sidebarToggle?: ElementRef<HTMLButtonElement>;
+  @ViewChild('sidebar') sidebar?: ElementRef<HTMLElement>;
+  @ViewChild('accountButton') accountButton?: ElementRef<HTMLButtonElement>;
+  @ViewChild('userDialog') userDialog?: ElementRef<HTMLDialogElement>;
 
   authfacade = inject(AuthFacade);
   auth = inject(AuthService);
@@ -53,12 +64,26 @@ export class DashboardShellComponent {
     }
   }
 
-  toggleSidebar() {
-    this.isSidebarOpen.update(v => !v);
+  @HostListener('document:keydown.escape')
+  onEscape() {
+    if (this.isMobile() && this.isSidebarOpen()) {
+      this.closeSidebar(true);
+    }
   }
 
-  closeSidebar() {
+  toggleSidebar() {
+    const willOpen = !this.isSidebarOpen();
+    this.isSidebarOpen.set(willOpen);
+    if (this.isMobile() && willOpen) {
+      setTimeout(() => this.sidebar?.nativeElement.querySelector<HTMLElement>('a')?.focus());
+    }
+  }
+
+  closeSidebar(restoreFocus = false) {
     this.isSidebarOpen.set(false);
+    if (restoreFocus) {
+      this.sidebarToggle?.nativeElement.focus();
+    }
   }
 
   session = computed<UserSession | null>(() => this.auth.getSession());
@@ -81,11 +106,15 @@ export class DashboardShellComponent {
   }
 
   openUserModal() {
-    (document.getElementById('userDlg') as HTMLDialogElement | null)?.showModal();
+    this.userDialog?.nativeElement.showModal();
   }
 
   closeUserModal() {
-    (document.getElementById('userDlg') as HTMLDialogElement | null)?.close();
+    const dialog = this.userDialog?.nativeElement;
+    if (dialog?.open) {
+      dialog.close();
+    }
+    this.accountButton?.nativeElement.focus();
   }
 
   logout() {
