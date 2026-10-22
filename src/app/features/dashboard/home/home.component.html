@@ -1,330 +1,399 @@
-<div class="dashboard-page container-fluid py-3">
-    <div class="dashboard-hero row align-items-end g-3 mb-4">
-      <div class="col-lg-8 col-12">
-        <div class="dashboard-heading">
-          <h2 class="dashboard-title fw-bold mb-1">Dashboard</h2>
-          <p class="dashboard-subtitle text-muted mb-0">
-            Pulse actual del mercado para el activo seleccionado.
-          </p>
-        </div>
-      </div>
-  
-      <div class="col-lg-4 col-12">
-        <label class="form-label small">Moneda de visualización</label>
-        <div class="d-grid gap-2">
-          <select class="form-select" [formControl]="form.controls.displayQuote">
-            <option value="MARKET">Moneda mercado</option>
-            <option value="USD">USD</option>
-            <option value="CLP">CLP</option>
-          </select>
-          <button
-            type="button"
-            class="btn btn-outline-primary fw-bold"
-            [disabled]="latestRefreshing()"
-            (click)="refreshData()"
-          >
-            <span *ngIf="latestRefreshing()" class="loading-spinner" aria-hidden="true"></span>
-            <i *ngIf="!latestRefreshing()" class="bi bi-arrow-clockwise"></i>
-            {{ latestRefreshing() ? 'Actualizando...' : 'Actualizar' }}
-          </button>
-        </div>
+<div class="dashboard-page">
+  <header class="dashboard-hero">
+    <div class="dashboard-heading">
+      <p class="dashboard-eyebrow">Market pulse</p>
+      <h1 class="dashboard-title">Dashboard</h1>
+      <p class="dashboard-subtitle">
+        Pulse actual del mercado para el activo seleccionado.
+      </p>
+    </div>
+
+    <div class="quote-control">
+      <label class="form-label" for="dashboard-display-quote">Moneda de visualización</label>
+      <div class="quote-control__actions">
+        <select
+          id="dashboard-display-quote"
+          class="form-select"
+          [formControl]="form.controls.displayQuote"
+        >
+          <option value="MARKET">Moneda mercado</option>
+          <option value="USD">USD</option>
+          <option value="CLP">CLP</option>
+        </select>
+        <button
+          type="button"
+          class="refresh-button"
+          [disabled]="latestRefreshing()"
+          [attr.aria-busy]="latestRefreshing()"
+          (click)="refreshData()"
+        >
+          <span *ngIf="latestRefreshing()" class="loading-spinner" aria-hidden="true"></span>
+          <i *ngIf="!latestRefreshing()" class="bi bi-arrow-clockwise" aria-hidden="true"></i>
+          <span>{{ latestRefreshing() ? 'Actualizando...' : 'Actualizar' }}</span>
+        </button>
       </div>
     </div>
-  
-    <ng-container *ngIf="options$ | async as options; else loadingTpl">
-      <div class="dashboard-filters row g-3 mb-4">
-        <div class="col-xl-4 col-md-4 col-12">
-          <label class="form-label small">Activo</label>
-          <select class="form-select" [formControl]="form.controls.asset">
+  </header>
+
+  <ng-container *ngIf="options$ | async as options; else loadingTpl">
+    <section class="selection-panel" aria-labelledby="selection-title">
+      <div class="section-heading">
+        <div>
+          <p class="section-kicker">Lectura de mercado</p>
+          <h2 id="selection-title">Configuración</h2>
+        </div>
+        <p>Selecciona el contexto analítico que quieres consultar.</p>
+      </div>
+
+      <div class="dashboard-filters">
+        <div class="filter-field">
+          <label class="form-label" for="dashboard-asset">Activo</label>
+          <select id="dashboard-asset" class="form-select" [formControl]="form.controls.asset">
             <option *ngFor="let a of options.assets" [value]="a.asset">
               {{ a.asset }}
             </option>
           </select>
         </div>
-  
-        <div class="col-xl-4 col-md-4 col-12">
-          <label class="form-label small">Temporalidad</label>
-          <select class="form-select" [formControl]="form.controls.timeframe">
+
+        <div class="filter-field">
+          <label class="form-label" for="dashboard-timeframe">Temporalidad</label>
+          <select
+            id="dashboard-timeframe"
+            class="form-select"
+            [formControl]="form.controls.timeframe"
+          >
             <option *ngFor="let tf of options.timeframes" [value]="tf">
               {{ tf }}
             </option>
           </select>
         </div>
-  
-        <div class="col-xl-4 col-md-4 col-12">
-          <label class="form-label small">Horizonte</label>
-          <select class="form-select" [formControl]="form.controls.horizon">
+
+        <div class="filter-field">
+          <label class="form-label" for="dashboard-horizon">Horizonte</label>
+          <select
+            id="dashboard-horizon"
+            class="form-select"
+            [formControl]="form.controls.horizon"
+          >
             <option *ngFor="let h of options.horizons" [value]="h">
               {{ h }}
             </option>
           </select>
         </div>
       </div>
-  
-      <div class="dashboard-context card shadow-sm mb-4">
-        <div class="card-body py-3">
-          <div class="context-grid">
-            <div class="context-item">
-              <span class="context-label">Activo</span>
-              <strong>{{ form.controls.asset.value }}</strong>
-            </div>
-  
-            <div class="context-item">
-              <span class="context-label">Temporalidad</span>
-              <strong>{{ form.controls.timeframe.value }}</strong>
-            </div>
-  
-            <div class="context-item">
-              <span class="context-label">Horizonte</span>
-              <strong>{{ form.controls.horizon.value }}</strong>
-            </div>
-  
-            <div class="context-item">
-              <span class="context-label">Visualización</span>
-              <strong>
-                {{
-                  form.controls.displayQuote.value === 'MARKET'
-                    ? 'Moneda mercado'
-                    : form.controls.displayQuote.value
-                }}
-              </strong>
-            </div>
+    </section>
 
-            <div class="context-item">
-              <span class="context-label">Refresh manual</span>
-              <strong title="Hora local Chile">{{ refreshRequestedAt() | cryptoTimestamp:'Sin refresh' }}</strong>
-            </div>
-          </div>
+    <section class="dashboard-context" aria-label="Contexto de la lectura actual">
+      <div class="context-grid">
+        <div class="context-item">
+          <span class="context-label">Activo</span>
+          <strong>{{ form.controls.asset.value }}</strong>
+        </div>
+
+        <div class="context-item">
+          <span class="context-label">Temporalidad</span>
+          <strong>{{ form.controls.timeframe.value }}</strong>
+        </div>
+
+        <div class="context-item">
+          <span class="context-label">Horizonte</span>
+          <strong>{{ form.controls.horizon.value }}</strong>
+        </div>
+
+        <div class="context-item">
+          <span class="context-label">Visualización</span>
+          <strong>
+            {{
+              form.controls.displayQuote.value === 'MARKET'
+                ? 'Moneda mercado'
+                : form.controls.displayQuote.value
+            }}
+          </strong>
+        </div>
+
+        <div class="context-item context-item--refresh">
+          <span class="context-label">Refresh manual</span>
+          <strong title="Hora local Chile">
+            {{ refreshRequestedAt() | cryptoTimestamp: 'Sin refresh' }}
+          </strong>
         </div>
       </div>
-  
-      <div class="alert alert-info mb-3" *ngIf="latestLoading()">
-        <span class="loading-inline">
-          <span class="loading-spinner" aria-hidden="true"></span>
-          <span>Cargando datos...</span>
-        </span>
+    </section>
+
+    <div class="state-stack" aria-live="polite">
+      <div class="state-banner state-banner--loading" *ngIf="latestLoading()">
+        <span class="loading-spinner" aria-hidden="true"></span>
+        <div>
+          <strong>Cargando datos...</strong>
+          <span>Estamos reuniendo el último pulso disponible.</span>
+        </div>
       </div>
 
-      <div class="alert alert-info mb-3" *ngIf="latestRefreshing()">
-        <span class="loading-inline">
-          <span class="loading-spinner" aria-hidden="true"></span>
-          <span>Actualizando datos...</span>
-        </span>
+      <div class="state-banner state-banner--refreshing" *ngIf="latestRefreshing()">
+        <span class="loading-spinner" aria-hidden="true"></span>
+        <div>
+          <strong>Actualizando datos...</strong>
+          <span>La lectura visible se renovará al completar la consulta.</span>
+        </div>
       </div>
 
-      <div class="alert alert-warning mb-3" *ngIf="latestError() as error">
-        {{ error }}
+      <div class="state-banner state-banner--error" role="alert" *ngIf="latestError() as error">
+        <i class="bi bi-info-circle" aria-hidden="true"></i>
+        <div>
+          <strong>No fue posible actualizar los datos.</strong>
+          <span>{{ error }}</span>
+        </div>
       </div>
+    </div>
 
-      <ng-container *ngIf="pulse$ | async as pulse; else pulseError">
-        <ng-container *ngIf="pulse; else pulseError">
-          <div class="dashboard-cards row g-4">
-            <div class="col-xl-3 col-lg-6 col-md-12">
-              <div class="card dashboard-card shadow-sm h-100">
-                <div class="card-body">
-                  <div class="metric-head d-flex align-items-center mb-3">
-                    <i class="bi bi-currency-bitcoin metric-icon"></i>
-                    <span class="metric-label">Precio actual</span>
-                  </div>
-                  <div class="metric-sub text-muted" *ngIf="priceLoading()">Cargando precio...</div>
-                  <div class="metric-sub text-warning" *ngIf="priceError() as error">{{ error }}</div>
-  
-                  <div class="metric-value">
-                    {{ formatMetric(shownPriceValue(pulse.price), shownPriceCurrency(pulse.price)) }}
-                  </div>
-  
-                  <div class="metric-meta mt-2">
-                    {{ pulse.price?.meta?.asset }} · {{ pulse.price?.meta?.timeframe }}
-                  </div>
-  
-                  <div class="metric-sub mt-2" *ngIf="hasConvertedPrice(pulse.price); else marketPriceTpl">
-                    Base mercado:
-                    {{ formatMetric(basePriceValue(pulse.price), basePriceCurrency(pulse.price)) }}
-                  </div>
-  
-                  <ng-template #marketPriceTpl>
-                    <div class="metric-sub mt-2">
-                      Mostrando moneda mercado.
-                    </div>
-                  </ng-template>
-                </div>
-              </div>
+    <ng-container *ngIf="pulse$ | async as pulse; else pulseError">
+      <ng-container *ngIf="pulse; else pulseError">
+        <section class="metrics-section" aria-labelledby="metrics-title">
+          <div class="section-heading section-heading--metrics">
+            <div>
+              <p class="section-kicker">Vista consolidada</p>
+              <h2 id="metrics-title">Indicadores clave</h2>
             </div>
-  
-            <div class="col-xl-3 col-lg-6 col-md-12">
-              <div class="card dashboard-card shadow-sm h-100">
-                  <div class="card-body" *ngIf="technicalReading(pulse) as technical">
-                  <div class="metric-head d-flex align-items-center mb-3">
-                    <i class="bi bi-activity metric-icon"></i>
-                    <span class="metric-label">Indicadores técnicos</span>
-                  </div>
-                  <div class="metric-sub text-muted" *ngIf="featureLoading()">Cargando indicadores...</div>
-                  <div class="metric-sub text-warning" *ngIf="featureError() as error">{{ error }}</div>
-  
-                  <div class="metric-value">
-                    RSI {{ pulse.feature?.data?.rsi | number:'1.0-2' }}
-                  </div>
-  
-                  <div class="metric-meta mt-2">
-                    MACD {{ pulse.feature?.data?.macd | number:'1.0-2' }}
-                  </div>
-  
-                  <div class="metric-sub mt-2">
-                    Volatilidad {{ pulse.feature?.data?.volatility | number:'1.4-6' }}
-                  </div>
-
-                  <div class="technical-reading mt-3">
-                    <div>{{ technical.rsiText }}</div>
-                    <div>{{ technical.macdText }}</div>
-                    <div>{{ technical.volatilityText }}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-  
-            <div class="col-xl-3 col-lg-6 col-md-12">
-              <div class="card dashboard-card shadow-sm h-100">
-                <div class="card-body">
-                  <div class="metric-head d-flex align-items-center mb-3">
-                    <i class="bi bi-cpu metric-icon"></i>
-                    <span class="metric-label">Predicción ML</span>
-                  </div>
-                  <div class="metric-sub text-muted" *ngIf="predictionLoading()">Cargando predicción...</div>
-                  <div class="metric-sub text-warning" *ngIf="predictionError() as error">{{ error }}</div>
-  
-                  <div class="metric-value">
-                    {{
-                      formatMetric(
-                        shownPredictionValue(pulse.prediction),
-                        shownPredictionCurrency(pulse.prediction)
-                      )
-                    }}
-                  </div>
-  
-                  <div class="metric-meta mt-2">
-                    Confianza {{ pulse.prediction?.data?.confidence | percent:'1.0-0' }}
-                  </div>
-  
-                  <div class="metric-sub mt-1">
-                    Horizonte {{ pulse.prediction?.meta?.horizon }}
-                  </div>
-  
-                  <div class="metric-sub mt-2" *ngIf="hasConvertedPrediction(pulse.prediction); else marketPredictionTpl">
-                    Modelo base:
-                    {{
-                      formatMetric(
-                        basePredictionValue(pulse.prediction),
-                        basePredictionCurrency(pulse.prediction)
-                      )
-                    }}
-                  </div>
-  
-                  <ng-template #marketPredictionTpl>
-                    <div class="metric-sub mt-2">
-                      Predicción en moneda mercado.
-                    </div>
-                  </ng-template>
-
-                  <div class="technical-accordion mt-3" *ngIf="modelExplanation(pulse.prediction) as explanation">
-                    <button
-                      type="button"
-                      class="technical-accordion-toggle"
-                      [attr.aria-expanded]="explanationOpen"
-                      (click)="toggleExplanation()"
-                    >
-                      <span>Ver detalle técnico</span>
-                      <i class="bi" [ngClass]="explanationOpen ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
-                    </button>
-
-                    <div class="technical-accordion-body metric-sub mt-2" *ngIf="explanationOpen">
-                      {{ explanation }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="col-xl-3 col-lg-6 col-md-12">
-              <div class="card dashboard-card shadow-sm h-100">
-                <div class="card-body" *ngIf="signalReading(pulse) as reading">
-                  <div class="metric-head d-flex align-items-center mb-3">
-                    <i class="bi bi-signpost-split metric-icon"></i>
-                    <span class="metric-label">Señal derivada</span>
-                  </div>
-                  <div class="metric-sub text-muted" *ngIf="signalLoading()">Cargando señal...</div>
-                  <div class="metric-sub text-warning" *ngIf="signalError() as error">{{ error }}</div>
-
-                  <div class="metric-value">
-                    <span
-                      class="signal-pill"
-                      [ngClass]="signalBadgeClass(reading)"
-                    >
-                      {{ reading.signal }}
-                    </span>
-                  </div>
-
-                  <div class="expected-return mt-3" [ngClass]="expectedReturnClass(reading)">
-                    {{ reading.expectedReturn | percent:'1.2-2' }}
-                  </div>
-
-                  <div class="metric-meta mt-2">
-                    {{ reading.text }}
-                  </div>
-
-                  <div class="metric-sub mt-1">
-                    Confianza {{ reading.confidenceLevel }}
-                  </div>
-
-                  <div class="metric-sub mt-1">
-                    Umbral HOLD aplicado: ±{{ signalThresholdLabel }}
-                  </div>
-                </div>
-              </div>
-            </div>
+            <p>Precio, lectura técnica, estimación de modelo y señal derivada.</p>
           </div>
-  
-          <div class="dashboard-footer card shadow-sm mt-4">
-            <div class="card-body py-3">
-              <div class="footer-line d-flex align-items-center mb-2">
-                <i class="bi bi-clock me-2"></i>
-                <span title="Hora local Chile">Datos actualizados: {{ pulse.price?.meta?.asof_ts_utc | cryptoTimestamp }}</span>
+
+          <div class="dashboard-cards">
+            <article class="dashboard-card dashboard-card--price">
+              <div class="metric-head">
+                <span class="metric-icon-wrap" aria-hidden="true">
+                  <i class="bi bi-currency-bitcoin metric-icon"></i>
+                </span>
+                <div>
+                  <span class="metric-overline">Mercado</span>
+                  <h3 class="metric-label">Precio actual</h3>
+                </div>
               </div>
-  
-              <div class="footer-line" *ngIf="hasFxContext(pulse); else fxFallbackTpl">
-                <ng-container *ngIf="fxContext(pulse) as fx">
-                  FX {{ fx.base_currency }}→{{ fx.display_quote_currency }}:
-                  {{ fx.fx_rate | number:'1.2-4' }}
-                  · Provider: {{ fx.provider }}
-                  · <span title="Hora local Chile">Actualizado: {{ fx.fx_asof_ts_utc | cryptoTimestamp }}</span>
-                </ng-container>
+
+              <div class="metric-status" *ngIf="priceLoading()">Cargando precio...</div>
+              <div class="metric-status metric-status--error" *ngIf="priceError() as error">
+                {{ error }}
               </div>
-  
-              <ng-template #fxFallbackTpl>
-                <div class="footer-line">
-                  Sin contexto FX adicional para esta visualización.
+
+              <div class="metric-value">
+                {{ formatMetric(shownPriceValue(pulse.price), shownPriceCurrency(pulse.price)) }}
+              </div>
+
+              <div class="metric-meta">
+                {{ pulse.price?.meta?.asset }} · {{ pulse.price?.meta?.timeframe }}
+              </div>
+
+              <div class="metric-detail" *ngIf="hasConvertedPrice(pulse.price); else marketPriceTpl">
+                <span>Base mercado</span>
+                <strong>
+                  {{ formatMetric(basePriceValue(pulse.price), basePriceCurrency(pulse.price)) }}
+                </strong>
+              </div>
+
+              <ng-template #marketPriceTpl>
+                <div class="metric-detail">
+                  <span>Conversión</span>
+                  <strong>Mostrando moneda mercado.</strong>
+                </div>
+              </ng-template>
+            </article>
+
+            <article class="dashboard-card dashboard-card--technical">
+              <div *ngIf="technicalReading(pulse) as technical">
+                <div class="metric-head">
+                  <span class="metric-icon-wrap" aria-hidden="true">
+                    <i class="bi bi-activity metric-icon"></i>
+                  </span>
+                  <div>
+                    <span class="metric-overline">Análisis</span>
+                    <h3 class="metric-label">Indicadores técnicos</h3>
+                  </div>
+                </div>
+
+                <div class="metric-status" *ngIf="featureLoading()">Cargando indicadores...</div>
+                <div class="metric-status metric-status--error" *ngIf="featureError() as error">
+                  {{ error }}
+                </div>
+
+                <div class="metric-value">RSI {{ pulse.feature?.data?.rsi | number: '1.0-2' }}</div>
+
+                <div class="metric-meta">
+                  MACD {{ pulse.feature?.data?.macd | number: '1.0-2' }}
+                </div>
+
+                <div class="metric-sub">
+                  Volatilidad {{ pulse.feature?.data?.volatility | number: '1.4-6' }}
+                </div>
+
+                <div class="technical-reading">
+                  <div>{{ technical.rsiText }}</div>
+                  <div>{{ technical.macdText }}</div>
+                  <div>{{ technical.volatilityText }}</div>
+                </div>
+              </div>
+            </article>
+
+            <article class="dashboard-card dashboard-card--prediction">
+              <div class="metric-head">
+                <span class="metric-icon-wrap" aria-hidden="true">
+                  <i class="bi bi-cpu metric-icon"></i>
+                </span>
+                <div>
+                  <span class="metric-overline">Modelo</span>
+                  <h3 class="metric-label">Predicción ML</h3>
+                </div>
+              </div>
+
+              <div class="metric-status" *ngIf="predictionLoading()">Cargando predicción...</div>
+              <div class="metric-status metric-status--error" *ngIf="predictionError() as error">
+                {{ error }}
+              </div>
+
+              <div class="metric-value">
+                {{
+                  formatMetric(
+                    shownPredictionValue(pulse.prediction),
+                    shownPredictionCurrency(pulse.prediction)
+                  )
+                }}
+              </div>
+
+              <div class="metric-meta">
+                Confianza {{ pulse.prediction?.data?.confidence | percent: '1.0-0' }}
+              </div>
+
+              <div class="metric-sub">Horizonte {{ pulse.prediction?.meta?.horizon }}</div>
+
+              <div
+                class="metric-detail"
+                *ngIf="hasConvertedPrediction(pulse.prediction); else marketPredictionTpl"
+              >
+                <span>Modelo base</span>
+                <strong>
+                  {{
+                    formatMetric(
+                      basePredictionValue(pulse.prediction),
+                      basePredictionCurrency(pulse.prediction)
+                    )
+                  }}
+                </strong>
+              </div>
+
+              <ng-template #marketPredictionTpl>
+                <div class="metric-detail">
+                  <span>Conversión</span>
+                  <strong>Predicción en moneda mercado.</strong>
                 </div>
               </ng-template>
 
-              <div class="footer-line footer-disclaimer mt-2">
-                Lectura analítica asistiva. No constituye recomendación financiera.
+              <div class="technical-accordion" *ngIf="modelExplanation(pulse.prediction) as explanation">
+                <button
+                  type="button"
+                  class="technical-accordion-toggle"
+                  [attr.aria-expanded]="explanationOpen"
+                  (click)="toggleExplanation()"
+                >
+                  <span>Ver detalle técnico</span>
+                  <i
+                    class="bi"
+                    [ngClass]="explanationOpen ? 'bi-chevron-up' : 'bi-chevron-down'"
+                    aria-hidden="true"
+                  ></i>
+                </button>
+
+                <div class="technical-accordion-body metric-sub" *ngIf="explanationOpen">
+                  {{ explanation }}
+                </div>
               </div>
+            </article>
+
+            <article class="dashboard-card dashboard-card--signal">
+              <div *ngIf="signalReading(pulse) as reading">
+                <div class="metric-head">
+                  <span class="metric-icon-wrap" aria-hidden="true">
+                    <i class="bi bi-signpost-split metric-icon"></i>
+                  </span>
+                  <div>
+                    <span class="metric-overline">Decisión</span>
+                    <h3 class="metric-label">Señal derivada</h3>
+                  </div>
+                </div>
+
+                <div class="metric-status" *ngIf="signalLoading()">Cargando señal...</div>
+                <div class="metric-status metric-status--error" *ngIf="signalError() as error">
+                  {{ error }}
+                </div>
+
+                <div class="metric-value metric-value--signal">
+                  <span class="signal-pill" [ngClass]="signalBadgeClass(reading)">
+                    {{ reading.signal }}
+                  </span>
+                </div>
+
+                <div class="expected-return" [ngClass]="expectedReturnClass(reading)">
+                  {{ reading.expectedReturn | percent: '1.2-2' }}
+                </div>
+
+                <div class="metric-meta">{{ reading.text }}</div>
+
+                <div class="metric-sub">Confianza {{ reading.confidenceLevel }}</div>
+
+                <div class="metric-sub">Umbral HOLD aplicado: ±{{ signalThresholdLabel }}</div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <footer class="dashboard-footer">
+          <div class="footer-icon" aria-hidden="true">
+            <i class="bi bi-clock"></i>
+          </div>
+          <div class="footer-content">
+            <div class="footer-line footer-line--primary">
+              <span title="Hora local Chile">
+                Datos actualizados: {{ pulse.price?.meta?.asof_ts_utc | cryptoTimestamp }}
+              </span>
+            </div>
+
+            <div class="footer-line" *ngIf="hasFxContext(pulse); else fxFallbackTpl">
+              <ng-container *ngIf="fxContext(pulse) as fx">
+                FX {{ fx.base_currency }}→{{ fx.display_quote_currency }}:
+                {{ fx.fx_rate | number: '1.2-4' }} · Provider: {{ fx.provider }} ·
+                <span title="Hora local Chile">
+                  Actualizado: {{ fx.fx_asof_ts_utc | cryptoTimestamp }}
+                </span>
+              </ng-container>
+            </div>
+
+            <ng-template #fxFallbackTpl>
+              <div class="footer-line">Sin contexto FX adicional para esta visualización.</div>
+            </ng-template>
+
+            <div class="footer-disclaimer">
+              Lectura analítica asistiva. No constituye recomendación financiera.
             </div>
           </div>
-        </ng-container>
+        </footer>
       </ng-container>
-  
-      <ng-template #pulseError>
-        <div class="alert alert-warning mb-0" *ngIf="!latestLoading()">
-          No fue posible cargar el pulse para la selección actual.
-        </div>
-      </ng-template>
     </ng-container>
-  
-    <ng-template #loadingTpl>
-      <div class="card shadow-sm">
-        <div class="card-body text-muted">
-          Cargando dashboard...
+
+    <ng-template #pulseError>
+      <div class="state-banner state-banner--error" role="alert" *ngIf="!latestLoading()">
+        <i class="bi bi-info-circle" aria-hidden="true"></i>
+        <div>
+          <strong>Pulse no disponible</strong>
+          <span>No fue posible cargar el pulse para la selección actual.</span>
         </div>
       </div>
     </ng-template>
-  </div>
+  </ng-container>
+
+  <ng-template #loadingTpl>
+    <div class="dashboard-skeleton" aria-live="polite">
+      <span class="loading-spinner" aria-hidden="true"></span>
+      <div>
+        <strong>Cargando dashboard...</strong>
+        <span>Preparando las opciones de mercado.</span>
+      </div>
+    </div>
+  </ng-template>
+</div>
