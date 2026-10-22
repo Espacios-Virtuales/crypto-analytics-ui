@@ -1,46 +1,93 @@
-<!-- src/app/features/auth/login/login.component.html -->
-<div class="login-wrapper d-flex flex-column flex-md-row vh-100">
-  <div class="login-image d-none d-md-flex flex-column justify-content-center align-items-center text-light">
-    <div class="overlay text-center">
-      <h2 class="fw-bold">Crypto Analytics UI</h2>
-      <p class="lead">Anliza, predice y acciona.</p>
-      <img src="/logo.png" alt="logo" class="brand-logo mt-3" />
+<main class="login-page">
+  <section class="login-brand" aria-labelledby="login-brand-title">
+    <div class="login-brand__content">
+      <div class="login-brand__identity">
+        <span class="login-brand__mark" aria-hidden="true">
+          <img
+            src="/brand/CRYPTO_ANALYTICS_CA_MONOGRAM_ANALYTIC_NETWORK_v1.0.svg"
+            alt=""
+          />
+        </span>
+        <span class="login-brand__name">Crypto Analytics</span>
+      </div>
+
+      <div class="login-brand__message">
+        <p class="crypto-eyebrow">LECTURA ANALÍTICA</p>
+        <h1 id="login-brand-title">Lee el mercado <span>con contexto.</span></h1>
+        <p>
+          Accede a una experiencia diseñada para organizar datos, indicadores y señales sin
+          perder de vista la decisión humana.
+        </p>
+      </div>
+
+      <ul class="login-brand__principles" aria-label="Principios de la experiencia">
+        <li><b>01</b><span>Datos trazables</span></li>
+        <li><b>02</b><span>Contexto visible</span></li>
+        <li><b>03</b><span>Decisión humana</span></li>
+      </ul>
     </div>
-  </div>
+  </section>
 
-  <div class="login-form d-flex align-items-center justify-content-center flex-grow-1 p-4">
-    <div class="form-container p-4 shadow-sm bg-white rounded-4" style="min-width:340px;max-width:420px;">
-      <h1 class="h4 mb-3 text-center text-primary">Ingresar</h1>
+  <section class="login-access" aria-labelledby="login-title">
+    <div class="login-card">
+      <header class="login-card__header">
+        <p class="crypto-eyebrow">ACCESO SEGURO</p>
+        <h2 id="login-title">Ingresar</h2>
+        <p>Usa las credenciales asociadas a tu cuenta.</p>
+      </header>
 
-      <div *ngIf="justRegistered()" class="alert alert-success small">
+      <div *ngIf="justRegistered()" class="login-notice login-notice--success" role="status">
         ¡Tu cuenta fue creada! Revisa tu inbox y activa tu cuenta para iniciar sesión.
       </div>
 
-      <!-- 🔴 MUESTRA EL ERROR DE SERVIDOR -->
-      <div *ngIf="serverError()" class="alert alert-danger small">
+      <div *ngIf="serverError()" class="login-notice login-notice--error" role="alert">
         {{ serverError() }}
       </div>
 
-      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="vstack gap-3">
-        <div>
-          <input formControlName="email" type="email" class="form-control" placeholder="Correo electrónico" />
-          <div class="form-text text-danger" *ngIf="f.email.touched && f.email.invalid">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form" novalidate>
+        <div class="login-field">
+          <label for="login-email">Correo electrónico</label>
+          <input
+            id="login-email"
+            formControlName="email"
+            type="email"
+            inputmode="email"
+            autocomplete="username"
+            placeholder="nombre@ejemplo.com"
+            [attr.aria-invalid]="f.email.touched && f.email.invalid"
+            [attr.aria-describedby]="f.email.touched && f.email.invalid ? 'email-error' : null"
+          />
+          <p id="email-error" class="login-field__error" *ngIf="f.email.touched && f.email.invalid">
             {{ f.email.hasError('required') ? 'Email requerido.' : f.email.hasError('email') ? 'Email inválido.' : '' }}
-          </div>
+          </p>
         </div>
 
-        <div>
-          <input formControlName="password" type="password" class="form-control" placeholder="Contraseña" />
-          <div class="form-text text-danger" *ngIf="f.password.touched && f.password.invalid">
+        <div class="login-field">
+          <label for="login-password">Contraseña</label>
+          <input
+            id="login-password"
+            formControlName="password"
+            type="password"
+            autocomplete="current-password"
+            placeholder="Ingresa tu contraseña"
+            [attr.aria-invalid]="f.password.touched && f.password.invalid"
+            [attr.aria-describedby]="f.password.touched && f.password.invalid ? 'password-error' : null"
+          />
+          <p id="password-error" class="login-field__error" *ngIf="f.password.touched && f.password.invalid">
             {{ f.password.hasError('required') ? 'Contraseña requerida.' : f.password.hasError('minlength') ? 'Mínimo 6 caracteres.' : '' }}
-          </div>
+          </p>
         </div>
 
-        <button class="btn btn-ev w-100 py-2 mt-2" type="submit"
-                [disabled]="form.invalid || submitting()">
+        <button
+          class="login-submit"
+          type="submit"
+          [disabled]="form.invalid || submitting()"
+          [attr.aria-busy]="submitting()"
+        >
+          <span *ngIf="submitting()" class="login-submit__spinner" aria-hidden="true"></span>
           {{ submitting() ? 'Ingresando…' : 'Entrar' }}
         </button>
       </form>
     </div>
-  </div>
-</div>
+  </section>
+</main>
