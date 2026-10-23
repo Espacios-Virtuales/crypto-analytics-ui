@@ -1,8 +1,14 @@
-<div class="assets-page container-fluid py-3">
-  <div class="assets-hero mb-3">
-    <h2 class="assets-title">Activos</h2>
-    <p class="assets-subtitle mb-0">Disponibilidad operacional por activo y combinación de mercado.</p>
-  </div>
+<div class="assets-page">
+  <header class="assets-hero">
+    <p class="assets-eyebrow">Market coverage</p>
+    <div class="assets-heading">
+      <div>
+        <h1 class="assets-title">Activos</h1>
+        <p class="assets-subtitle">Disponibilidad operacional por activo y combinación de mercado.</p>
+      </div>
+      <span class="assets-hero-mark" aria-hidden="true"><i class="bi bi-currency-bitcoin"></i></span>
+    </div>
+  </header>
 
   <div class="alert alert-info mb-3" *ngIf="loading()">
     <span class="loading-inline">
@@ -16,7 +22,14 @@
   </div>
 
   <ng-container *ngIf="assets$ | async as assets; else loadingTpl">
-    <div class="card asset-table-card shadow-sm" *ngIf="assets.length; else emptyAssetsTpl">
+    <section class="asset-table-card crypto-card" *ngIf="assets.length; else emptyAssetsTpl" aria-labelledby="assets-table-title">
+      <div class="asset-table-heading">
+        <div>
+          <p class="section-kicker">Cobertura disponible</p>
+          <h2 id="assets-table-title">Matriz operacional</h2>
+        </div>
+        <p>Estado, ventanas de análisis y última actualización por activo.</p>
+      </div>
       <div class="table-responsive">
         <table class="table table-sm table-hover align-middle mb-0 asset-table">
           <thead>
@@ -31,35 +44,36 @@
           </thead>
           <tbody>
             <tr *ngFor="let item of assets; trackBy: trackByAsset">
-              <td class="asset-name">{{ item.asset }}</td>
+              <td class="asset-name"><span>{{ item.asset }}</span></td>
               <td>
-                <span class="badge" [class.text-bg-success]="item.ready" [class.text-bg-warning]="!item.ready">
+                <span class="asset-state" [class.asset-state--ready]="item.ready" [class.asset-state--pending]="!item.ready">
+                  <span class="asset-state__dot" aria-hidden="true"></span>
                   {{ item.ready ? 'Ready' : 'No ready' }}
                 </span>
               </td>
-              <td>{{ item.timeframes.join(', ') || '-' }}</td>
-              <td>{{ item.horizons.join(', ') || '-' }}</td>
+              <td><span class="asset-window">{{ item.timeframes.join(', ') || '-' }}</span></td>
+              <td><span class="asset-window">{{ item.horizons.join(', ') || '-' }}</span></td>
               <td>
-                <strong>{{ lastStatus(item) }}</strong>
+                <strong class="asset-last-state">{{ lastStatus(item) }}</strong>
                 <span class="asset-meta d-block" title="Hora local Chile">{{ lastTimestamp(item) | cryptoTimestamp:'-' }}</span>
               </td>
-              <td class="text-muted">{{ summary(item) }}</td>
+              <td class="asset-summary">{{ summary(item) }}</td>
             </tr>
           </tbody>
         </table>
       </div>
-    </div>
+    </section>
   </ng-container>
 
   <ng-template #emptyAssetsTpl>
-    <div class="card shadow-sm">
-      <div class="card-body text-muted">No hay activos disponibles.</div>
+    <div class="assets-empty crypto-card">
+      <div class="text-muted">No hay activos disponibles.</div>
     </div>
   </ng-template>
 
   <ng-template #loadingTpl>
-    <div class="card shadow-sm" *ngIf="loading()">
-      <div class="card-body text-muted">
+    <div class="assets-empty crypto-card" *ngIf="loading()">
+      <div class="text-muted">
         <span class="loading-inline">
           <span class="loading-spinner" aria-hidden="true"></span>
           <span>Cargando activos...</span>

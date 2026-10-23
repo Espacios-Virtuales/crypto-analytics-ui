@@ -1,19 +1,28 @@
-<div class="history-page container-fluid py-3">
-  <div class="row mb-4">
-    <div class="col-12">
-      <div class="history-hero">
-        <h2 class="history-title">Histórico</h2>
-        <p class="history-subtitle mb-0">
+<div class="history-page">
+  <header class="history-hero">
+    <p class="history-eyebrow">Market timeline</p>
+    <div class="history-heading">
+      <div>
+        <h1 class="history-title">Histórico</h1>
+        <p class="history-subtitle">
           Exploración dinámica del comportamiento reciente del activo.
         </p>
       </div>
     </div>
-  </div>
+  </header>
 
-  <div class="history-filters row g-3 mb-3">
-    <div class="col-xl-3 col-md-6 col-12">
-      <label class="form-label small">Activo</label>
-      <select class="form-select history-select" [formControl]="form.controls.asset" (change)="resetOffset()">
+  <section class="history-filter-panel crypto-card" aria-labelledby="history-filter-title">
+    <div class="history-section-heading mb-3">
+      <div>
+        <p class="history-section-kicker">Consulta</p>
+        <h2 id="history-filter-title">Parámetros de lectura</h2>
+      </div>
+      <p class="text-muted mb-0">Selecciona mercado, ventana, horizonte y moneda de visualización.</p>
+    </div>
+    <div class="history-filters">
+    <div class="history-field">
+      <label class="form-label" for="history-asset">Activo</label>
+      <select id="history-asset" class="form-select history-select" [formControl]="form.controls.asset" (change)="resetOffset()">
         <ng-container *ngIf="assets$ | async as assets">
           <option *ngFor="let item of assets" [value]="item.asset">
             {{ item.asset }}
@@ -22,9 +31,9 @@
       </select>
     </div>
 
-    <div class="col-xl-3 col-md-6 col-12">
-      <label class="form-label small">Temporalidad</label>
-      <select class="form-select history-select" [formControl]="form.controls.timeframe" (change)="resetOffset()">
+    <div class="history-field">
+      <label class="form-label" for="history-timeframe">Temporalidad</label>
+      <select id="history-timeframe" class="form-select history-select" [formControl]="form.controls.timeframe" (change)="resetOffset()">
         <ng-container *ngIf="selectedMarketOptions$ | async as options">
           <option *ngFor="let tf of options.timeframes" [value]="tf">
             {{ tf }}
@@ -33,9 +42,9 @@
       </select>
     </div>
 
-    <div class="col-xl-3 col-md-6 col-12">
-      <label class="form-label small">Horizonte</label>
-      <select class="form-select history-select" [formControl]="form.controls.horizon" (change)="resetOffset()">
+    <div class="history-field">
+      <label class="form-label" for="history-horizon">Horizonte</label>
+      <select id="history-horizon" class="form-select history-select" [formControl]="form.controls.horizon" (change)="resetOffset()">
         <ng-container *ngIf="selectedMarketOptions$ | async as options">
           <option *ngFor="let hz of options.horizons" [value]="hz">
             {{ hz }}
@@ -44,25 +53,27 @@
       </select>
     </div>
 
-    <div class="col-xl-3 col-md-6 col-12">
-      <label class="form-label small">Moneda</label>
-      <select class="form-select history-select" [formControl]="form.controls.displayQuote">
+    <div class="history-field">
+      <label class="form-label" for="history-currency">Moneda</label>
+      <select id="history-currency" class="form-select history-select" [formControl]="form.controls.displayQuote">
         <option value="USD">USD</option>
         <option value="CLP">CLP</option>
       </select>
     </div>
 
-    <div class="col-xl-3 col-md-6 col-12">
-      <label class="form-label small">Registros</label>
-      <select class="form-select history-select" [formControl]="form.controls.limit" (change)="resetOffset()">
+    <div class="history-field">
+      <label class="form-label" for="history-limit">Registros</label>
+      <select id="history-limit" class="form-select history-select" [formControl]="form.controls.limit" (change)="resetOffset()">
         <option *ngFor="let limit of historyLimitOptions" [ngValue]="limit">{{ limit }}</option>
       </select>
     </div>
-  </div>
+    </div>
+  </section>
 
-  <div class="history-monetary-context mb-4">
-    <small class="text-muted">
-      Visualización activa: <strong>{{ monetaryCode() }}</strong>
+  <div class="history-monetary-context" aria-live="polite">
+    <i class="bi bi-info-circle" aria-hidden="true"></i>
+    <small>
+      Visualización activa: <strong class="text-white">{{ monetaryCode() }}</strong>
       · {{ monetaryContextLabel() }}
       <ng-container *ngIf="monetaryCode() === 'CLP'">
         · 1 USD ≈ {{ fxRateUsdClp | number:'1.0-0' }} CLP
@@ -83,52 +94,52 @@
 
   <ng-container *ngIf="vm$ | async as vm; else loadingTpl">
     <ng-container *ngIf="vm; else errorTpl">
-      <div class="row g-3 mb-4">
-        <div class="col-lg-4 col-md-6 col-12">
-          <div class="card crypto-card history-card shadow-sm h-100">
+      <section class="history-metrics" aria-label="Métricas recientes">
+        <div>
+          <div class="history-metric-card crypto-card h-100">
             <div class="card-body">
-              <div class="small text-muted mb-2">Último cierre</div>
-              <div class="fs-4 fw-bold">
+              <div class="history-metric-label">Último cierre</div>
+              <div class="history-metric-value">
                 {{ formatMoney(latestClose(vm), monetaryCode()) }}
               </div>
-              <div class="small text-muted">
+              <div class="text-muted mt-2">
                 {{ vm.prices.meta.asset }} / {{ vm.prices.meta.timeframe }}
               </div>
             </div>
           </div>
         </div>
 
-        <div class="col-lg-4 col-md-6 col-12">
-          <div class="card crypto-card history-card shadow-sm h-100">
+        <div>
+          <div class="history-metric-card crypto-card h-100">
             <div class="card-body">
-              <div class="small text-muted mb-2">Última predicción</div>
-              <div class="fs-4 fw-bold">
+              <div class="history-metric-label">Última predicción</div>
+              <div class="history-metric-value">
                 {{ formatMoney(latestPrediction(vm), monetaryCode()) }}
               </div>
-              <div class="small text-muted">
+              <div class="text-muted mt-2">
                 Horizonte {{ vm.predictions.meta.horizon }}
               </div>
             </div>
           </div>
         </div>
 
-        <div class="col-lg-4 col-md-12 col-12">
-          <div class="card crypto-card history-card shadow-sm h-100">
+        <div>
+          <div class="history-metric-card crypto-card h-100">
             <div class="card-body">
-              <div class="small text-muted mb-2">Último RSI</div>
-              <div class="fs-4 fw-bold">
+              <div class="history-metric-label">Último RSI</div>
+              <div class="history-metric-value">
                 {{ latestRsi(vm) | number:'1.2-2' }}
               </div>
-              <div class="small text-muted">
+              <div class="text-muted mt-2">
                 Indicador técnico reciente
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div class="row g-4 mb-4">
-        <div class="col-12">
+      <div class="history-charts">
+        <div>
           <app-line-chart
             [title]="'Precio vs Predicción (' + monetaryCode() + ')'"
             seriesAName="Close"
@@ -138,7 +149,7 @@
           </app-line-chart>
         </div>
 
-        <div class="col-12">
+        <div>
           <app-line-chart
             title="Indicadores técnicos"
             seriesAName="RSI"
@@ -149,13 +160,14 @@
         </div>
       </div>
 
-      <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-        <div class="d-flex flex-wrap gap-2">
+      <div class="history-table-toolbar">
+        <div class="history-table-tabs" aria-label="Seleccionar conjunto de datos">
           <button
             type="button"
             class="btn btn-sm"
             [class.btn-primary]="activeTable === 'prices'"
             [class.btn-outline-primary]="activeTable !== 'prices'"
+            [attr.aria-pressed]="activeTable === 'prices'"
             (click)="setActiveTable('prices')">
             Prices
           </button>
@@ -165,6 +177,7 @@
             class="btn btn-sm"
             [class.btn-primary]="activeTable === 'features'"
             [class.btn-outline-primary]="activeTable !== 'features'"
+            [attr.aria-pressed]="activeTable === 'features'"
             (click)="setActiveTable('features')">
             Features
           </button>
@@ -174,12 +187,13 @@
             class="btn btn-sm"
             [class.btn-primary]="activeTable === 'predictions'"
             [class.btn-outline-primary]="activeTable !== 'predictions'"
+            [attr.aria-pressed]="activeTable === 'predictions'"
             (click)="setActiveTable('predictions')">
             Predictions
           </button>
         </div>
 
-        <div class="d-flex align-items-center gap-2">
+        <div class="history-pagination" aria-label="Paginación del histórico">
           <button
             type="button"
             class="btn btn-sm btn-outline-secondary"
@@ -187,7 +201,7 @@
             (click)="previousPage()">
             Anterior
           </button>
-          <small class="text-muted">{{ paginationLabel(vm) }}</small>
+          <small>{{ paginationLabel(vm) }}</small>
           <button
             type="button"
             class="btn btn-sm btn-outline-secondary"
