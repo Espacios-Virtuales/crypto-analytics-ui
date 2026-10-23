@@ -1,178 +1,46 @@
-:host {
-  display: block;
-}
+:host { display: block; }
 
-.history-page {
-  color: #1f2937;
+.history-page { width: min(100%, 90rem); margin: 0 auto; padding: clamp(1.25rem, 2.4vw, 2.5rem); color: var(--crypto-text); }
+.history-hero { padding: clamp(.5rem, 1vw, 1rem) 0 clamp(1.6rem, 3vw, 2.5rem); }
+.history-eyebrow, .history-section-kicker { margin: 0; color: var(--crypto-accent-value-strong); font-size: .68rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
+.history-title { margin: .4rem 0 .55rem; font-size: clamp(2.3rem, 5vw, 4.2rem); font-weight: 760; letter-spacing: -.055em; line-height: .98; }
+.history-subtitle { max-width: 42rem; margin: 0; color: var(--crypto-text-muted); line-height: 1.6; }
 
-  .history-hero {
-    padding: 1.25rem 1.5rem;
-    border-radius: 1rem;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
-  }
+.history-filter-panel { padding: 1.25rem; }
+.history-filters { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .85rem; }
+.history-field { display: grid; gap: .45rem; }
+.form-label { margin: 0; color: var(--crypto-text-muted); font-size: .7rem; font-weight: 750; }
+.history-select { min-height: 3rem; border-radius: var(--crypto-radius-sm); color-scheme: dark; }
+.history-select:focus-visible { outline: 3px solid var(--crypto-focus); outline-offset: 2px; }
 
-  .history-title {
-    margin: 0 0 0.35rem;
-    font-size: 1.65rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    color: #111827;
-  }
+.history-monetary-context { display: flex; align-items: center; gap: .7rem; margin: 1rem 0 1.5rem; padding: .8rem 1rem; border: 1px solid var(--crypto-border); border-radius: var(--crypto-radius); color: var(--crypto-text-muted); background: var(--crypto-bg-elevated); }
 
-  .history-subtitle {
-    margin: 0;
-    max-width: 720px;
-    color: #6b7280;
-    font-size: 0.95rem;
-  }
+.history-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+.history-metric-label { margin-bottom: .7rem; color: var(--crypto-text-muted); font-size: .67rem; font-weight: 800; text-transform: uppercase; }
+.history-metric-value { color: var(--crypto-text); font-size: clamp(1.35rem, 2.4vw, 1.9rem); font-weight: 780; letter-spacing: -.035em; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 
-  .history-filters {
-    padding: 0.25rem 0;
-  }
+.history-charts { display: grid; gap: 1.25rem; margin-bottom: 1.5rem; }
+:host ::ng-deep app-line-chart .line-chart-card { border-color: var(--crypto-border); background: var(--crypto-surface); }
+:host ::ng-deep app-line-chart .line-chart-header { border-color: var(--crypto-border); color: var(--crypto-text); background: var(--crypto-surface-soft); }
+:host ::ng-deep app-line-chart .card-body { color: var(--crypto-text); background: var(--crypto-surface); }
+:host ::ng-deep app-line-chart .legend-label, :host ::ng-deep app-line-chart text { color: var(--crypto-text-muted); fill: var(--crypto-text-muted); }
+:host ::ng-deep app-line-chart polyline:first-of-type { stroke: var(--crypto-accent-tech-strong); }
+:host ::ng-deep app-line-chart polyline:nth-of-type(2) { stroke: var(--crypto-neutral); }
 
-  .form-label {
-    margin-bottom: 0.45rem;
-    color: #374151;
-    font-weight: 600;
-    letter-spacing: 0.01em;
-  }
+.history-table-toolbar, .history-table-tabs, .history-pagination { display: flex; align-items: center; gap: .6rem; }
+.history-table-toolbar { justify-content: space-between; margin-bottom: .85rem; }
 
-  .history-select,
-  .history-input {
-    min-height: 46px;
-    border-radius: 0.85rem;
-    border: 1px solid #d1d5db;
-    background: #ffffff;
-    color: #111827;
-    box-shadow: none;
-    transition:
-      border-color 0.2s ease,
-      box-shadow 0.2s ease,
-      background 0.2s ease;
-  }
+.history-table { --bs-table-bg: var(--crypto-surface); --bs-table-color: var(--crypto-text); --bs-table-border-color: var(--crypto-border); --bs-table-hover-bg: var(--crypto-surface-soft); --bs-table-hover-color: var(--crypto-text); min-width: 38rem; }
+.history-table thead th { padding: .78rem 1rem; border-bottom-width: 1px; color: var(--crypto-text-muted); background: var(--crypto-bg-elevated); font-size: .65rem; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; white-space: nowrap; }
+.history-table tbody td { padding: .8rem 1rem; border-color: var(--crypto-border); color: var(--crypto-text); background: var(--crypto-surface); font-size: .82rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.history-page .text-muted { color: var(--crypto-text-muted) !important; }
 
-  .history-select:hover,
-  .history-input:hover {
-    border-color: #cbd5e1;
-  }
-
-  .history-select:focus,
-  .history-input:focus {
-    border-color: #d4af37;
-    box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.14);
-    background: #ffffff;
-  }
-
-  .history-table {
-    margin-bottom: 0;
-
-    thead th {
-      font-size: 0.76rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: #6b7280;
-      border-bottom: 1px solid #e5e7eb;
-      background: #f9fafb;
-      white-space: nowrap;
-    }
-
-    tbody td {
-      font-size: 0.92rem;
-      vertical-align: middle;
-      color: #1f2937;
-      border-bottom: 1px solid #f1f5f9;
-      background: #ffffff;
-    }
-
-    tbody tr:hover td {
-      background: #f8fafc;
-    }
-  }
-
-  .text-muted {
-    color: #6b7280 !important;
-  }
-
-  .btn.btn-sm {
-    border-radius: 999px;
-    font-weight: 600;
-    padding: 0.45rem 0.9rem;
-  }
-
-  .btn-primary {
-    background-color: #111827;
-    border-color: #111827;
-  }
-
-  .btn-primary:hover,
-  .btn-primary:focus {
-    background-color: #0f172a;
-    border-color: #0f172a;
-  }
-
-  .btn-outline-primary {
-    color: #374151;
-    border-color: #d1d5db;
-    background: #ffffff;
-  }
-
-  .btn-outline-primary:hover,
-  .btn-outline-primary:focus {
-    color: #111827;
-    border-color: #9ca3af;
-    background: #f9fafb;
-  }
-
-  .alert-danger {
-    border-radius: 1rem;
-    border: 1px solid #fecaca;
-  }
-
-  .history-monetary-context {
-    padding: 0.5rem 0.75rem;
-    border-radius: 0.75rem;
-    background: rgba(0, 0, 0, 0.03);
-    border: 1px solid rgba(0, 0, 0, 0.05);
-
-    strong {
-      font-weight: 600;
-    }
-  }
-}
-
+@media (max-width: 991.98px) { .history-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); } .history-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); } .history-metrics > div:last-child { grid-column: 1 / -1; } }
 @media (max-width: 767.98px) {
-  .history-page {
-    .history-hero {
-      padding: 1rem;
-      border-radius: 0.85rem;
-    }
-
-    .history-title {
-      font-size: 1.35rem;
-    }
-
-    .history-select,
-    .history-input {
-      min-height: 44px;
-      border-radius: 0.8rem;
-    }
-
-    .history-monetary-context {
-      padding: 0.65rem 0.75rem;
-    }
-  }
+  .history-page { padding: 1.1rem .85rem 2rem; }
+  .history-filter-panel { padding: 1rem; }
+  .history-table-toolbar { align-items: stretch; flex-direction: column; }
+  .history-table-tabs, .history-pagination { justify-content: space-between; }
+  .history-table-tabs .btn { flex: 1; }
 }
-
-.history-page { color: var(--crypto-text); }
-.history-page .history-hero { background: var(--crypto-surface); border-color: var(--crypto-border); box-shadow: var(--crypto-shadow); }
-.history-page .history-title, .history-page .history-table tbody td { color: var(--crypto-text); }
-.history-page .history-subtitle, .history-page .text-muted, .history-page .history-table thead th { color: var(--crypto-text-muted) !important; }
-.history-page .history-table thead th { background: var(--crypto-surface-soft); border-color: var(--crypto-border); }
-.history-page .history-table tbody td { background: var(--crypto-surface); border-color: var(--crypto-border); }.history-page .history-table tbody tr:hover td { background: var(--crypto-surface-soft); }
-.history-page .history-select, .history-page .history-input { background: var(--crypto-surface-soft); border-color: var(--crypto-border); color: var(--crypto-text); }
-.history-page .history-select { color-scheme: dark; }
-.history-page .history-select option { background: var(--crypto-surface-soft); color: var(--crypto-text); }
-.history-page .history-select:focus, .history-page .history-input:focus { border-color: var(--crypto-accent-tech); box-shadow: 0 0 0 .2rem var(--crypto-focus); }
+@media (max-width: 575.98px) { .history-filters, .history-metrics { grid-template-columns: 1fr; } .history-metrics > div:last-child { grid-column: auto; } .history-pagination .btn { flex: 1; } }

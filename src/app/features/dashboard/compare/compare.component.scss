@@ -1,263 +1,76 @@
-:host {
-  display: block;
-}
+:host { display: block; min-width: 0; }
 
-.compare-page {
-  color: #1f2937;
+.compare-page { width: min(100%, 90rem); min-width: 0; margin: 0 auto; padding: clamp(1.25rem, 2.4vw, 2.5rem); color: var(--crypto-text); }
+.compare-hero { padding: clamp(.5rem, 1vw, 1rem) 0 clamp(1.6rem, 3vw, 2.5rem); }
+.compare-eyebrow, .compare-section-kicker { margin: 0; color: var(--crypto-accent-value-strong); font-size: .68rem; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
+.compare-title { margin: .4rem 0 .55rem; font-size: clamp(2.3rem, 5vw, 4.2rem); font-weight: 760; letter-spacing: -.055em; line-height: .98; }
+.compare-subtitle { max-width: 48rem; margin: 0; color: var(--crypto-text-muted); line-height: 1.6; }
 
-  .compare-hero {
-    padding: 1.25rem 1.5rem;
-    border-radius: 1rem;
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
-  }
+.compare-selection { padding: 1.25rem; }
+.compare-section-heading { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 1.1rem; }
+.compare-section-heading h2 { margin: .28rem 0 0; font-size: 1.15rem; }
+.compare-section-heading > p { max-width: 30rem; margin: 0; color: var(--crypto-text-muted); font-size: .78rem; text-align: right; }
+.compare-assets-field, .compare-field { display: grid; gap: .5rem; }
+.form-label { margin: 0; color: var(--crypto-text-muted); font-size: .7rem; font-weight: 750; }
+.asset-chip-grid { display: flex; flex-wrap: wrap; gap: .65rem; }
+.asset-chip { display: inline-flex; min-height: 2.75rem; align-items: center; gap: .55rem; padding: .55rem .8rem; border: 1px solid var(--crypto-border); border-radius: 999px; color: var(--crypto-text-muted); background: var(--crypto-bg-elevated); cursor: pointer; font-size: .78rem; font-weight: 800; }
+.asset-chip:hover { border-color: var(--crypto-accent-tech); color: var(--crypto-text); background: var(--crypto-surface-soft); }
+.asset-chip-active { border-color: color-mix(in srgb, var(--crypto-accent-tech) 58%, transparent); color: var(--crypto-accent-tech-strong); background: var(--crypto-glow-tech); }
+.asset-chip:has(input:focus-visible) { outline: 3px solid var(--crypto-focus); outline-offset: 2px; }
+.asset-chip input { margin: 0; }
+.compare-select-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 1rem; }
+.compare-page .form-select { min-height: 3rem; border: 1px solid var(--crypto-border); border-radius: var(--crypto-radius-sm); color: var(--crypto-text); background: var(--crypto-surface-soft); box-shadow: none; color-scheme: dark; }
+.compare-page .form-select option { color: var(--crypto-text); background: var(--crypto-surface-soft); }
+.compare-page .form-select:focus { border-color: var(--crypto-accent-tech); outline: 3px solid var(--crypto-focus); outline-offset: 2px; box-shadow: none; }
 
-  .compare-title {
-    margin: 0 0 0.35rem;
-    font-size: 1.65rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    color: #111827;
-  }
+.compare-context { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); margin: 1rem 0 1.5rem; overflow: hidden; border: 1px solid color-mix(in srgb, var(--crypto-accent-tech) 28%, transparent); border-radius: var(--crypto-radius); background: linear-gradient(90deg, var(--crypto-glow-tech), transparent 48%), var(--crypto-bg-elevated); }
+.compare-context > div { display: grid; gap: .22rem; min-width: 0; padding: .8rem 1rem; border-right: 1px solid var(--crypto-border); }
+.compare-context > div:last-child { border-right: 0; }
+.compare-context span { color: var(--crypto-text-muted); font-size: .62rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.compare-context strong { overflow: hidden; color: var(--crypto-text); font-size: .82rem; text-overflow: ellipsis; white-space: nowrap; }
 
-  .compare-subtitle {
-    max-width: 840px;
-    color: #6b7280;
-    font-size: 0.95rem;
-  }
+.compare-card { margin-bottom: 1.25rem; }
+.compare-card-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .9rem 1rem; border-bottom: 1px solid var(--crypto-border); color: var(--crypto-text); background: var(--crypto-surface-soft); }
+.compare-card-header strong { font-size: .92rem; }
+.compare-card-header small { color: var(--crypto-text-muted); font-size: .72rem; text-align: right; }
+.compare-table { --bs-table-bg: var(--crypto-surface); --bs-table-color: var(--crypto-text); --bs-table-border-color: var(--crypto-border); --bs-table-hover-bg: var(--crypto-surface-soft); --bs-table-hover-color: var(--crypto-text); min-width: 72rem; }
+.correlation-table { min-width: 38rem; }
+.compare-table thead th { padding: .78rem 1rem; border-bottom-width: 1px; color: var(--crypto-text-muted); background: var(--crypto-bg-elevated); font-size: .63rem; font-weight: 800; letter-spacing: .085em; text-transform: uppercase; white-space: nowrap; }
+.compare-table tbody td { padding: .85rem 1rem; border-color: var(--crypto-border); color: var(--crypto-text); background: var(--crypto-surface); font-size: .79rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.compare-table tbody tr:hover td { background: var(--crypto-surface-soft); }
+.executive-reading { color: var(--crypto-text); }
+.technical-context { display: grid; color: var(--crypto-text-muted); font-size: .72rem; }
+.compare-badge { padding: .42rem .66rem; border: 1px solid; font-size: .65rem; font-weight: 800; letter-spacing: .035em; }
+.compare-badge-buy { border-color: color-mix(in srgb, var(--crypto-success) 45%, transparent); color: var(--crypto-success); background: color-mix(in srgb, var(--crypto-success) 11%, transparent); }
+.compare-badge-sell { border-color: color-mix(in srgb, var(--crypto-danger) 45%, transparent); color: var(--crypto-danger); background: color-mix(in srgb, var(--crypto-danger) 11%, transparent); }
+.compare-badge-hold { border-color: color-mix(in srgb, var(--crypto-neutral) 48%, transparent); color: var(--crypto-text-muted); background: color-mix(in srgb, var(--crypto-neutral) 11%, transparent); }
+.expected-return-positive { color: var(--crypto-success); }
+.expected-return-negative { color: var(--crypto-danger); }
+.expected-return-neutral { color: var(--crypto-text-muted); }
+.correlation-table .compare-badge-buy { border-color: color-mix(in srgb, var(--crypto-accent-tech) 45%, transparent); color: var(--crypto-accent-tech-strong); background: var(--crypto-glow-tech); }
+.correlation-table .compare-badge-hold { border-color: color-mix(in srgb, var(--crypto-neutral) 48%, transparent); color: var(--crypto-text-muted); background: color-mix(in srgb, var(--crypto-neutral) 11%, transparent); }
+.correlation-table .compare-badge-sell { border-color: color-mix(in srgb, var(--crypto-danger) 40%, transparent); color: var(--crypto-danger); background: color-mix(in srgb, var(--crypto-danger) 9%, transparent); }
 
-  .form-label {
-    margin-bottom: 0.45rem;
-    color: #374151;
-    font-weight: 600;
-    letter-spacing: 0.01em;
-  }
+.trading-safety { display: inline-flex; align-items: center; gap: .4rem; color: var(--crypto-accent-tech-strong) !important; }
+.trading-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .85rem; }
+.trading-panel { display: flex; min-height: 6rem; flex-direction: column; justify-content: center; gap: .25rem; padding: .95rem; border: 1px solid var(--crypto-border); border-radius: var(--crypto-radius); background: var(--crypto-bg-elevated); }
+.trading-panel strong { color: var(--crypto-text); font-size: 1.25rem; line-height: 1.2; overflow-wrap: anywhere; }
+.trading-panel small { color: var(--crypto-text-muted); font-weight: 650; }
+.trading-label { color: var(--crypto-text-muted); font-size: .66rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.trading-panel--buy .trading-label { color: var(--crypto-success); }
+.trading-panel--sell .trading-label { color: var(--crypto-danger); }
+.compare-page .text-muted { color: var(--crypto-text-muted) !important; }
 
-  .form-select {
-    min-height: 46px;
-    border-radius: 0.85rem;
-    border: 1px solid #d1d5db;
-    background: #ffffff;
-    color: #111827;
-    box-shadow: none;
-    transition:
-      border-color 0.2s ease,
-      box-shadow 0.2s ease,
-      background 0.2s ease;
-  }
-
-  .form-select:hover {
-    border-color: #cbd5e1;
-  }
-
-  .form-select:focus {
-    border-color: #d4af37;
-    box-shadow: 0 0 0 0.2rem rgba(212, 175, 55, 0.14);
-    background: #ffffff;
-  }
-
-  .asset-chip-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-
-  .asset-chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.55rem;
-    padding: 0.65rem 0.9rem;
-    border-radius: 999px;
-    border: 1px solid #d1d5db;
-    background: #ffffff;
-    color: #374151;
-    cursor: pointer;
-
-    &:hover {
-      border-color: #9ca3af;
-      background: #f9fafb;
-    }
-
-    input {
-      margin: 0;
-    }
-  }
-
-  .asset-chip-active {
-    border-color: #111827;
-    background: #f3f4f6;
-    color: #111827;
-  }
-
-  .compare-context {
-    padding: 0.5rem 0.75rem;
-    border-radius: 0.75rem;
-    background: rgba(0, 0, 0, 0.03);
-    border: 1px solid rgba(0, 0, 0, 0.05);
-
-    strong {
-      font-weight: 600;
-    }
-  }
-
-  .compare-table {
-    margin-bottom: 0;
-
-    thead th {
-      font-size: 0.76rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: #6b7280;
-      border-bottom: 1px solid #e5e7eb;
-      background: #f9fafb;
-      white-space: nowrap;
-    }
-
-    tbody td {
-      font-size: 0.92rem;
-      vertical-align: middle;
-      color: #1f2937;
-      border-bottom: 1px solid #f1f5f9;
-      background: #ffffff;
-      white-space: nowrap;
-    }
-
-    tbody tr:hover td {
-      background: #f8fafc;
-    }
-  }
-
-  .compare-badge {
-    font-weight: 700;
-    padding: 0.45rem 0.75rem;
-  }
-
-  .compare-badge-buy {
-    background: #dcfce7;
-    color: #166534;
-    border: 1px solid #bbf7d0;
-  }
-
-  .compare-badge-sell {
-    background: #fee2e2;
-    color: #991b1b;
-    border: 1px solid #fecaca;
-  }
-
-  .compare-badge-hold {
-    background: #e5e7eb;
-    color: #374151;
-    border: 1px solid #d1d5db;
-  }
-
-  .executive-reading {
-    color: #111827;
-  }
-
-  .expected-return-positive {
-    color: #166534;
-  }
-
-  .expected-return-negative {
-    color: #991b1b;
-  }
-
-  .expected-return-neutral {
-    color: #374151;
-  }
-
-  .technical-context {
-    display: grid;
-    color: #374151;
-    font-size: 0.82rem;
-  }
-
-  .trading-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 0.85rem;
-  }
-
-  .trading-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
-    min-height: 86px;
-    justify-content: center;
-    padding: 0.85rem;
-    border: 1px solid #e5e7eb;
-    border-radius: 0.75rem;
-    background: #ffffff;
-
-    strong {
-      color: #111827;
-      font-size: 1.25rem;
-      line-height: 1.2;
-      overflow-wrap: anywhere;
-    }
-
-    small {
-      color: #6b7280;
-      font-weight: 600;
-    }
-  }
-
-  .trading-label {
-    color: #6b7280;
-    font-size: 0.72rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-
-  .text-muted {
-    color: #6b7280 !important;
-  }
-}
-
+@media (max-width: 991.98px) { .compare-context { grid-template-columns: repeat(2, minmax(0, 1fr)); } .compare-context > div:nth-child(2) { border-right: 0; } .compare-context > div:nth-child(-n + 2) { border-bottom: 1px solid var(--crypto-border); } .trading-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 767.98px) {
-  .compare-page {
-    .compare-hero {
-      padding: 1rem;
-      border-radius: 0.85rem;
-    }
-
-    .compare-title {
-      font-size: 1.35rem;
-    }
-
-    .form-select {
-      min-height: 44px;
-      border-radius: 0.8rem;
-    }
-
-    .asset-chip {
-      padding: 0.55rem 0.8rem;
-    }
-
-    .trading-grid {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
+  .compare-page { padding: 1.1rem .85rem 2rem; }
+  .compare-title { font-size: clamp(2rem, 10vw, 2.35rem); }
+  .compare-subtitle { font-size: .9rem; }
+  .compare-selection { padding: 1rem; }
+  .compare-section-heading { display: block; }
+  .compare-section-heading > p { margin-top: .5rem; text-align: left; }
+  .compare-card-header { align-items: flex-start; flex-direction: column; gap: .3rem; }
+  .compare-card-header small { text-align: left; }
+  .compare-card .table-responsive { scrollbar-color: var(--crypto-accent-tech) var(--crypto-bg-elevated); }
 }
-
-@media (max-width: 575.98px) {
-  .compare-page {
-    .trading-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-}
-
-.compare-page { color: var(--crypto-text); }
-.compare-page .compare-hero, .compare-page .trading-panel { background: var(--crypto-surface); border-color: var(--crypto-border); box-shadow: var(--crypto-shadow); }
-.compare-page .compare-title, .compare-page .compare-table tbody td, .compare-page .trading-panel strong { color: var(--crypto-text); }
-.compare-page .compare-subtitle, .compare-page .text-muted, .compare-page .compare-table thead th, .compare-page .trading-label { color: var(--crypto-text-muted) !important; }
-.compare-page .compare-table thead th { background: var(--crypto-surface-soft); border-color: var(--crypto-border); }.compare-page .compare-table tbody td { background: var(--crypto-surface); border-color: var(--crypto-border); }.compare-page .compare-table tbody tr:hover td { background: var(--crypto-surface-soft); }
-.compare-page .form-select, .compare-page .asset-chip { background: var(--crypto-surface-soft); color: var(--crypto-text); border-color: var(--crypto-border); }
-.compare-page .form-select { color-scheme: dark; }
-.compare-page .form-select option { background: var(--crypto-surface-soft); color: var(--crypto-text); }
-.compare-page .form-select:focus { border-color: var(--crypto-accent-tech); box-shadow: 0 0 0 .2rem var(--crypto-focus); }
-.compare-page .asset-chip-active { border-color: var(--crypto-accent-tech); background: var(--crypto-glow-tech); }
+@media (max-width: 575.98px) { .compare-select-grid, .compare-context, .trading-grid { grid-template-columns: 1fr; } .compare-context > div { border-right: 0; border-bottom: 1px solid var(--crypto-border); } .compare-context > div:last-child { border-bottom: 0; } }

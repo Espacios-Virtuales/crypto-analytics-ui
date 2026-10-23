@@ -1,15 +1,16 @@
-<div class="compare-page container-fluid py-3">
-  <div class="row mb-4">
-    <div class="col-12">
-      <div class="compare-hero">
-        <h2 class="compare-title">Comparador de activos</h2>
-        <p class="compare-subtitle mb-0">
+<div class="compare-page">
+  <header class="compare-hero">
+    <p class="compare-eyebrow">Cross-market intelligence</p>
+    <div class="compare-heading">
+      <div>
+        <h1 class="compare-title">Comparador de activos</h1>
+        <p class="compare-subtitle">
           Lectura comparativa del mercado usando precio actual, predicción e indicadores
           técnicos recientes.
         </p>
       </div>
     </div>
-  </div>
+  </header>
 
   <div class="alert alert-info mb-3" *ngIf="assetsLoading()">
     <span class="loading-inline">
@@ -23,9 +24,16 @@
   </div>
 
   <ng-container *ngIf="selectionSummary$ | async as summary">
-    <div class="row g-3 mb-4">
-      <div class="col-12">
-        <label class="form-label small">Activos</label>
+    <section class="compare-selection crypto-card" aria-labelledby="compare-selection-title">
+      <div class="compare-section-heading">
+        <div>
+          <p class="compare-section-kicker">Selección</p>
+          <h2 id="compare-selection-title">Universo comparativo</h2>
+        </div>
+        <p>Selecciona hasta seis activos y define una ventana común de análisis.</p>
+      </div>
+      <div class="compare-assets-field">
+        <span class="form-label" id="compare-assets-label">Activos</span>
         <div class="asset-chip-grid">
           <label
             class="asset-chip"
@@ -35,32 +43,35 @@
             <input
               type="checkbox"
               class="form-check-input"
+              [attr.aria-labelledby]="'compare-asset-' + item.asset"
               [checked]="isSelected(item.asset)"
               (change)="toggleAsset(item.asset, $any($event.target).checked)"
             />
-            <span>{{ item.asset }}</span>
+            <span [id]="'compare-asset-' + item.asset">{{ item.asset }}</span>
           </label>
         </div>
       </div>
 
-      <div class="col-lg-6 col-md-6 col-12">
-        <label class="form-label small">Temporalidad</label>
-        <select class="form-select" [formControl]="form.controls.timeframe">
+      <div class="compare-select-grid">
+      <div class="compare-field">
+        <label class="form-label" for="compare-timeframe">Temporalidad</label>
+        <select id="compare-timeframe" class="form-select" [formControl]="form.controls.timeframe">
           <option *ngFor="let tf of summary.timeframes" [value]="tf">
             {{ tf }}
           </option>
         </select>
       </div>
 
-      <div class="col-lg-6 col-md-6 col-12">
-        <label class="form-label small">Horizonte</label>
-        <select class="form-select" [formControl]="form.controls.horizon">
+      <div class="compare-field">
+        <label class="form-label" for="compare-horizon">Horizonte</label>
+        <select id="compare-horizon" class="form-select" [formControl]="form.controls.horizon">
           <option *ngFor="let hz of summary.horizons" [value]="hz">
             {{ hz }}
           </option>
         </select>
       </div>
-    </div>
+      </div>
+    </section>
   </ng-container>
 
   <div class="alert alert-info mb-3" *ngIf="compareLoading()">
@@ -75,20 +86,18 @@
   </div>
 
   <ng-container *ngIf="vm$ | async as vm; else loadingTpl">
-    <div class="compare-context mb-4">
-      <small class="text-muted">
-        Activos seleccionados: <strong>{{ vm.meta.count }}</strong>
-        · Temporalidad: <strong>{{ vm.meta.timeframe }}</strong>
-        · Horizonte: <strong>{{ vm.meta.horizon }}</strong>
+    <div class="compare-context" aria-live="polite">
+      <div><span>Activos seleccionados</span><strong>{{ vm.meta.count }}</strong></div>
+      <div><span>Temporalidad</span><strong>{{ vm.meta.timeframe }}</strong></div>
+      <div><span>Horizonte</span><strong>{{ vm.meta.horizon }}</strong></div>
         <ng-container *ngIf="vm.leaderAsset">
-          · Referencia correlación: <strong>{{ vm.leaderAsset }}</strong>
+          <div><span>Referencia correlación</span><strong>{{ vm.leaderAsset }}</strong></div>
         </ng-container>
-      </small>
     </div>
 
-    <div class="card crypto-card compare-card shadow-sm mb-4" *ngIf="vm.rows.length; else emptyTpl">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <strong>Resumen comparativo</strong>
+    <section class="compare-card crypto-card" *ngIf="vm.rows.length; else emptyTpl" aria-labelledby="compare-summary-title">
+      <div class="compare-card-header">
+        <strong id="compare-summary-title">Resumen comparativo</strong>
         <small class="text-muted">Ordenado por confianza y fuerza de señal</small>
       </div>
 
@@ -143,16 +152,16 @@
           </tbody>
         </table>
       </div>
-    </div>
+    </section>
 
-    <div class="card crypto-card compare-card shadow-sm mb-4" *ngIf="vm.correlations.length">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <strong>Correlación básica</strong>
+    <section class="compare-card crypto-card" *ngIf="vm.correlations.length" aria-labelledby="compare-correlation-title">
+      <div class="compare-card-header">
+        <strong id="compare-correlation-title">Correlación básica</strong>
         <small class="text-muted">Comparación frente al activo líder</small>
       </div>
 
       <div class="table-responsive">
-        <table class="table table-sm table-hover align-middle mb-0 compare-table">
+        <table class="table table-sm table-hover align-middle mb-0 compare-table correlation-table">
           <thead>
             <tr>
               <th>Asset</th>
@@ -178,25 +187,25 @@
           </tbody>
         </table>
       </div>
-    </div>
+    </section>
 
-    <div class="card crypto-card compare-card trading-placeholder shadow-sm mb-4" *ngIf="vm.rows.length">
-      <div class="card-header d-flex justify-content-between align-items-center">
-        <strong>Trading Mode visual</strong>
-        <small class="text-muted">Sin ejecución automática</small>
+    <section class="compare-card crypto-card trading-placeholder" *ngIf="vm.rows.length" aria-labelledby="trading-visual-title">
+      <div class="compare-card-header">
+        <strong id="trading-visual-title">Trading Mode visual</strong>
+        <small class="trading-safety"><i class="bi bi-info-circle" aria-hidden="true"></i> Sin ejecución automática</small>
       </div>
 
       <div class="card-body">
         <div class="trading-grid">
-          <div class="trading-panel">
+          <div class="trading-panel trading-panel--buy">
             <span class="trading-label">BUY</span>
             <strong>{{ signalCount(vm.rows, 'BUY') }}</strong>
           </div>
-          <div class="trading-panel">
+          <div class="trading-panel trading-panel--sell">
             <span class="trading-label">SELL</span>
             <strong>{{ signalCount(vm.rows, 'SELL') }}</strong>
           </div>
-          <div class="trading-panel">
+          <div class="trading-panel trading-panel--hold">
             <span class="trading-label">HOLD</span>
             <strong>{{ signalCount(vm.rows, 'HOLD') }}</strong>
           </div>
@@ -207,7 +216,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </section>
   </ng-container>
 
   <ng-template #loadingTpl>
